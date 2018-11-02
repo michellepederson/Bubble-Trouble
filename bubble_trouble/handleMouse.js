@@ -18,7 +18,10 @@ function handleMouse(evt) {
     // If no button is being pressed, then bail
     var button = evt.buttons === undefined ? evt.which : evt.buttons;
     if (!button) return;
-    
+   // Balloon.prototype.direction *= -1;
+ //   this.dir *= -1;
+  //  this.velX *= -1;
+
     entityManager.generateBalloon(g_mouseX, g_mouseY);
 }
 

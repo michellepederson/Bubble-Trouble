@@ -31,6 +31,7 @@ _players  : [],
 _bullets : [],
 _blocks : [],
 _balloons : [],
+_Wires : [],
 
 _forEachOf: function(aCategory, fn) {
     for (var i = 0; i < aCategory.length; ++i) {
@@ -49,17 +50,19 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._bullets, this._players, this._blocks, this._balloons];
+    this._categories = [this._bullets, this._players, this._blocks, this._balloons, this._Wires];
 },
 
 init: function() {
 },
 
 fire: function(cx, cy) {
-    this._categories[0].push(
+
+    this._categories[4].push(
         new Wire({
             cx,
-            cy,
+            // temporary solution cy. -40 because otherwise the wire shot collides with the player
+            cy: cy - 40,
         })
     );
 },
@@ -82,13 +85,11 @@ generateGround : function(cy, halfHeight) {
     return cy + halfHeight;
 },
 
-generateBalloon : function(cx, cy) {
-    this._categories[3].push(
-        new Balloon({
-            cx,
-            cy,
-        })
-    );
+
+generateBalloon : function(descr, g_mouseX, g_mouseY) {
+
+    var entity = new Balloon(descr);
+    this._categories[3].push(entity);
 },
 
 resetBubbles: function() {
