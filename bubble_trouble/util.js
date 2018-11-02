@@ -73,7 +73,6 @@ wrappedDistSq: function(x1, y1, x2, y2, xWrap, yWrap) {
     return this.square(dx) + this.square(dy);
 },
 
-
 // CANVAS OPS
 // ==========
 

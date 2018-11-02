@@ -12,7 +12,7 @@ function Block(descr) {
 
 // Initial, inheritable, default values
 Block.prototype.cx = 200;
-Block.prototype.cy = 200;
+Block.prototype.cy = 300;
     
 Block.prototype.update = function (du) {
 };

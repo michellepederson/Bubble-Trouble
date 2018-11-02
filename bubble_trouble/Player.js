@@ -36,11 +36,13 @@ Player.prototype.cy = 200;
 
     
 Player.prototype.update = function (du) {
-    
+   
     spatialManager.unregister(this);
-
-    if (this._isDeadNow) return;
-
+    //Quit game if the player dies
+    if(this._isDeadNow){
+        return main.gameOver();
+        return -1;
+    }
     // Handle firing
     this.maybeFire();
 
@@ -50,26 +52,28 @@ Player.prototype.update = function (du) {
     }
 
     if (keys[this.KEY_LEFT]) {
-        this.cx -= 2.5*du;
-    } else if (keys[this.KEY_RIGHT]) {
-        this.cx += 2.5*du;
+        if(this.cx > this.getRadius()){
+               this.cx -= 2.5*du;
+        }
+    } 
+    else if (keys[this.KEY_RIGHT]) {
+        if(this.cx < g_canvas.width-this.getRadius()){
+             this.cx += 2.5*du;
+        }
     }
-    spatialManager.register(this);
-
+    if(!this._isDeadNow){
+        spatialManager.register(this);
+    }
 };
 
 Player.prototype.maybeFire = function () {
 
     if (eatKey(this.KEY_FIRE)) {
-    
         entityManager.fire(this.cx, this.cy);
-           
     }
-    
 };
 
 Player.prototype.getRadius = function () {
-    //return (this.sprite.width / 2) * 0.9;
     return 20;
 };
 

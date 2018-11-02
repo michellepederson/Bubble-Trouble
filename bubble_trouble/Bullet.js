@@ -17,6 +17,10 @@ Bullet.prototype.cy = 200;
 Bullet.prototype.update = function (du) {
 };
 
+Bullet.prototype.takeBulletHit = function () {
+    this.kill();
+};
 
 Bullet.prototype.render = function (ctx) {
 };
+
