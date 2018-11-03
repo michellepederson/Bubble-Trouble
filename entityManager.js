@@ -26,7 +26,7 @@ with suitable 'data' and 'methods'.
 var entityManager = {
 
 // "PRIVATE" DATA
-
+_backgrounds : [],
 _players  : [],
 _bullets : [],
 _blocks : [],
@@ -50,7 +50,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._bullets, this._players, this._blocks, this._balloons, this._Wires];
+    this._categories = [this._backgrounds, this._bullets, this._players, this._blocks, this._balloons, this._Wires];
 },
 
 init: function() {
@@ -58,13 +58,20 @@ init: function() {
 
 fire: function(cx, cy) {
 
-    this._categories[4].push(
+    this._categories[5].push(
         new Wire({
             cx,
             // temporary solution cy. -40 because otherwise the wire shot collides with the player
             cy: cy - 40,
         })
     );
+},
+
+generateBackground : function () {
+
+   var background = new Background();
+   this._backgrounds.push(background);
+
 },
 
 generatePlayer : function(cx, ground_edge) {
@@ -89,7 +96,7 @@ generateGround : function(cy, halfHeight) {
 generateBalloon : function(descr, g_mouseX, g_mouseY) {
 
     var entity = new Balloon(descr);
-    this._categories[3].push(entity);
+    this._categories[4].push(entity);
 },
 
 resetBubbles: function() {

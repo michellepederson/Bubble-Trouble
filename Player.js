@@ -1,4 +1,3 @@
-
 "use strict";
 
 /* jshint browser: true, devel: true, globalstrict: true */
@@ -12,7 +11,8 @@ function Player(descr) {
     this.rememberResets();
     
     // Default sprite, if not otherwise specified
-    this.sprite = this.sprite || g_sprites.ship;
+
+    this.scale  = this.scale  || 0.5;
     
 };
 
@@ -36,6 +36,13 @@ Player.prototype.cx = 200;
 Player.prototype.cy = 200;
 Player.prototype.velX = 0;
 Player.prototype.velY = 0;
+Player.prototype.spriteCell = 0;
+Player.prototype.sprite;
+Player.prototype.animationLag = 5;
+Player.prototype.left = true;
+Player.prototype.move = false;
+Player.prototype.shoot = false;
+Player.prototype.spriteMode = 1;
 //var NOMINAL_GRAVITY = 0.12;
     
 Player.prototype.update = function (du) {
@@ -46,6 +53,7 @@ Player.prototype.update = function (du) {
         return main.gameOver();
         return -1;
     }
+    this.movePlayer(du);
     // Handle firing
     this.maybeFire();
     
@@ -53,17 +61,7 @@ Player.prototype.update = function (du) {
     if (entity) {
         return this.kill();
     }
-    
-    if (keys[this.KEY_LEFT]) {
-        if(this.cx > this.getRadius()){
-               this.cx -= 2.5*du;
-        }
-    } 
-    else if (keys[this.KEY_RIGHT]) {
-        if(this.cx < g_canvas.width-this.getRadius()){
-             this.cx += 2.5*du;
-        }
-    }
+
 
     var prevX = this.cx;
     var prevY = this.cy;
@@ -82,15 +80,75 @@ Player.prototype.update = function (du) {
     if(this.cy > entityManager._blocks[0].cy-this.getRadius()){
         this.cy = entityManager._blocks[0].cy-this.getRadius()+5;
     }
+
+            if(this.shoot){
+            this.spriteMode = 3;
+        }
+
+        //Update sprite
+    this.sprite = g_sprite_cycles[this.spriteMode][this.spriteCell];
+
+
+    //Manage the speed - better way of doing this ?
+    if(this.animationLag > 0) this.animationLag--;
+
+    else {
+        ++this.spriteCell;
+        this.animationLag = 5;
+
+        if (this.spriteCell === g_sprite_cycles[this.spriteMode].length){ 
+            if(this.shoot) this.shoot = false;
+            this.spriteCell = 0;
+        }
+    }
+
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
 };
 
+Player.prototype.movePlayer = function (du) {
+
+   if (keys[this.KEY_LEFT]) {
+
+    if(!this.move) this.spriteCell = 0;
+    this.left = true;
+    this.move = true;
+    this.cx -= 5*du;
+    this.spriteMode = 2;
+    
+} 
+
+else if (keys[this.KEY_RIGHT]) {
+
+    if(!this.move) this.spriteCell = 0;
+    this.left = false;
+    this.move = true;
+    this.cx += 5*du;
+    this.spriteMode = 2;
+    
+}
+
+else {
+
+    if(this.move) this.spriteCell = 0;
+    this.move = false;
+    this.spriteMode = 1;
+
+}
+
+};
+
 Player.prototype.maybeFire = function () {
+
     if (eatKey(this.KEY_FIRE)) {
+
         entityManager.fire(this.cx, this.cy);
+        if(!this.shoot) this.spriteCell = 0;
+        this.shoot = true;
+
     }
+
 };
 
 Player.prototype.getRadius = function () {
@@ -104,12 +162,9 @@ Player.prototype.reset = function () {
 };
 
 Player.prototype.render = function (ctx) {
-    var radius = this.getRadius();
-    ctx.beginPath();
-    ctx.arc(this.cx,this.cy,radius,0,360, false);
-    ctx.fillStyle = 'black';
-    ctx.fill();
-    ctx.stroke();
+    this.sprite.drawSpriteAt(
+        ctx, this.cx, this.cy, this.scale, this
+        );
 };
 
 

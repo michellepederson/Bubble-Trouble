@@ -14,17 +14,50 @@
 
 // Construct a "sprite" from the given `image`,
 //
-function Sprite(image) {
+function Sprite(image, sx, sy, width, height) {
+    if(sx === undefined || sy === undefined){
+        sx = 0;
+        sy = 0;
+    }
     this.image = image;
 
-    this.width = image.width;
-    this.height = image.height;
+    this.sx = sx;
+    this.sy = sy;
+
+    if(width === undefined || height === undefined){
+        this.width = image.width;
+        this.height = image.height;
+    }
+    else {
+    this.width = width;
+    this.height = height;
+    }
     this.scale = 1;
 }
 
 Sprite.prototype.drawAt = function (ctx, x, y) {
+
+        ctx.drawImage(this.image, 
+                  this.sx, this.sy, this.width, this.height,
+                  x, y, this.width, this.height);
+
+};
+
+Sprite.prototype.drawSpriteAt = function (ctx, x, y, scale, player) {
+    ctx.save();
+   
+    if(player.left){
+        ctx.scale(scale, scale);
+        ctx.translate(x,y);
+    }
+    else {
+        ctx.scale(-scale, scale);
+        ctx.translate(-x*3,y);
+    }
     ctx.drawImage(this.image, 
-                  x, y);
+                  this.sx, this.sy, this.width, this.height,
+                  x - this.width/2, y - this.height/2, this.width, this.height);
+        ctx.restore();
 };
 
 Sprite.prototype.drawCentredAt = function (ctx, cx, cy, rotation) {
@@ -53,7 +86,7 @@ Sprite.prototype.drawWrappedCentredAt = function (ctx, cx, cy, rotation) {
     
     // Draw primary instance
     this.drawWrappedVerticalCentredAt(ctx, cx, cy, rotation);
-
+    
     // Left and Right wraps
     this.drawWrappedVerticalCentredAt(ctx, cx - sw, cy, rotation);
     this.drawWrappedVerticalCentredAt(ctx, cx + sw, cy, rotation);
