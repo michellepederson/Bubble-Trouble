@@ -17,7 +17,7 @@ function Wire(descr) {
 Wire.prototype = new Entity();
 // Initial, inheritable, default values
 Wire.prototype.velY = -6;
-Wire.prototype.radius = 2;
+Wire.prototype.radius = 3;
 
 Wire.prototype.update = function (du) {
 
@@ -54,11 +54,13 @@ Wire.prototype.render = function (ctx) {
 
 	ctx.beginPath();
     ctx.arc(this.cx,this.cy,this.radius,0,360, false);
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'red';
     ctx.fill();
     ctx.stroke();
-    ctx.beginPath();
+    
 	ctx.moveTo(this.cx, this.cy);
-	ctx.lineTo(this.cx, 510);
+    ctx.lineTo(this.cx, 510);
+    ctx.strokeStyle = 'red';
+    ctx.fill();
 	ctx.stroke();
 };

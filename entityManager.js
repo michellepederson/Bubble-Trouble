@@ -80,12 +80,12 @@ generatePlayer : function(cx, ground_edge) {
     this._players.push(new Player({cx, cy,}))
 },
 
-generateGround : function(cy, halfHeight) {
+generateGround : function(cx,cy, halfWidth,halfHeight) {
     this._blocks.push(
         new Block({
-            cx : g_canvas.width/2,
+            cx,
             cy,
-            halfWidth : g_canvas.width/2,
+            halfWidth,
             halfHeight,
         }));
     

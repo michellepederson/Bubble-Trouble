@@ -18,7 +18,7 @@ function Balloon(descr) {
 Balloon.prototype = new Entity();
 // Initial, inheritable, default values
 Balloon.prototype.cx = 150;
-Balloon.prototype.cy = 40;
+Balloon.prototype.cy = 150;
 Balloon.prototype.radius = 30;
 Balloon.prototype.velX = -2;
 Balloon.prototype.velY = 1;
@@ -51,7 +51,7 @@ Balloon.prototype.update = function (du) {
     }
     var accelY = NOMINAL_GRAVITY*du;
     this.applyAccel(accelY, du);
-    
+ 
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
@@ -69,14 +69,15 @@ Balloon.prototype.takeWireHit = function () {
 Balloon.prototype._spawnFragment = function () {
 
     this.direction *= -1;
-    var dir = this.velX
+    //var dir = this.velX
 
     entityManager.generateBalloon({
         cx : this.cx,
         cy : this.cy,
         scale: this.scale/2,
         radius: this.radius*this.scale,
-        velX : this.direction
+        velX : this.direction,
+        velY : -5.5
     });
 };
 
