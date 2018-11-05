@@ -89,7 +89,6 @@ findEntityInRange: function(posX, posY, radius) {
     return entity;
 },
 */
-
 findEntityInRange: function(posX, posY, radius){
     // TODO: YOUR STUFF HERE!
 var distance;
@@ -99,50 +98,57 @@ var lim;
 var dist2;
 var lim2;
 //Loop through all the entities andcheck them for collision
-for(var i = 1; i < this._entities.length; i++){
+for(var i = 0; i < this._entities.length; i++){
     if (this._entities[i] === undefined){
         //if the place in the _entity array is undefined then do nothing, just skip it
     }
     else{
         ent = this._entities[i];
-        halfwidth = ent.getRadius();
-        //find the distance between the center of the objects (treating them like a circle)
-        // distance = Math.sqrt(((posX - ent.cx) * (posX - ent.cx)) + ((posY - ent.cy) * (posY - ent.cy)));
-        distance = util.distSq(posX, posY, ent.cx, ent.cy);   
-        //Fæ ekki radius og halfwidth inn svo ég setti gildin bara inn manually
-        //til að sjá hvort þetta virkar.
-        lim = util.square(radius + halfwidth*2);
-        // check if the circles overlap (wire ball(the small dot) and balloons)
-        if(distance < lim){
-           // console.log("collision");
-           return ent;
+        if(ent instanceof Balloon){
+            ent = this._entities[i];
+            halfwidth = ent.getRadius();
+            //find the distance between the center of the objects (treating them like a circle)
+            // distance = Math.sqrt(((posX - ent.cx) * (posX - ent.cx)) + ((posY - ent.cy) * (posY - ent.cy)));
+            distance = util.distSq(posX, posY, ent.cx, ent.cy);   
+            //Fæ ekki radius og halfwidth inn svo ég setti gildin bara inn manually
+            //til að sjá hvort þetta virkar.
+            lim = util.square(radius + halfwidth*2);
+            // check if the circles overlap (wire ball(the small dot) and balloons)
+            if(distance < lim){
+                // console.log("collision");
+                return ent;
+            }
         }
-
-        for(var j = 0; j < entityManager._balloons.length; j++){
+   }
+}
+// This compares every bubble to every wire. If ent is usued above instead then that compares also to the player and 
+// they collide and the player is killed becouse of the wire or wire ball.
+// what's a better way to do this?
+for(var j = 0; j < entityManager._balloons.length; j++){
             for(var k = 0; k < entityManager._Wires.length; k++){
-
-                var  dist3 = util.distSq(entityManager._balloons[j].cx, entityManager._balloons[j].cy, entityManager._Wires[k].cx, entityManager._balloons[j].cy);
-                var  lim3 = util.square(entityManager._balloons[j].radius/1.5 + entityManager._Wires[k].radius);
-
+                
+                var  dist3 = util.distSq(entityManager._balloons[j].cx, 
+                                        entityManager._balloons[j].cy, 
+                                        entityManager._Wires[k].cx, 
+                                        entityManager._balloons[j].cy);
+                // big bubble limit
+                if(entityManager._balloons[j].scale === 1){
+                    var  lim3 = util.square(entityManager._balloons[j].radius);
+                }                
+                //medium bubble limit, adjust to scale
+                if(entityManager._balloons[j].scale === 0.5){
+                     var  lim3 = util.square(entityManager._balloons[j].radius*entityManager._balloons[j].scale);
+                }
+                //small bubble limit, adjust to scale
+                if(entityManager._balloons[j].scale === 0.25){
+                    var  lim3 = util.square(entityManager._balloons[j].radius*entityManager._balloons[j].scale);
+                }
+                //Check if the bubble has collided with the wire
                 if(dist3 < lim3 &&  entityManager._balloons[j].cy > entityManager._Wires[k].cy){
                     return entityManager._balloons[j];
                 }
             }
         }
-
-        /*
-        //Collision detection for the Player 
-        if(ent instanceof Player){
-            dist2 = util.distSq(ent.cx, ent.cy, posX, posY);
-            lim2 = util.square(radius + halfwidth);
-            if(dist2 < lim2){
-                console.log("collision");
-                return ent;
-            }
-        }
-        */
-    }
-}
 
 // just return false and do nothing if no collision was found
 return false;

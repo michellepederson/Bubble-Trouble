@@ -10,8 +10,13 @@ function init() {
     var cx = 300;
     // Returns y coordinate of the edge of the ground, its needed to place the player
     // on top of the ground edge
-    var ground_edge = entityManager.generateGround(ground_y, 5);
 
+
+
+                                    //    cx           - cy       - g_canvas.width/2-   5
+                                    //g_canvas.width/2 - ground_y - halfWidth   -     halfHeight
+    var padding = 100;
+    var ground_edge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generatePlayer(cx, ground_edge);
     entityManager.generateBackground();
 }
@@ -20,10 +25,10 @@ function init() {
 
 function gatherInputs() {
 }
-
-
+		
+			
 // GAME-SPECIFIC UPDATE LOGIC
-
+			
 function updateSimulation(du) {
 
     processDiagnostics();
@@ -198,7 +203,7 @@ function preloadDone() {
                                 celWidth, celHeight) 
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-            console.log(sprite);     
+          //  console.log(sprite);     
 
         }
     }

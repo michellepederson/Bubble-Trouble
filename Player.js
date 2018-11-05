@@ -11,9 +11,7 @@ function Player(descr) {
     this.rememberResets();
     
     // Default sprite, if not otherwise specified
-
     this.scale  = this.scale  || 0.5;
-    
 };
 
 Player.prototype = new Entity();
@@ -43,9 +41,14 @@ Player.prototype.left = true;
 Player.prototype.move = false;
 Player.prototype.shoot = false;
 Player.prototype.spriteMode = 1;
+
+
+
 //var NOMINAL_GRAVITY = 0.12;
     
 Player.prototype.update = function (du) {
+    var nextX = this.cx + this.velX;
+    var nextY = this.cy + this.velY;
     
     spatialManager.unregister(this);
     //Quit game if the player dies
@@ -61,8 +64,6 @@ Player.prototype.update = function (du) {
     if (entity) {
         return this.kill();
     }
-
-
     var prevX = this.cx;
     var prevY = this.cy;
     var nextY = prevY + this.velY;
@@ -71,23 +72,20 @@ Player.prototype.update = function (du) {
        
     var accelY = NOMINAL_GRAVITY*du;
    
-    if (keys[this.KEY_JUMP] && this.cy >= entityManager._blocks[0].cy-this.getRadius()+5) {
+    if (keys[this.KEY_JUMP] && this.cy >= entityManager._blocks[0].cy-this.getRadius()*2) {
         this.jump();
     }
-    
-    this.applyAccel(accelY, du); 
-    
-    if(this.cy > entityManager._blocks[0].cy-this.getRadius()){
-        this.cy = entityManager._blocks[0].cy-this.getRadius()+5;
+    if(nextY > entityManager._blocks[0].cy-this.getRadius()*2){
+        this.cy = entityManager._blocks[0].cy-this.getRadius()*2;
     }
-
+    else{
+        this.applyAccel(accelY, du);
+    }
             if(this.shoot){
             this.spriteMode = 3;
         }
-
         //Update sprite
     this.sprite = g_sprite_cycles[this.spriteMode][this.spriteCell];
-
 
     //Manage the speed - better way of doing this ?
     if(this.animationLag > 0) this.animationLag--;
@@ -108,18 +106,21 @@ Player.prototype.update = function (du) {
 };
 
 Player.prototype.movePlayer = function (du) {
+    var prevX = this.cx;
+    var prevY = this.cy;
+    var nextX = prevX + this.velX;
+    var nextY = prevY + this.velY;
 
-   if (keys[this.KEY_LEFT]) {
+   if (keys[this.KEY_LEFT] && nextX > this.getRadius()) {
 
     if(!this.move) this.spriteCell = 0;
     this.left = true;
     this.move = true;
     this.cx -= 5*du;
     this.spriteMode = 2;
-    
 } 
 
-else if (keys[this.KEY_RIGHT]) {
+else if (keys[this.KEY_RIGHT] && nextX < 600-this.getRadius()) {
 
     if(!this.move) this.spriteCell = 0;
     this.left = false;
@@ -141,14 +142,11 @@ else {
 
 Player.prototype.maybeFire = function () {
 
-    if (eatKey(this.KEY_FIRE)) {
-
-        entityManager.fire(this.cx, this.cy);
+    if (eatKey(this.KEY_FIRE) && entityManager._Wires.length < 1) {
+        entityManager.fire(this.cx, this.cy-this.getRadius());
         if(!this.shoot) this.spriteCell = 0;
         this.shoot = true;
-
     }
-
 };
 
 Player.prototype.getRadius = function () {
@@ -168,15 +166,11 @@ Player.prototype.render = function (ctx) {
 };
 
 
-var jumphight = 3.7;
+var jumphight = 4;
 var jumphightSquared = jumphight * jumphight;
 Player.prototype.jump = function(du,nextY){
-    
-    this.velY = - jumphightSquared;
-  //  this.velY += 1.5 *du;
+    this.velY = -jumphightSquared;
     this.cy += this.velY;
-   
-    console.log(this.getRadius());
 };
 
 
