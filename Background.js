@@ -24,12 +24,16 @@ Background.prototype.cx = 0;
 Background.prototype.backgroundMode = 1;
 
 Background.prototype.update = function (du) {
-    //Update x coord for parallax 
-    if (keys[this.KEY_LEFT]) {
-        this.cx -= 2.5*du;
-    } else if (keys[this.KEY_RIGHT]) {
-        this.cx += 2.5*du;
+    
+    //Update x coord for parallax, but only if the player is moving
+    if(entityManager._players[0].move) {
+        if (keys[this.KEY_LEFT]) {
+            this.cx -= 2.5*du;
+        } else if (keys[this.KEY_RIGHT]) {
+            this.cx += 2.5*du;
+        }
     }
+
     this.maybeToggleBackground();
 
 
@@ -47,40 +51,52 @@ Background.prototype.render = function (ctx) {
 
     var cx = this.cx;
 
+
     util.clearCanvas(ctx);
 
     if(this.backgroundMode === 1){
 
-    ctx.save();
-    ctx.scale(4, 4);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkIndustrial1.drawAt(ctx, -50, 0);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkIndustrial2.drawAt(ctx, -50, 0);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkIndustrial3.drawAt(ctx, -50, 0);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkIndustrial4.drawAt(ctx, -50, 22);
+        ctx.save();
+        ctx.scale(4, 4);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkIndustrial1.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkIndustrial2.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkIndustrial3.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkIndustrial4.drawAt(ctx, -50, 22);
 
-    ctx.restore();
-}
+        ctx.restore();
+    }
 
     else {
 
-    ctx.save();
-    ctx.scale(2.75, 2.75);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkBulkhead1.drawAt(ctx, -50, 0);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkBulkhead2.drawAt(ctx, -50, 0);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkBulkhead3.drawAt(ctx, -50, 0);
-    ctx.translate(cx/60, 0);
-    g_sprites.bgkBulkhead4.drawAt(ctx, -50, 0);
+        ctx.save();
+        ctx.scale(2.75, 2.75);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkBulkhead1.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkBulkhead2.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkBulkhead3.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bgkBulkhead4.drawAt(ctx, -50, 0);
 
-    ctx.restore();
+        ctx.restore();
 
     }
+
+    //Draw the spikes
+    for(var i=0; i< 650; i+=g_sprites.spike.width){
+        ctx.beginPath();
+        ctx.save();
+        //ctx.scale(1, -1);
+        //ctx.translate(i, 0);
+        g_sprites.arrow.drawCentredAt(ctx, i, 0, 3.14);
+        ctx.restore();
+    }
+
 
 
 

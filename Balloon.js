@@ -42,7 +42,7 @@ Balloon.prototype.update = function (du) {
 
     // Simple collision detection to keep the bubbles inside the canvas 
     // Lines 45-60 i'd like to be in a function below (notOrbit).
-    if(Balloon.orbit === false){
+    if(this.orbit === false){
         if(nextY > entityManager._blocks[0].cy - this.radius/2){
             this.velY *= -1;
         }

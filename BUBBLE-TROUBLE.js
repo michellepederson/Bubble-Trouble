@@ -77,26 +77,35 @@ var g_images = {};
 function requestPreloads() {
 
     var requiredImages = {
-        bubble : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bubble_2.png",
+        bubble : "img/bubbles/bubble_2.png",
 
         //Background One
-        bkgBulkhead1 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-bulkhead/bulkhead-walls-back.png",
-        bkgBulkhead2 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-bulkhead/bulkhead-walls-pipes.png",
-        bkgBulkhead3 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-bulkhead/bulkhead-walls-platform.png",
-        bkgBulkhead4 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-bulkhead/cols.png",
+        bkgBulkhead1 : "img/bkg-bulkhead/bulkhead-walls-back.png",
+        bkgBulkhead2 : "img/bkg-bulkhead/bulkhead-walls-pipes.png",
+        bkgBulkhead3 : "img/bkg-bulkhead/bulkhead-walls-platform.png",
+        bkgBulkhead4 : "img/bkg-bulkhead/cols.png",
 
         //Background Two
-        bkgIndustrial1 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-industrial/skill-desc_0003_bg.png",
-        bkgIndustrial2 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-industrial/skill-desc_0002_far-buildings.png",
-        bkgIndustrial3 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-industrial/skill-desc_0001_buildings.png",
-        bkgIndustrial4 : "https://notendur.hi.is/~map56/T%C3%B6l308/images/bkg-industrial/skill-desc_0000_foreground.png",
+        bkgIndustrial1 : "img/bkg-industrial/skill-desc_0003_bg.png",
+        bkgIndustrial2 : "img/bkg-industrial/skill-desc_0002_far-buildings.png",
+        bkgIndustrial3 : "img/bkg-industrial/skill-desc_0001_buildings.png",
+        bkgIndustrial4 : "img/bkg-industrial/skill-desc_0000_foreground.png",
+
+        //Spokes
+        spike: "img/spike.png",
+
+        //Wire and arrow
+        wire : "img/player/chain.png",
+        arrow : "img/player/arrow.png",
 
         //Player Sprites
-        idle : "https://notendur.hi.is/map56/T%C3%B6l308/images/player/idle-sheet.png",
-        defeated : "https://notendur.hi.is/map56/T%C3%B6l308/images/player/deafeated-sheet.png",
-        run : "https://notendur.hi.is/map56/T%C3%B6l308/images/player/run.png",
-        shoot : "https://notendur.hi.is/map56/T%C3%B6l308/images/player/shoot-sheet.png",
-        swipe : "https://notendur.hi.is/map56/T%C3%B6l308/images/player/swipe-sheet.png"
+        idle : "img/player/idle-sheet.png",
+        death : "img/player/deafeated-sheet.png",
+        run : "img/player/run.png",
+        shoot : "img/player/shoot-sheet.png",
+        swipe : "img/player/swipe-sheet.png",
+        jump : "img/player/jump.png",
+        crouch : "img/player/crouch-sheet.png"
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);
@@ -123,18 +132,16 @@ function preloadDone() {
     g_sprites.bgkIndustrial3 = new Sprite(g_images.bkgIndustrial3);
     g_sprites.bgkIndustrial4 = new Sprite(g_images.bkgIndustrial4);
 
-    //Player Sprites
+    //Spikes
+    g_sprites.spike = new Sprite (g_images.spike);
 
+    //Wire and arrow
+    g_sprites.wire = new Sprite(g_images.wire);
+    g_sprites.arrow = new Sprite(g_images.arrow);
 
-
-    g_sprite_cycles = [ [], [], [], [], [], [] ];
-    var sprite;
-    var celWidth;
-    var celHeight;
-    var numCols;
-    var numRows;
-    var numCels;
-    var image;
+    //Player Animations
+    g_sprite_cycles = [ [], [], [], [], [], [], [] ];
+    var sprite, celWidth, celHeight, numCols, numRows, numCels, image, offsetX, offsetY;
 
     g_sprite_setup = [];
     g_sprite_setup[0] = {
@@ -143,7 +150,7 @@ function preloadDone() {
             numCols : 7,
             numRows : 1,
             numCels : 7,
-            spriteSheet : g_images.defeated
+            spriteSheet : g_images.death
         };
     g_sprite_setup[1] = {
             celWidth : 196,
@@ -167,7 +174,8 @@ function preloadDone() {
             numCols : 3,
             numRows : 1,
             numCels : 3,
-            spriteSheet : g_images.shoot
+            spriteSheet : g_images.shoot,
+            offsetY : -25
     };
         g_sprite_setup[4] = {
             celWidth : 251,
@@ -175,7 +183,11 @@ function preloadDone() {
             numCols : 4,
             numRows : 1,
             numCels : 4,
-            spriteSheet : g_images.swipe
+            spriteSheet : g_images.swipe,
+            offsetX : -45,
+            offsetY : -25
+    
+            
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -185,6 +197,18 @@ function preloadDone() {
             numCels : 1,
             spriteSheet : g_images.jump
     };
+
+            g_sprite_setup[6] = {
+            celWidth : 137,
+            celHeight : 162,
+            numCols : 2,
+            numRows : 1,
+            numCels : 2,
+            spriteSheet : g_images.crouch,
+            offsetY: 12
+    };
+
+
     
     for(var i = 0; i < g_sprite_setup.length; i++){
 
@@ -194,13 +218,15 @@ function preloadDone() {
          numRows = g_sprite_setup[i].numRows;
          numCels = g_sprite_setup[i].numCels;
          image = g_sprite_setup[i].spriteSheet;
+         offsetX = g_sprite_setup[i].offsetX;
+         offsetY = g_sprite_setup[i].offsetY;
 
     for (var row = 0; row < numRows; ++row) {
 
         for (var col = 0; col < numCols; ++col) {
 
             sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight) 
+                                celWidth, celHeight, offsetX, offsetY) 
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
           //  console.log(sprite);     

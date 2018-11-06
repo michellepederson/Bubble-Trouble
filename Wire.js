@@ -8,11 +8,10 @@ function Wire(descr) {
 
         // Common inherited setup logic from Entity
     this.setup(descr);
-    /*
-    for (var property in descr) {
-        this[property] = descr[property];
-    } 
-    */
+
+    this.sprite = this.sprite || g_sprites.arrow;
+    this.scale  = this.scale  || 0.5;
+
 };
 Wire.prototype = new Entity();
 // Initial, inheritable, default values
@@ -50,17 +49,38 @@ Wire.prototype.takeWireHit = function () {
     this.kill();
 };
 
+
 Wire.prototype.render = function (ctx) {
 
+    /*
 	ctx.beginPath();
     ctx.arc(this.cx,this.cy,this.radius,0,360, false);
     ctx.fillStyle = 'red';
     ctx.fill();
     ctx.stroke();
+    */
+    //Draw the arrow
+    var originalScale = this.sprite.scale;
+    this.sprite.scale = this.scale;
+    this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
+
+    //Draw the 'wire'
     
+    ctx.beginPath();
 	ctx.moveTo(this.cx, this.cy);
-    ctx.lineTo(this.cx, 510);
-    ctx.strokeStyle = 'red';
-    ctx.fill();
-	ctx.stroke();
+    g_sprites.wire.drawAt(ctx, this.cx-5, this.cy+5);
+
+     for (var i = this.cy; i < 475; i+= g_sprites.wire.height){
+        g_sprites.wire.drawAt(ctx, this.cx-5, i);
+    }
+
+
+
+    //g_sprites.wire.drawAt(ctx, this.cx-5, this.cy+5);
+    //ctx.strokeStyle = 'red';
+   // ctx.fill();
+	//ctx.stroke();
+    
+
+
 };
