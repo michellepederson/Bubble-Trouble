@@ -63,18 +63,19 @@ if(this.spriteMode!==0){
 this.movePlayer(du);
 // Shoot wire or swing sword
 this.maybeAttack();
-// Check if player has been hit
-var entity = this.findHitEntity();
-if (entity) {
-    this.spriteMode = 0;
-    this.spriteCell = 0;
-}
 
 this.maybeJump(du);
 
 }
 //Update sprite to next animation frame
 this.spriteUpdate();
+
+// Check if player has been hit
+var entity = this.findHitEntity();
+if (entity) {
+    this.spriteMode = 0;
+    this.spriteCell = 0;
+}
 
 //Check for death and re-register
 if(!this._isDeadNow){
