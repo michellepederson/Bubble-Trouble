@@ -14,15 +14,22 @@
 
 // Construct a "sprite" from the given `image`,
 //
-function Sprite(image, sx, sy, width, height) {
+function Sprite(image, sx, sy, width, height, offsetX, offsetY) {
+    if(offsetX === undefined) offsetX = 0;
+    if(offsetY === undefined) offsetY = 0;
+
     if(sx === undefined || sy === undefined){
         sx = 0;
         sy = 0;
     }
+
     this.image = image;
 
     this.sx = sx;
     this.sy = sy;
+
+    this.offsetX = offsetX;
+    this.offsetY = offsetY;
 
     if(width === undefined || height === undefined){
         this.width = image.width;
@@ -33,17 +40,18 @@ function Sprite(image, sx, sy, width, height) {
     this.height = height;
     }
     this.scale = 1;
-}
+};
 
 Sprite.prototype.drawAt = function (ctx, x, y) {
 
-        ctx.drawImage(this.image, 
+     ctx.drawImage(this.image, 
                   this.sx, this.sy, this.width, this.height,
                   x, y, this.width, this.height);
 
 };
 
-Sprite.prototype.drawSpriteAt = function (ctx, x, y, scale, player) {
+Sprite.prototype.drawSpriteAt = function (ctx, x, y, scale, player) {    
+
     ctx.save();
    
     if(player.left){
@@ -56,8 +64,8 @@ Sprite.prototype.drawSpriteAt = function (ctx, x, y, scale, player) {
     }
     ctx.drawImage(this.image, 
                   this.sx, this.sy, this.width, this.height,
-                  x - this.width/2, y - this.height/2, this.width, this.height);
-        ctx.restore();
+                  x - this.width/2 + this.offsetX, y - this.height/2 +this.offsetY, this.width, this.height);
+    ctx.restore();
 };
 
 Sprite.prototype.drawCentredAt = function (ctx, cx, cy, rotation) {
