@@ -90,6 +90,7 @@ Player.prototype.checkForDeath = function (ent) {
     return;
   } else {
     if (Player.prototype.lives === 1) {
+      Player.prototype.lives -= 1;
       this.spriteMode = 0;
       this.spriteCell = 0;
     } else {

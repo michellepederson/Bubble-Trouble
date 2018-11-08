@@ -56,6 +56,7 @@ Balloon.prototype.update = function (du) {
             if(Balloon.orbit){
         }
         else{
+            scores.raisePoints();
             return entityManager.KILL_ME_NOW;
         }
     }
@@ -73,7 +74,6 @@ Balloon.prototype.update = function (du) {
         var accelY = Balloon.NOMINAL_GRAVITY*du;
         this.applyAccel(accelY, du);
     }
-
 
 
     if(!this._isDeadNow){
