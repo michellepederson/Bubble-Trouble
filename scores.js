@@ -19,12 +19,16 @@ scores.raisePoints = function() {
 
 scores.prototype.update = function (du) {
   ctx.fillText(scores.prototype.points,500,560);
+  ctx.fillText(Player.prototype.lives,200,565);
+
 };
 
 scores.prototype.render = function (ctx) {
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
-    ctx.fillText("Score: ",400,560);
-    ctx.fillText(scores.prototype.points,500,560);
+    ctx.fillText("Score: ",400,565);
+    ctx.fillText(scores.prototype.points,500,565);
+    ctx.fillText("Lives:",30,565);
+    ctx.fillText(Player.prototype.lives,120,565);
     ctx.fillStyle = "black";
 };
