@@ -158,7 +158,6 @@ Balloon.prototype.setEarthPosition = function(){
     // increase speed and reduce distance to black hole if bubbles are popped. 
     if(this.scale === 1){
         this.cx += 25;
-     
     }
     else if(this.scale === 0.5){
         this.earthSpeed = 0.05;

@@ -32,7 +32,7 @@ _players  : [],
 _bullets : [],
 _blocks : [],
 _balloons : [],
-
+_bricks : [],
 
 _forEachOf: function(aCategory, fn) {
     for (var i = 0; i < aCategory.length; ++i) {
@@ -51,14 +51,13 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons];
+    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons, this._bricks];
 },
 
 init: function() {
 },
 
 fire: function(cx, cy) {
-
     this._categories[2].push(
         new Wire({
             cx,
@@ -89,15 +88,34 @@ generateGround : function(cx,cy, halfWidth,halfHeight) {
             halfWidth,
             halfHeight,
         }));
-    
     return cy + halfHeight;
 },
 
-
 generateBalloon : function(descr, g_mouseX, g_mouseY) {
-
     var entity = new Balloon(descr);
     this._categories[5].push(entity);
+},
+
+
+brick : function(cx, cy,status) {
+    
+   // var brickk = new Brick();
+  //  this._bricks.push(new Brick({cx, cy, status}));
+
+
+   this._bricks.push(
+        new Brick({
+            cx,
+            cy,
+            status,
+        })
+    );
+   
+   /*
+    var entity = new Brick(descr);
+    this._categories[6].push(entity);
+*/
+   //console.log("NEW BRICK");
 },
 
 resetBubbles: function() {

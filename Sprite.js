@@ -35,11 +35,14 @@ function Sprite(image, sx, sy, width, height, offsetX, offsetY) {
         this.width = image.width;
         this.height = image.height;
     }
+
     else {
     this.width = width;
     this.height = height;
+    //console.log("asdd " , width,height);
     }
     this.scale = 1;
+   console.log(this.image,this.height,this.width,this.sx,this.sy);
 };
 
 Sprite.prototype.drawAt = function (ctx, x, y) {

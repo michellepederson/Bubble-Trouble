@@ -15,8 +15,8 @@ Block.prototype.cx = 200;
 Block.prototype.cy = 200;
     
 Block.prototype.update = function (du) {
-};
 
+};
 
 Block.prototype.render = function (ctx) {
     ctx.fillStyle = 'black';

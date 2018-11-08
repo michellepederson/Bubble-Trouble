@@ -19,6 +19,15 @@ function init() {
     var ground_edge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generatePlayer(cx, ground_edge);
     entityManager.generateBackground();
+    //entityManager.brick(300, 200,1);
+    var brickwidth = 60;
+    var brickheight = 40;
+    var brickOffsetTop = 100;
+    for(var i = 0; i < 10; i++){
+        for(var j = 0; j < 10; j++){
+             entityManager.brick(j*brickwidth, (i*brickheight) + brickOffsetTop , 0);
+        }
+    }
 }
 
 // GATHER INPUTS
