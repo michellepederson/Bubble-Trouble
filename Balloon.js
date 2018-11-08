@@ -9,7 +9,7 @@ function Balloon(descr) {
     /*
     for (var property in descr) {
         this[property] = descr[property];
-    } 
+    }
     */
     this.sprite = this.sprite || g_sprites.bubble;
     this.scale  = this.scale  || 1;
@@ -38,9 +38,9 @@ Balloon.prototype.update = function (du) {
     var prevY = this.cy;
     var nextX = prevX + this.velX;
     var nextY = prevY + this.velY;
-   
 
-    // Simple collision detection to keep the bubbles inside the canvas 
+
+    // Simple collision detection to keep the bubbles inside the canvas
     // Lines 45-60 i'd like to be in a function below (notOrbit).
     if(this.orbit === false){
         if(nextY > entityManager._blocks[0].cy - this.radius/2){
@@ -64,7 +64,7 @@ Balloon.prototype.update = function (du) {
     if(eatKey(KEY_GRAVITY)){
         Balloon.orbit =  !Balloon.orbit;
     }
-    
+
     if(Balloon.orbit){
         this.gravityOn();
     }
@@ -73,9 +73,9 @@ Balloon.prototype.update = function (du) {
         var accelY = Balloon.NOMINAL_GRAVITY*du;
         this.applyAccel(accelY, du);
     }
-       
 
-    
+
+
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
@@ -83,6 +83,7 @@ Balloon.prototype.update = function (du) {
 
 Balloon.prototype.takeWireHit = function () {
     this.kill();
+    scores.raisePoints();
     if (this.scale > 0.25) {
         this._spawnFragment();
         this._spawnFragment();
@@ -110,9 +111,9 @@ Balloon.prototype.getRadius = function () {
 Balloon.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;
-    
-    this.velY += accelY * du; 
- 
+
+    this.velY += accelY * du;
+
     var aveVelY = (oldVelY + this.velY) / 2;
 
     this.cx += du * this.velX;
@@ -120,7 +121,7 @@ Balloon.prototype.applyAccel = function(accelY, du) {
 }
 
 Balloon.prototype.render = function (ctx) {
-   
+
     if(Balloon.orbit){
         this.drawBlackHole();
     }
@@ -154,11 +155,11 @@ Balloon.prototype.setEarthPosition = function(){
     //find next cx/cy coordinates of the orbit
     this.cx = planetX + Math.cos(this.earthRadians) * this.dist;
     this.cy = planetY + Math.sin(this.earthRadians) * this.dist;
-        
-    // increase speed and reduce distance to black hole if bubbles are popped. 
+
+    // increase speed and reduce distance to black hole if bubbles are popped.
     if(this.scale === 1){
         this.cx += 25;
-     
+
     }
     else if(this.scale === 0.5){
         this.earthSpeed = 0.05;
@@ -168,7 +169,7 @@ Balloon.prototype.setEarthPosition = function(){
         this.dist = 80;
 
     }
-   
+
 }
 //if gravity is toggled draw the black hole
 Balloon.prototype.drawBlackHole = function(){
