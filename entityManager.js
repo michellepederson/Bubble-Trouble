@@ -17,7 +17,7 @@ with suitable 'data' and 'methods'.
 
 
 // Tell jslint not to complain about my use of underscore prefixes (nomen),
-// my flattening of some indentation (white), or my use of incr/decr ops
+// my flattening of some indentation (white), or my use of incr/decr ops 
 // (plusplus).
 //
 /*jslint nomen: true, white: true, plusplus: true*/
@@ -32,6 +32,7 @@ _players  : [],
 _bullets : [],
 _blocks : [],
 _balloons : [],
+_bricks : [],
 _scores : [],
 
 
@@ -52,14 +53,13 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._scores, this._blocks, this._balloons];
+    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons, this._bricks, this._scores];
 },
 
 init: function() {
 },
 
 fire: function(cx, cy) {
-
     this._categories[2].push(
         new Wire({
             cx,
@@ -90,9 +90,9 @@ generateGround : function(cx,cy, halfWidth,halfHeight) {
             halfWidth,
             halfHeight,
         }));
-
     return cy + halfHeight;
 },
+
 
 generateScores : function(descr) {
   this._scores.push(new scores(descr));
@@ -100,9 +100,30 @@ generateScores : function(descr) {
 
 
 generateBalloon : function(descr, g_mouseX, g_mouseY) {
-
     var entity = new Balloon(descr);
     this._categories[5].push(entity);
+},
+
+
+brick : function(cx, cy,status) {
+    
+   // var brickk = new Brick();
+  //  this._bricks.push(new Brick({cx, cy, status}));
+
+
+   this._bricks.push(
+        new Brick({
+            cx,
+            cy,
+            status,
+        })
+    );
+   
+   /*
+    var entity = new Brick(descr);
+    this._categories[6].push(entity);
+*/
+   //console.log("NEW BRICK");
 },
 
 resetBubbles: function() {
@@ -111,7 +132,7 @@ resetBubbles: function() {
 
 haltBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.halt);
-},
+},	
 
 update: function(du) {
     for (var c = 0; c < this._categories.length; ++c) {
@@ -154,3 +175,4 @@ render: function(ctx) {
 
 // Some deferred setup which needs the object to have been created first
 entityManager.deferredSetup();
+

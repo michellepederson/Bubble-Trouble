@@ -20,20 +20,29 @@ function init() {
     entityManager.generateScores();
     entityManager.generatePlayer(cx, ground_edge);
     entityManager.generateBackground();
+    //entityManager.brick(300, 200,1);
+    var brickwidth = 60;
+    var brickheight = 40;
+    var brickOffsetTop = 100;
+    for(var i = 0; i < 10; i++){
+        for(var j = 0; j < 10; j++){
+             entityManager.brick(j*brickwidth, (i*brickheight) + brickOffsetTop , 0);
+        }
+    }
 }
 
 // GATHER INPUTS
 
 function gatherInputs() {
 }
-
-
+		
+			
 // GAME-SPECIFIC UPDATE LOGIC
-
+			
 function updateSimulation(du) {
 
     processDiagnostics();
-
+    
     entityManager.update(du);
 
 }
@@ -92,7 +101,7 @@ function requestPreloads() {
         bkgIndustrial3 : "img/bkg-industrial/skill-desc_0001_buildings.png",
         bkgIndustrial4 : "img/bkg-industrial/skill-desc_0000_foreground.png",
 
-        //Spikes
+        //Spokes
         spike: "img/spike.png",
 
         //Wire and arrow
@@ -187,8 +196,8 @@ function preloadDone() {
             spriteSheet : g_images.swipe,
             offsetX : -45,
             offsetY : -25
-
-
+    
+            
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -210,7 +219,7 @@ function preloadDone() {
     };
 
 
-
+    
     for(var i = 0; i < g_sprite_setup.length; i++){
 
          celWidth  = g_sprite_setup[i].celWidth;
@@ -227,10 +236,10 @@ function preloadDone() {
         for (var col = 0; col < numCols; ++col) {
 
             sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight, offsetX, offsetY)
+                                celWidth, celHeight, offsetX, offsetY) 
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);
+          //  console.log(sprite);     
 
         }
     }
