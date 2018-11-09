@@ -11,6 +11,9 @@ function Brick(descr) {
         this[property] = descr[property];
     } 
     */
+
+    this.sprite = this.sprite || g_sprites.platform;
+    
 };
 
 Brick.prototype = new Entity();
@@ -52,8 +55,9 @@ Brick.prototype.render = function (ctx) {
 	
 	for(var i = 0; i < entityManager._bricks.length; i++ ){
 		if(entityManager._bricks[i].status === 1){
-			 ctx.fillStyle = 'black';
-   			 ctx.fillRect(entityManager._bricks[i].cx, entityManager._bricks[i].cy, 60, 40);
+			 //ctx.fillStyle = 'black';
+   			 //ctx.fillRect(entityManager._bricks[i].cx, entityManager._bricks[i].cy, 60, 40);
+   			 this.sprite.drawAt(ctx, entityManager._bricks[i].cx, entityManager._bricks[i].cy, 0);
 		}
 	}
 };

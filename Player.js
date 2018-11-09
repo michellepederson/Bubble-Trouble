@@ -304,9 +304,11 @@ Player.prototype.maybeJump = function (du) {
 
     }
     else{
+        if(this.velY !== 0){
+            this.spriteMode = 5;
+            this.spriteCell = 0;
+        }
         this.applyAccel(accelY, du);
-        this.spriteMode = 5;
-        this.spriteCell = 0;
     }
 }
 
