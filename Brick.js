@@ -98,7 +98,6 @@ Brick.prototype.isStatus = function(){
 			entityManager._bricks[82].status = 1;
 			entityManager._bricks[87].status = 1;
 			entityManager._bricks[97].status = 1;
-    		console.log("sadas");
 }
 
 

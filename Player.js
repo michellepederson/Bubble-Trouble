@@ -25,7 +25,7 @@ this.reset_rotation = this.rotation;
 
 Player.prototype.KEY_LEFT   = 'A'.charCodeAt(0);
 Player.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
-Player.prototype.KEY_FIRE   = ' '.charCodeAt(0);
+//Player.prototype.KEY_FIRE   = ' '.charCodeAt(0);
 Player.prototype.KEY_JUMP   = 'W'.charCodeAt(0);
 Player.prototype.KEY_CROUCH = 'S'.charCodeAt(0);
 Player.prototype.KEY_SWORD = 'Z'.charCodeAt(0);
@@ -45,6 +45,7 @@ Player.prototype.shoot = false;
 Player.prototype.spriteMode = 1;
 Player.prototype.lives = 3;
 Player.prototype.lastEnt;
+Player.prototype.isPowerUP = false;
 
 //var NOMINAL_GRAVITY = 0.12;
 
@@ -60,11 +61,9 @@ if(this._isDeadNow && Player.prototype.lives === 0){
 }
 
 
-
-
 if(this.spriteMode!==0){
 
-this.movePlayer(du);
+    this.movePlayer(du);
 // Shoot wire or swing sword
 this.maybeAttack();
 
@@ -76,9 +75,9 @@ this.spriteUpdate();
 
 // Check if player has been hit
 var entity = this.findHitEntity();
-  if (entity) {
+if (entity) {
     this.checkForDeath(entity);
-  }
+}
 
 //Check for death and re-register
 if(!this._isDeadNow){
@@ -92,15 +91,15 @@ if(!this._isDeadNow){
 Player.prototype.checkForDeath = function (ent) {
   if (ent === this.lastEnt) {
     return;
-  } else {
+} else {
     if (Player.prototype.lives === 1) {
       this.spriteMode = 0;
       this.spriteCell = 0;
-    } else {
+  } else {
       Player.prototype.lives -= 1;
       this.lastEnt = ent;
-    }
   }
+}
 };
 
 
@@ -126,10 +125,10 @@ Player.prototype.movePlayer = function (du) {
         this.spriteMode = 2;
 
            // console.log("not working");
-        
-        }
 
-    
+       }
+
+
     //If moving right, make sure player stays within screen
     else if (keys[this.KEY_RIGHT] && nextX < 600-this.getRadius()) {
 
@@ -162,42 +161,41 @@ Player.prototype.movePlayer = function (du) {
     var playerHMiddle = this.cx;
     var playerVMiddle = this.cy;
 
-      for(var n = 0; n < entityManager._bricks.length; n++){
-           // console.log(nextY + this.getRadius(), entityManager._bricks[n].cy);
+    for(var n = 0; n < entityManager._bricks.length; n++){
+
         if(entityManager._bricks[n].status === 1){
             var temp = entityManager._bricks[n].cy;
             //console.log(prevX,this.cx, entityManager._bricks[n].cx);
             //falling/walking on bricks collision
             if((nextY + 50 > entityManager._bricks[n].cy &&
-                     nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
+               nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
 
-                    ((this.cx - 20 > entityManager._bricks[n].cx && 
-                        this.cx - 20 < entityManager._bricks[n].cx + brickwidth)||
-                        (this.cx + 20 > entityManager._bricks[n].cx &&
-                        this.cx + 20 < entityManager._bricks[n].cx + brickwidth))){    
+                ((this.cx - 20 > entityManager._bricks[n].cx && 
+                    this.cx - 20 < entityManager._bricks[n].cx + brickwidth)||
+                (this.cx + 20 > entityManager._bricks[n].cx &&
+                    this.cx + 20 < entityManager._bricks[n].cx + brickwidth))){    
 
                 this.velY = 0;
-                this.cy = temp-50;
+            this.cy = temp-50;
             
-                if (keys[this.KEY_JUMP]){
-                    this.jump(du,nextY);
-                } 
-               // console.log("ofan á");
-                return;
-            }
-            
+            if (keys[this.KEY_JUMP]){
+                this.jump(du,nextY);
+            } 
+            return;
+        }
+
             // jumping under bricks collision
             else if((nextY - 50 < entityManager._bricks[n].cy + 40 && 
-                     nextY - 50 > entityManager._bricks[n].cy) &&
+               nextY - 50 > entityManager._bricks[n].cy) &&
 
-                    ((this.cx + 20 > entityManager._bricks[n].cx && 
-                      this.cx - 20 < entityManager._bricks[n].cx + 60))){
+                ((this.cx + 20 > entityManager._bricks[n].cx && 
+                  this.cx - 20 < entityManager._bricks[n].cx + 60))){
 
                 this.cy = entityManager._bricks[n].cy + 41 + 50; 
-                this.velY = 0;
-            //console.log("undir");
-                return;
-            }
+            this.velY = 0;
+            return;
+        }
+
             //Bricks on left collision
             else if(this.cx - 20 < entityManager._bricks[n].cx + 60 && this.cx + 20 > entityManager._bricks[n].cx + 60){
 
@@ -205,14 +203,13 @@ Player.prototype.movePlayer = function (du) {
                     this.cy - 20 <  entityManager._bricks[n].cy) ||
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
-                     this.cy - 20 < entityManager._bricks[n].cy+40)){
-                        this.cx = entityManager._bricks[n].cx + 61+20;
-                        this.velY = 0;
-                        this.cy = prevY-0.4;
-                        return;
-                }
+                       this.cy - 20 < entityManager._bricks[n].cy+40)){
+                    this.cx = entityManager._bricks[n].cx + 61+20;
+                this.velY = 0;
+                this.cy = prevY-0.4;
+                return;
             }
-
+        }
 
             // Bricks on right colision
             else if(this.cx + 20 > entityManager._bricks[n].cx  && this.cx < entityManager._bricks[n].cx){
@@ -221,14 +218,13 @@ Player.prototype.movePlayer = function (du) {
                     this.cy - 20 <  entityManager._bricks[n].cy) ||
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
-                     this.cy - 20 < entityManager._bricks[n].cy+40)){
-                        this.cx = entityManager._bricks[n].cx-21;
-                        this.velY = 0;
-                        this.cy = prevY-0.4;
-                        return;
-                }
+                       this.cy - 20 < entityManager._bricks[n].cy+40)){
+                    this.cx = entityManager._bricks[n].cx-21;
+                this.velY = 0;
+                this.cy = prevY-0.4;
+                return;
             }
-                
+        }    
             /*
             if (playerVMiddle > entityManager._bricks[n].cy && playerVMiddle < entityManager._bricks[n].cy+40) { // If player vertical-middle is inside block vertical bounds
                 if ((this.cx + 50 > entityManager._bricks[n].cx && this.cx + 50  < entityManager._bricks[n].cx + 60)) { // If player vmiddle-right goes through block-left
@@ -262,22 +258,51 @@ Player.prototype.movePlayer = function (du) {
                this.cx = entityManager._bricks[n].cx - 1;
                return;
             }
-        */
+            */
         }
     }
+};
+Player.prototype.getPower = function () {
+
+    if(entityManager._power.length > 0){
+
+        for(var i = 0; i < entityManager._power.length; i++){
+
+            var PlayerDist = util.distSq(this.cx, this.cy, entityManager._power[i].cx, entityManager._power[i].cy);
+            var limit = util.square(20 + 40);
+
+            if(limit > PlayerDist){
+                this.isPowerUP = true;
+            }
+            console.log(PlayerDist, limit,this.isPowerUP);
+        }  
+    }
+    return this.isPowerUP;
 };
 
 
 
+var KEY_FIRE = keyCode(' ');
+//var KEY_GRAVITY = keyCode('G');
 Player.prototype.maybeAttack = function () {
 
-    if (eatKey(this.KEY_FIRE) && entityManager._Wires.length < 1) {
-        entityManager.fire(this.cx, this.cy-this.getRadius());
-        if(!this.shoot) this.spriteCell = 0;
-        this.shoot = true;
-    }
+    //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
 
-    if(eatKey(this.KEY_SWORD)) {
+    this.getPower();
+
+    if (eatKey(KEY_FIRE)){
+        if(entityManager._Wires.length < 1 || this.isPowerUP){
+            entityManager.fire(this.cx, this.cy-this.getRadius());
+            console.log(this.isPowerUP, 69);
+        }
+        if(!this.shoot){
+            this.spriteCell = 0;
+        }
+        else{
+           this.shoot = true;
+       }    
+
+       if(eatKey(this.KEY_SWORD)) {
         this.spriteMode = 4;
         this.spriteCell = 0;
     }
@@ -285,6 +310,7 @@ Player.prototype.maybeAttack = function () {
     if(this.shoot){
         this.spriteMode = 3;
     }
+}
 };
 
 Player.prototype.maybeJump = function (du) {
@@ -333,7 +359,7 @@ Player.prototype.spriteUpdate = function () {
             this.spriteCell = 0;
         }
     } 
-}
+};
 
 Player.prototype.getRadius = function () {
     return 20;
@@ -353,7 +379,7 @@ Player.prototype.render = function (ctx) {
 };
 
 
-var jumphight = 4.5;
+var jumphight = 3.8;
 var jumphightSquared = jumphight * jumphight;
 
 Player.prototype.jump = function(du,nextY){
@@ -397,8 +423,8 @@ Player.prototype.PlayerToBrickCollision = function(ctx){
 
 Player.prototype.drawcenter = function(ctx){
 
-             ctx.beginPath();
-             ctx.fillStyle = 'black';
-             ctx.rect(this.cx-25, this.cy-50, 50, 100);
-             ctx.fill();
+   ctx.beginPath();
+   ctx.fillStyle = 'black';
+   ctx.rect(this.cx-25, this.cy-50, 50, 100);
+   ctx.fill();
 }

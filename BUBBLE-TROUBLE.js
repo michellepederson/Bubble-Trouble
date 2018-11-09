@@ -20,6 +20,7 @@ function init() {
     entityManager.generateScores();
     entityManager.generatePlayer(cx, ground_edge);
     entityManager.generateBackground();
+
     //entityManager.brick(300, 200,1);
     var brickwidth = 60;
     var brickheight = 40;

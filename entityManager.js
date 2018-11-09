@@ -34,7 +34,7 @@ _blocks : [],
 _balloons : [],
 _bricks : [],
 _scores : [],
-
+_power : [],
 
 _forEachOf: function(aCategory, fn) {
     for (var i = 0; i < aCategory.length; ++i) {
@@ -53,7 +53,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons, this._bricks, this._scores];
+    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons, this._bricks, this._scores, this._power];
 },
 
 init: function() {
@@ -93,23 +93,16 @@ generateGround : function(cx,cy, halfWidth,halfHeight) {
     return cy + halfHeight;
 },
 
-
 generateScores : function(descr) {
   this._scores.push(new scores(descr));
 },
-
 
 generateBalloon : function(descr, g_mouseX, g_mouseY) {
     var entity = new Balloon(descr);
     this._categories[5].push(entity);
 },
 
-
 brick : function(cx, cy,status) {
-    
-   // var brickk = new Brick();
-  //  this._bricks.push(new Brick({cx, cy, status}));
-
 
    this._bricks.push(
         new Brick({
@@ -118,13 +111,13 @@ brick : function(cx, cy,status) {
             status,
         })
     );
-   
-   /*
-    var entity = new Brick(descr);
-    this._categories[6].push(entity);
-*/
-   //console.log("NEW BRICK");
 },
+
+generatePowerUp : function(cx, cy) {
+    var entity = new powerUp(cx,cy);
+    this._categories[8].push(entity);
+},
+
 
 resetBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.reset);

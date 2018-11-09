@@ -27,6 +27,10 @@ Balloon.prototype.velY = 1;
 Balloon.prototype.direction = 1;
 Balloon.prototype.orbit = false;
 Balloon.prototype.NOMINAL_GRAVITY = 0.12;
+Balloon.prototype.powerRandom = 0;
+
+
+
 
 Balloon.prototype.update = function (du) {
 
@@ -73,17 +77,34 @@ Balloon.prototype.update = function (du) {
         var accelY = Balloon.NOMINAL_GRAVITY*du;
         this.applyAccel(accelY, du);
     }
-       
-
     
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
 };
 
-Balloon.prototype.takeWireHit = function () {
+var pow;
+Balloon.prototype.isItPowerup = function(){
+    pow = util.randRange(1, 1000);
+   // console.log(pow);
+     if(pow > 500){
+        //console.log(pow);
+        entityManager.generatePowerUp({
+            cx : this.cx,
+            cy : this.cy,
+        });
+
+    }
+}
+
+
+
+Balloon.prototype.takeWireHit = function (pow) {
+   
+    this.isItPowerup();
     this.kill();
     scores.raisePoints();
+
     if (this.scale > 0.25) {
         this._spawnFragment();
         this._spawnFragment();

@@ -22,5 +22,6 @@ Bullet.prototype.takeBulletHit = function () {
 };
 
 Bullet.prototype.render = function (ctx) {
+	
 };
 
