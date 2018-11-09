@@ -17,6 +17,7 @@ function init() {
                                     //g_canvas.width/2 - ground_y - halfWidth   -     halfHeight
     var padding = 100;
     var ground_edge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
+    entityManager.generateScores();
     entityManager.generatePlayer(cx, ground_edge);
     entityManager.generateBackground();
 }
@@ -25,14 +26,14 @@ function init() {
 
 function gatherInputs() {
 }
-		
-			
+
+
 // GAME-SPECIFIC UPDATE LOGIC
-			
+
 function updateSimulation(du) {
 
     processDiagnostics();
-    
+
     entityManager.update(du);
 
 }
@@ -91,7 +92,7 @@ function requestPreloads() {
         bkgIndustrial3 : "img/bkg-industrial/skill-desc_0001_buildings.png",
         bkgIndustrial4 : "img/bkg-industrial/skill-desc_0000_foreground.png",
 
-        //Spokes
+        //Spikes
         spike: "img/spike.png",
 
         //Wire and arrow
@@ -186,8 +187,8 @@ function preloadDone() {
             spriteSheet : g_images.swipe,
             offsetX : -45,
             offsetY : -25
-    
-            
+
+
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -209,7 +210,7 @@ function preloadDone() {
     };
 
 
-    
+
     for(var i = 0; i < g_sprite_setup.length; i++){
 
          celWidth  = g_sprite_setup[i].celWidth;
@@ -226,10 +227,10 @@ function preloadDone() {
         for (var col = 0; col < numCols; ++col) {
 
             sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight, offsetX, offsetY) 
+                                celWidth, celHeight, offsetX, offsetY)
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);     
+          //  console.log(sprite);
 
         }
     }

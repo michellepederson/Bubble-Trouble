@@ -43,45 +43,61 @@ Player.prototype.left = true;
 Player.prototype.move = false;
 Player.prototype.shoot = false;
 Player.prototype.spriteMode = 1;
+Player.prototype.lives = 3;
+Player.prototype.lastEnt;
 
 
 //var NOMINAL_GRAVITY = 0.12;
 
 Player.prototype.update = function (du) {
+  //Unregister
+  spatialManager.unregister(this);
 
-//Unregister
-spatialManager.unregister(this);
+  //Quit game if the player dies
+  if(this._isDeadNow){
+      return main.gameOver();
+      return -1;
+  }
 
-//Quit game if the player dies
-if(this._isDeadNow){
-    return main.gameOver();
-    return -1;
-}
+  if(this.spriteMode!==0){
 
-if(this.spriteMode!==0){
+  this.movePlayer(du);
+  // Shoot wire or swing sword
+  this.maybeAttack();
 
-this.movePlayer(du);
-// Shoot wire or swing sword
-this.maybeAttack();
+  this.maybeJump(du);
 
-this.maybeJump(du);
+  }
+  //Update sprite to next animation frame
+  this.spriteUpdate();
 
-}
-//Update sprite to next animation frame
-this.spriteUpdate();
+  // Check if player has been hit
+  var entity = this.findHitEntity();
+  if (entity) {
+    this.checkForDeath(entity);
+  }
 
-// Check if player has been hit
-var entity = this.findHitEntity();
-if (entity) {
-    this.spriteMode = 0;
-    this.spriteCell = 0;
-}
-
-//Check for death and re-register
-if(!this._isDeadNow){
-    spatialManager.register(this);
-}
+  //Check for death and re-register
+  if(!this._isDeadNow){
+      spatialManager.register(this);
+  }
 };
+
+// Works but each balloon can only take one life in a row.
+// Probably shouldn't be a problem for gameplay
+Player.prototype.checkForDeath = function (ent) {
+  if (ent === this.lastEnt) {
+    return;
+  } else {
+    if (Player.prototype.lives === 1) {
+      this.spriteMode = 0;
+      this.spriteCell = 0;
+    } else {
+      Player.prototype.lives -= 1;
+      this.lastEnt = ent;
+    }
+  }
+}
 
 Player.prototype.movePlayer = function (du) {
     var prevX = this.cx;
@@ -103,7 +119,7 @@ Player.prototype.movePlayer = function (du) {
         this.move = true;
         this.cx -= 5*du;
         this.spriteMode = 2;
-    } 
+    }
     //If moving right, make sure player stays within screen
     else if (keys[this.KEY_RIGHT] && nextX < 600-this.getRadius()) {
 
@@ -182,16 +198,16 @@ Player.prototype.spriteUpdate = function () {
         ++this.spriteCell;
         this.animationLag = 5;
 
-        if (this.spriteCell === g_sprite_cycles[this.spriteMode].length){ 
+        if (this.spriteCell === g_sprite_cycles[this.spriteMode].length){
             //If sprite is in death animation cycle, kill once he reaches the end of the animation.
             if(this.spriteMode === 0) return this.kill();
             //Likewise if sprite is in sword slashing animation cycle, return to idle once animation is complete.
             if(this.spriteMode === 4) this.spriteMode = 1;
             if(this.shoot) this.shoot = false;
-            //Reset to beginning of whatever animation cycle you are in 
+            //Reset to beginning of whatever animation cycle you are in
             this.spriteCell = 0;
         }
-    } 
+    }
 }
 
 Player.prototype.getRadius = function () {
@@ -224,7 +240,7 @@ Player.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;
 
-    this.velY += accelY * du; 
+    this.velY += accelY * du;
 
     var aveVelY = (oldVelY + this.velY) / 2;
 

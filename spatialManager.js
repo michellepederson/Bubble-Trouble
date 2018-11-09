@@ -97,7 +97,7 @@ var ent;
 var lim;
 var dist2;
 var lim2;
-//Loop through all the entities andcheck them for collision
+//Loop through all the entities and check them for collision
 for(var i = 0; i < this._entities.length; i++){
     if (this._entities[i] === undefined){
         //if the place in the _entity array is undefined then do nothing, just skip it
@@ -109,7 +109,7 @@ for(var i = 0; i < this._entities.length; i++){
             halfwidth = ent.getRadius();
             //find the distance between the center of the objects (treating them like a circle)
             // distance = Math.sqrt(((posX - ent.cx) * (posX - ent.cx)) + ((posY - ent.cy) * (posY - ent.cy)));
-            distance = util.distSq(posX, posY, ent.cx, ent.cy);   
+            distance = util.distSq(posX, posY, ent.cx, ent.cy);
             //Fæ ekki radius og halfwidth inn svo ég setti gildin bara inn manually
             //til að sjá hvort þetta virkar.
             lim = util.square(radius + halfwidth*2);
@@ -121,20 +121,20 @@ for(var i = 0; i < this._entities.length; i++){
         }
    }
 }
-// This compares every bubble to every wire. If ent is usued above instead then that compares also to the player and 
+// This compares every bubble to every wire. If ent is used above instead then that compares also to the player and
 // they collide and the player is killed becouse of the wire or wire ball.
 // what's a better way to do this?
 for(var j = 0; j < entityManager._balloons.length; j++){
             for(var k = 0; k < entityManager._Wires.length; k++){
-                
-                var  dist3 = util.distSq(entityManager._balloons[j].cx, 
-                                        entityManager._balloons[j].cy, 
-                                        entityManager._Wires[k].cx, 
-                                        entityManager._balloons[j].cy);
+
+                var  dist3 = util.distSq(entityManager._balloons[j].cx,
+                                        entityManager._balloons[j].cy,
+                                        entityManager._Wires[k].cx,
+                                        entityManager._Wires[k].cy);
                 // big bubble limit
                 if(entityManager._balloons[j].scale === 1){
                     var  lim3 = util.square(entityManager._balloons[j].radius);
-                }                
+                }
                 //medium bubble limit, adjust to scale
                 if(entityManager._balloons[j].scale === 0.5){
                      var  lim3 = util.square(entityManager._balloons[j].radius*entityManager._balloons[j].scale);
@@ -144,7 +144,7 @@ for(var j = 0; j < entityManager._balloons.length; j++){
                     var  lim3 = util.square(entityManager._balloons[j].radius*entityManager._balloons[j].scale);
                 }
                 //Check if the bubble has collided with the wire
-                if(dist3 < lim3 &&  entityManager._balloons[j].cy > entityManager._Wires[k].cy){
+                if(dist3 < lim3 && entityManager._balloons[j].cy > entityManager._Wires[k].cy){
                     return entityManager._balloons[j];
                 }
             }
@@ -157,7 +157,7 @@ return false;
 render: function(ctx) {
     var oldStyle = ctx.strokeStyle;
     ctx.strokeStyle = "red";
-    
+
     for (var ID in this._entities) {
         var e = this._entities[ID];
         util.strokeCircle(ctx, e.posX, e.posY, e.radius);
