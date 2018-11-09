@@ -80,7 +80,7 @@ function renderSimulation(ctx) {
 }
 
 
-// PRELOAD
+/// PRELOAD
 
 var g_images = {};
 
@@ -107,6 +107,9 @@ function requestPreloads() {
         //Wire and arrow
         wire : "img/player/chain.png",
         arrow : "img/player/arrow.png",
+
+        //Platform
+        platform : "img/tile_cave_platform.png",
 
         //Player Sprites
         idle : "img/player/idle-sheet.png",
@@ -148,6 +151,9 @@ function preloadDone() {
     //Wire and arrow
     g_sprites.wire = new Sprite(g_images.wire);
     g_sprites.arrow = new Sprite(g_images.arrow);
+
+    //Platform tile
+    g_sprites.platform = new Sprite(g_images.platform);
 
     //Player Animations
     g_sprite_cycles = [ [], [], [], [], [], [], [] ];
