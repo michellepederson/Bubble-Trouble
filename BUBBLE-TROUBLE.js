@@ -16,12 +16,12 @@ function init() {
                                     //    cx           - cy       - g_canvas.width/2-   5
                                     //g_canvas.width/2 - ground_y - halfWidth   -     halfHeight
     var padding = 100;
-    var ground_edge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
+    g_groundEdge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generateScores();
-    entityManager.generatePlayer(cx, ground_edge);
+    entityManager.generatePlayer(cx, g_groundEdge);
     entityManager.generateBackground();
 
-    //entityManager.brick(300, 200,1);
+    /*
     var brickwidth = 60;
     var brickheight = 40;
     var brickOffsetTop = 100;
@@ -29,7 +29,7 @@ function init() {
         for(var j = 0; j < 10; j++){
              entityManager.brick(j*brickwidth, (i*brickheight) + brickOffsetTop , 0);
         }
-    }
+    }*/
 }
 
 // GATHER INPUTS
@@ -51,7 +51,7 @@ function updateSimulation(du) {
 // GAME-SPECIFIC DIAGNOSTICS
 
 var g_allowMixedActions = true;
-var g_useGravity = false;
+var g_gravity = false;
 var g_useAveVel = true;
 var g_renderSpatialDebug = false;
 
@@ -59,6 +59,7 @@ var g_renderSpatialDebug = false;
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
+var KEY_GRAVITY = keyCode('G');
 
 function processDiagnostics() {
 
@@ -69,6 +70,8 @@ function processDiagnostics() {
 
     if(eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
 
+    if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
+
 }
 
 // GAME-SPECIFIC RENDERING
@@ -76,8 +79,18 @@ function processDiagnostics() {
 function renderSimulation(ctx) {
 
     entityManager.render(ctx);
-
+    // Blackhole would be object in entityManager if it has some behavior (features)
+    if (g_gravity) drawBlackHole();
     if (g_renderSpatialDebug) spatialManager.render(ctx);
+}
+
+// BLACKHOLE-DRAWING
+function drawBlackHole() {
+    ctx.beginPath();
+    ctx.arc(planetX,planetY,12,0,360, false);
+    ctx.fillStyle = 'black';
+    ctx.fill();
+    ctx.stroke();
 }
 
 

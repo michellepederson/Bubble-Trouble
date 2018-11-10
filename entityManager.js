@@ -79,7 +79,10 @@ generateBackground : function () {
 generatePlayer : function(cx, ground_edge) {
     var player = new Player();
     var cy = ground_edge - player.getRadius();
-    this._players.push(new Player({cx, cy,}))
+    this._players.push(new Player({
+        cx,
+        cy,
+    }))
 },
 
 generateGround : function(cx,cy, halfWidth,halfHeight) {
@@ -114,10 +117,17 @@ brick : function(cx, cy,status) {
 },
 
 generatePowerUp : function(cx, cy) {
-    var entity = new powerUp(cx,cy);
+    var entity = new powerUp(cx, cy);
     this._categories[8].push(entity);
 },
 
+getBalloons : function() {
+    return this._categories[5];
+},
+
+getWires : function() {
+    return this._categories[2];
+},
 
 resetBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.reset);
@@ -129,7 +139,6 @@ haltBubbles: function() {
 
 update: function(du) {
     for (var c = 0; c < this._categories.length; ++c) {
-
         var aCategory = this._categories[c];
         var i = 0;
 

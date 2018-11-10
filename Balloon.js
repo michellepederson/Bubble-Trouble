@@ -30,13 +30,10 @@ Balloon.prototype.NOMINAL_GRAVITY = 0.12;
 Balloon.prototype.powerRandom = 0;
 
 
-
-
 Balloon.prototype.update = function (du) {
-
     spatialManager.unregister(this);
     if(this._isDeadNow){
-        return -1;
+        return entityManager.KILL_ME_NOW;
     }
     var prevX = this.cx;
     var prevY = this.cy;
@@ -65,9 +62,7 @@ Balloon.prototype.update = function (du) {
     }
     }
 
-    if(eatKey(KEY_GRAVITY)){
-        Balloon.orbit =  !Balloon.orbit;
-    }
+    Balloon.orbit =  g_gravity;
     
     if(Balloon.orbit){
         this.gravityOn();
@@ -113,20 +108,22 @@ Balloon.prototype.takeWireHit = function (pow) {
 
 Balloon.prototype._spawnFragment = function () {
 
-    this.direction *= -1;
+    //this.direction *= -1;
+    this.velX *= -1;
 
     entityManager.generateBalloon({
         cx : this.cx,
         cy : this.cy,
         scale: this.scale/2,
-        radius: this.radius*this.scale,
-        velX : this.direction,
+        radius: this.radius*this.scale/2,
+        //velX : this.direction,
+        velX : this.velX*0.8,
         velY : -5.5
     });
 };
 
 Balloon.prototype.getRadius = function () {
-    return this.scale * (this.radius / 2) * 0.9;
+    return this.radius;
 };
 
 Balloon.prototype.applyAccel = function(accelY, du) {
@@ -143,9 +140,6 @@ Balloon.prototype.applyAccel = function(accelY, du) {
 
 Balloon.prototype.render = function (ctx) {
    
-    if(Balloon.orbit){
-        this.drawBlackHole();
-    }
     var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
     this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
@@ -190,14 +184,6 @@ Balloon.prototype.setEarthPosition = function(){
 
     }
    
-}
-//if gravity is toggled draw the black hole
-Balloon.prototype.drawBlackHole = function(){
-    ctx.beginPath();
-    ctx.arc(planetX,planetY,12,0,360, false);
-    ctx.fillStyle = 'black';
-    ctx.fill();
-    ctx.stroke();
 }
 
 // I want to use this later to simplify the update function

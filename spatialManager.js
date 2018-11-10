@@ -39,44 +39,22 @@ getNewSpatialID : function() {
 
 // Had some problems with registering and unregistering the entities so I just changed this until i got my code to work...
 
-/*
+
 register: function(entity) {
     var pos = entity.getPos();
     var spatialID = entity.getSpatialID();
-    var radius = entity.getRadius();
     entity['posX'] = pos['posX'];
     entity['posY'] = pos['posY'];
-    entity['spatialID'] = spatialID;
-    entity['radius'] = radius;
-    this._entities.push(entity);
-},
-
-unregister: function(entity) {
-    var spatialID = entity.getSpatialID();
-    for (var i = 0; i<this._entities.length; i += 1) {
-        var e = this._entities[i]
-        if (e.spatialID === spatialID) {
-            this._entities.splice(i, 1);
-            return;
-        }
-    }
-},
-*/
-
-register: function(entity) {
-    var pos = entity.getPos();
-    var spatialID = entity.getSpatialID();
-    // TODO: YOUR STUFF HERE!
+    entity['spatialID'] = entity.getSpatialID();
+    entity['radius'] = entity.getRadius();
     this._entities[spatialID] = entity;
 },
 
 unregister: function(entity) {
     var spatialID = entity.getSpatialID();
-
-    // TODO: YOUR STUFF HERE!
     delete this._entities[spatialID];
 },
-/*
+
 findEntityInRange: function(posX, posY, radius) {
     var entity;
     for (var ID in this._entities) {
@@ -86,10 +64,32 @@ findEntityInRange: function(posX, posY, radius) {
             entity = e;
         }
     }
+    
     return entity;
 },
-*/
-findEntityInRange: function(posX, posY, radius){
+
+// Special collision check for wires
+findEntityOverlapWire(wire) {
+    var halfwidth = wire.getRadius()/2;
+    var entity, pos, posX, posY, radius;
+    var balloons = entityManager.getBalloons();
+    for (var i = 0; i<balloons.length; i += 1) {
+        var e = balloons[i];
+        pos = e.getPos();
+        posX = pos['posX'];
+        posY = pos['posY'];
+        radius = e.getRadius();
+        if(posX + radius >= wire.cx - halfwidth && posX - radius <= wire.cx - halfwidth){
+            if(posY <= g_groundEdge && posY >= wire.cy + wire.radius) entity = e;
+        }
+        else if(posX + radius >= wire.cx + halfwidth && posX - radius <= wire.cx +halfwidth) {
+            if(posY <= g_groundEdge && posY >= wire.cy + wire.radius) entity = e;
+        }
+    }
+    return entity;
+},
+
+/*findEntityInRange: function(posX, posY, radius){
     // TODO: YOUR STUFF HERE!
 var distance;
 var halfwidth;
@@ -152,7 +152,7 @@ for(var j = 0; j < entityManager._balloons.length; j++){
 
 // just return false and do nothing if no collision was found
 return false;
-},
+},*/
 
 render: function(ctx) {
     var oldStyle = ctx.strokeStyle;
@@ -161,6 +161,14 @@ render: function(ctx) {
     for (var ID in this._entities) {
         var e = this._entities[ID];
         util.strokeCircle(ctx, e.posX, e.posY, e.radius);
+    }
+    // Special drawing for the "tail" of the wire
+    var wires = entityManager.getWires();
+    for (var i = 0; i<wires.length; i += 1) {
+        var wire = wires[i];
+        var halfwidth = wire.getRadius()/2;
+        ctx.rect(wire.cx - halfwidth, wire.cy, halfwidth*2, g_groundEdge-wire.cy);
+        ctx.stroke();
     }
     ctx.strokeStyle = oldStyle;
 }

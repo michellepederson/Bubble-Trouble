@@ -7,7 +7,6 @@ function Player(descr) {
 
 // Common inherited setup logic from Entity
 this.setup(descr);
-
 this.rememberResets();
 
 // Default sprite, if not otherwise specified
@@ -57,7 +56,6 @@ spatialManager.unregister(this);
 //Quit game if the player dies
 if(this._isDeadNow && Player.prototype.lives === 0){
     return main.gameOver();
-    return -1;
 }
 
 
@@ -76,7 +74,9 @@ this.spriteUpdate();
 // Check if player has been hit
 var entity = this.findHitEntity();
 if (entity) {
-    this.checkForDeath(entity);
+    this.checkEntity(entity);
+} else {
+    this.lastEnt = undefined;
 }
 
 //Check for death and re-register
@@ -88,18 +88,26 @@ if(!this._isDeadNow){
 // Works but each balloon can only take one life in a row.
 // Probably shouldn't be a problem for gameplay
 
-Player.prototype.checkForDeath = function (ent) {
-  if (ent === this.lastEnt) {
-    return;
-} else {
-    if (Player.prototype.lives === 1) {
-      this.spriteMode = 0;
-      this.spriteCell = 0;
-  } else {
-      Player.prototype.lives -= 1;
-      this.lastEnt = ent;
-  }
-}
+Player.prototype.checkEntity = function (ent) {
+    // If the entity is power up element
+    if (ent.isPowerUp()) {
+        this.isPowerUP = true;
+        ent.kill();
+        return;
+    // If the entity is still coliding with the player, like the same balloon
+    } else if(ent === this.lastEnt) {
+        return;
+    }
+    // Lifecheck
+    else {
+        if (Player.prototype.lives === 1) {
+        this.spriteMode = 0;
+        this.spriteCell = 0;
+    } else {
+        Player.prototype.lives -= 1;
+        this.lastEnt = ent;
+    }
+    }
 };
 
 
@@ -262,25 +270,6 @@ Player.prototype.movePlayer = function (du) {
         }
     }
 };
-Player.prototype.getPower = function () {
-
-    if(entityManager._power.length > 0){
-
-        for(var i = 0; i < entityManager._power.length; i++){
-
-            var PlayerDist = util.distSq(this.cx, this.cy, entityManager._power[i].cx, entityManager._power[i].cy);
-            var limit = util.square(20 + 40);
-
-            if(limit > PlayerDist){
-                this.isPowerUP = true;
-            }
-            console.log(PlayerDist, limit,this.isPowerUP);
-        }  
-    }
-    return this.isPowerUP;
-};
-
-
 
 var KEY_FIRE = keyCode(' ');
 //var KEY_GRAVITY = keyCode('G');
@@ -288,12 +277,10 @@ Player.prototype.maybeAttack = function () {
 
     //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
 
-    this.getPower();
-
     if (eatKey(KEY_FIRE)){
         if(entityManager._Wires.length < 1 || this.isPowerUP){
             entityManager.fire(this.cx, this.cy-this.getRadius());
-            console.log(this.isPowerUP, 69);
+            //console.log(this.isPowerUP, 69);
         }
         if(!this.shoot){
             this.spriteCell = 0;
@@ -362,7 +349,8 @@ Player.prototype.spriteUpdate = function () {
 };
 
 Player.prototype.getRadius = function () {
-    return 20;
+    return 50; // weird bug
+    //return 20;
 };
 
 Player.prototype.reset = function () {
