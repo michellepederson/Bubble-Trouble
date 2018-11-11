@@ -11,6 +11,7 @@ function Balloon(descr) {
         this[property] = descr[property];
     } 
     */
+    this.velX *= this.directionX;
     this.sprite = this.sprite || g_sprites.bubble;
     this.scale  = this.scale  || 1;
 };
@@ -20,11 +21,12 @@ Balloon.prototype = new Entity();
 var KEY_GRAVITY = keyCode('G');
 
 Balloon.prototype.cx = 150;
-Balloon.prototype.cy = 150;
+Balloon.prototype.cy = 50;
 Balloon.prototype.radius = 30;
+Balloon.prototype.direction = 1;
 Balloon.prototype.velX = -2;
 Balloon.prototype.velY = 1;
-Balloon.prototype.direction = 1;
+Balloon.prototype.directionX = 1;
 Balloon.prototype.orbit = false;
 Balloon.prototype.NOMINAL_GRAVITY = 0.12;
 Balloon.prototype.powerRandom = 0;
@@ -44,7 +46,7 @@ Balloon.prototype.update = function (du) {
     // Simple collision detection to keep the bubbles inside the canvas 
     // Lines 45-60 i'd like to be in a function below (notOrbit).
     if(this.orbit === false){
-        if(nextY > entityManager._blocks[0].cy - this.radius/2){
+        if(nextY > g_groundEdge - this.radius/2){
             this.velY *= -1;
         }
         if(nextX <= this.radius/2){
@@ -91,7 +93,6 @@ Balloon.prototype.isItPowerup = function(){
 
     }
 }
-
 
 
 Balloon.prototype.takeWireHit = function (pow) {

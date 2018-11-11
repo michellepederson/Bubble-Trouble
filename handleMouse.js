@@ -19,7 +19,10 @@ function handleMouse(evt) {
     var button = evt.buttons === undefined ? evt.which : evt.buttons;
     if (!button) return;
 
-    entityManager.generateBalloon(g_mouseX, g_mouseY);
+    entityManager.generateBalloon({
+        cx : g_mouseX, 
+        cy : g_mouseY
+    });
 }
 
 // Handle "down" and "move" events the same way.

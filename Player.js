@@ -54,10 +54,10 @@ Player.prototype.update = function (du) {
 spatialManager.unregister(this);
 
 //Quit game if the player dies
-if(this._isDeadNow && Player.prototype.lives === 0){
-    return main.gameOver();
+if(this._isDeadNow && Player.prototype.lives === 1){
+    g_playerIsDead = true;
+    return entityManager.KILL_ME_NOW;
 }
-
 
 if(this.spriteMode!==0){
 
@@ -349,8 +349,8 @@ Player.prototype.spriteUpdate = function () {
 };
 
 Player.prototype.getRadius = function () {
-    return 50; // weird bug
-    //return 20;
+    //return 50; // weird bug
+    return 20;
 };
 
 Player.prototype.reset = function () {

@@ -105,6 +105,14 @@ generateBalloon : function(descr, g_mouseX, g_mouseY) {
     this._categories[5].push(entity);
 },
 
+addBalloon : function(ballon) {
+    this._categories[5].push(ballon);
+},
+
+noBallonsOnScreen : function() {
+    return this._categories[5].length === 0;
+},
+
 brick : function(cx, cy,status) {
 
    this._bricks.push(
@@ -138,6 +146,7 @@ haltBubbles: function() {
 },	
 
 update: function(du) {
+
     for (var c = 0; c < this._categories.length; ++c) {
         var aCategory = this._categories[c];
         var i = 0;

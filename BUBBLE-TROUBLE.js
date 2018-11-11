@@ -11,15 +11,21 @@ function init() {
     // Returns y coordinate of the edge of the ground, its needed to place the player
     // on top of the ground edge
 
-
-
                                     //    cx           - cy       - g_canvas.width/2-   5
                                     //g_canvas.width/2 - ground_y - halfWidth   -     halfHeight
-    var padding = 100;
     g_groundEdge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generateScores();
     entityManager.generatePlayer(cx, g_groundEdge);
     entityManager.generateBackground();
+
+    var level = 2;
+    addBalloons(level);
+    g_numberOfWaves = g_waves[level] - 1;
+    var time = g_waveTime[level];
+    g_timeOuts = [
+        setTimeout(function(){
+        addBalloons(level);
+    }, time)]
 
     /*
     var brickwidth = 60;
@@ -91,6 +97,44 @@ function drawBlackHole() {
     ctx.fillStyle = 'black';
     ctx.fill();
     ctx.stroke();
+}
+
+// BALLOON ADDING
+function addBalloons(level) {
+    var timeOut;
+    g_timeOuts = [];
+    var ballonsDescr = g_ballonsDescr[level];
+    var time = g_waveTime[level];
+    var numberOfBalloons = ballonsDescr.length;
+    // Time between insertion of balloons for each wave
+    var timeInterval = 2000;
+    for(var i = 0; i<numberOfBalloons-1; i += 1) {
+        // Make balloon after 2 secs
+        timeOut = setTimeout(entityManager.addBalloon(new Balloon(ballonsDescr[i]), timeInterval));
+        g_timeOuts.push(timeOut);
+    }
+    if (g_numberOfWaves > 0) {
+        // Last timeout resest the global g_timeOuts back to its "original" value
+        timeOut = setTimeout(function() {
+            entityManager.addBalloon(new Balloon(ballonsDescr[numberOfBalloons-1]));
+            // Rest g_timeOuts
+            g_timeOuts = [
+                setTimeout(function() {
+                    addBalloons(level)
+                }, time)
+            ];
+        }, timeInterval*numberOfBalloons-1);
+        g_timeOuts.push(timeOut);
+        g_numberOfWaves -= 1;
+    }
+}
+
+// RESETTING OF THE GAME
+function resetGame() {
+    // Clear all timeouts
+    for(var i = 0; i<g_timeOuts.length; i += 1) {
+        clearTimeout(g_timeOuts[i]);
+    }
 }
 
 
@@ -264,7 +308,6 @@ function preloadDone() {
         }
     }
 }
-
 
     entityManager.init();
     init();
