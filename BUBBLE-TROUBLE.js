@@ -11,29 +11,45 @@ function init() {
     // Returns y coordinate of the edge of the ground, its needed to place the player
     // on top of the ground edge
 
-
-
                                     //    cx           - cy       - g_canvas.width/2-   5
                                     //g_canvas.width/2 - ground_y - halfWidth   -     halfHeight
-    var padding = 100;
-    var ground_edge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
+    g_groundEdge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generateScores();
-    entityManager.generatePlayer(cx, ground_edge);
+    entityManager.generatePlayer(cx, g_groundEdge);
     entityManager.generateBackground();
+
+    var level = 2;
+    addBubbles(level);
+    g_numberOfWaves = g_waves[level] - 1;
+    var time = g_waveTime[level];
+    g_timeOuts = [
+        setTimeout(function(){
+        addBubbles(level);
+    }, time)]
+
+    /*
+    var brickwidth = 60;
+    var brickheight = 40;
+    var brickOffsetTop = 100;
+    for(var i = 0; i < 10; i++){
+        for(var j = 0; j < 10; j++){
+             entityManager.brick(j*brickwidth, (i*brickheight) + brickOffsetTop , 0);
+        }
+    }*/
 }
 
 // GATHER INPUTS
 
 function gatherInputs() {
 }
-
-
+		
+			
 // GAME-SPECIFIC UPDATE LOGIC
-
+			
 function updateSimulation(du) {
 
     processDiagnostics();
-
+    
     entityManager.update(du);
 
 }
@@ -41,7 +57,7 @@ function updateSimulation(du) {
 // GAME-SPECIFIC DIAGNOSTICS
 
 var g_allowMixedActions = true;
-var g_useGravity = false;
+var g_gravity = false;
 var g_useAveVel = true;
 var g_renderSpatialDebug = false;
 
@@ -49,6 +65,7 @@ var g_renderSpatialDebug = false;
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
+var KEY_GRAVITY = keyCode('G');
 
 function processDiagnostics() {
 
@@ -56,8 +73,9 @@ function processDiagnostics() {
     if (eatKey(KEY_HALT)) entityManager.haltBubbles();
 
     if (eatKey(KEY_RESET)) entityManager.resetBubbles();
-
     if(eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
+
+    if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
 
 }
 
@@ -66,12 +84,60 @@ function processDiagnostics() {
 function renderSimulation(ctx) {
 
     entityManager.render(ctx);
-
+    // Blackhole would be object in entityManager if it has some behavior (features)
+    if (g_gravity) drawBlackHole();
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
+// BLACKHOLE-DRAWING
+function drawBlackHole() {
+    ctx.beginPath();
+    ctx.arc(planetX,planetY,12,0,360, false);
+    ctx.fillStyle = 'black';
+    ctx.fill();
+    ctx.stroke();
+}
 
-// PRELOAD
+// Bubble ADDING
+function addBubbles(level) {
+    var timeOut;
+    g_timeOuts = [];
+    var bubblesDescr = g_bubblesDescr[level];
+    var time = g_waveTime[level];
+    var numberOfBubbles = bubblesDescr.length;
+    // Time between insertion of bubbles for each wave
+    var timeInterval = 2000;
+    for(var i = 0; i<numberOfBubbles-1; i += 1) {
+        // Make Bubble after 2 secs
+        timeOut = setTimeout(entityManager.addBubble(new Bubble(bubblesDescr[i]), timeInterval));
+        g_timeOuts.push(timeOut);
+    }
+    if (g_numberOfWaves > 0) {
+        // Last timeout resest the global g_timeOuts back to its "original" value
+        timeOut = setTimeout(function() {
+            entityManager.addBubble(new Bubble(bubblesDescr[numberOfBubbles-1]));
+            // Rest g_timeOuts
+            g_timeOuts = [
+                setTimeout(function() {
+                    addBubbles(level)
+                }, time)
+            ];
+        }, timeInterval*numberOfBubbles-1);
+        g_timeOuts.push(timeOut);
+        g_numberOfWaves -= 1;
+    }
+}
+
+// RESETTING OF THE GAME
+function resetGame() {
+    // Clear all timeouts
+    for(var i = 0; i<g_timeOuts.length; i += 1) {
+        clearTimeout(g_timeOuts[i]);
+    }
+}
+
+
+/// PRELOAD
 
 var g_images = {};
 
@@ -92,12 +158,15 @@ function requestPreloads() {
         bkgIndustrial3 : "img/bkg-industrial/skill-desc_0001_buildings.png",
         bkgIndustrial4 : "img/bkg-industrial/skill-desc_0000_foreground.png",
 
-        //Spikes
+        //Spokes
         spike: "img/spike.png",
 
         //Wire and arrow
         wire : "img/player/chain.png",
         arrow : "img/player/arrow.png",
+
+        //Platform
+        platform : "img/tile_cave_platform.png",
 
         //Player Sprites
         idle : "img/player/idle-sheet.png",
@@ -139,6 +208,9 @@ function preloadDone() {
     //Wire and arrow
     g_sprites.wire = new Sprite(g_images.wire);
     g_sprites.arrow = new Sprite(g_images.arrow);
+
+    //Platform tile
+    g_sprites.platform = new Sprite(g_images.platform);
 
     //Player Animations
     g_sprite_cycles = [ [], [], [], [], [], [], [] ];
@@ -187,8 +259,8 @@ function preloadDone() {
             spriteSheet : g_images.swipe,
             offsetX : -45,
             offsetY : -25
-
-
+    
+            
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -210,7 +282,7 @@ function preloadDone() {
     };
 
 
-
+    
     for(var i = 0; i < g_sprite_setup.length; i++){
 
          celWidth  = g_sprite_setup[i].celWidth;
@@ -227,15 +299,14 @@ function preloadDone() {
         for (var col = 0; col < numCols; ++col) {
 
             sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight, offsetX, offsetY)
+                                celWidth, celHeight, offsetX, offsetY) 
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);
+          //  console.log(sprite);     
 
         }
     }
 }
-
 
     entityManager.init();
     init();

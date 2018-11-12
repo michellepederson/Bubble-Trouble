@@ -35,6 +35,7 @@ function Sprite(image, sx, sy, width, height, offsetX, offsetY) {
         this.width = image.width;
         this.height = image.height;
     }
+
     else {
     this.width = width;
     this.height = height;

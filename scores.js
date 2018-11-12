@@ -1,4 +1,3 @@
-
 "use strict";
 
 /* jshint browser: true, devel: true, globalstrict: true */
@@ -14,10 +13,7 @@ function scores(descr) {
 scores.prototype.points = 0;
 
 scores.raisePoints = function() {
-  scores.prototype.points += 1;
-  if (scores.prototype.points % 5 === 0) {
-    entityManager.generateBalloon();
-  }
+  scores.prototype.points += 2;
 }
 
 scores.prototype.update = function (du) {

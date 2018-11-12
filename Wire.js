@@ -17,6 +17,7 @@ Wire.prototype = new Entity();
 // Initial, inheritable, default values
 Wire.prototype.velY = -6;
 Wire.prototype.radius = 3;
+Wire.prototype.halfHeight = 3;
 
 Wire.prototype.update = function (du) {
 
@@ -33,6 +34,7 @@ Wire.prototype.update = function (du) {
         return entityManager.KILL_ME_NOW;
     }
     var hitEntity = this.findHitEntity();
+    hitEntity = spatialManager.findEntityOverlapWire(this);
     if (hitEntity){
         var canTakeHit = hitEntity.takeWireHit;
         if (canTakeHit) canTakeHit.call(hitEntity); 
