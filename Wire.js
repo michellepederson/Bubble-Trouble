@@ -33,7 +33,6 @@ Wire.prototype.update = function (du) {
       this.velY = -6;
     }
     this.cy += this.velY*du;
-    console.log(this.velY);
 
     // If "wire" crosses top edge of canvas
 
