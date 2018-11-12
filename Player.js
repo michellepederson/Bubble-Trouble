@@ -95,6 +95,7 @@ Player.prototype.checkEntity = function (ent) {
         if (ent.color === 1) Player.prototype.lives += 1;
         if (ent.color === 2) Wire.prototype.velToggle = true;
         if (ent.color === 3) Wire.prototype.velToggle = false;
+        if (ent.color === 4) g_gravity = !g_gravity;
         ent.kill();
         return;
     // If the entity is still colliding with the player, like the same bubble
