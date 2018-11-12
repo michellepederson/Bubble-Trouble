@@ -3,7 +3,7 @@
 /* jshint browser: true, devel: true, globalstrict: true */
 
 // A generic contructor which accepts an arbitrary descriptor object
-function Balloon(descr) {
+function Bubble(descr) {
         // Common inherited setup logic from Entity
     this.setup(descr);
     /*
@@ -16,23 +16,23 @@ function Balloon(descr) {
     this.scale  = this.scale  || 1;
 };
 
-Balloon.prototype = new Entity();
+Bubble.prototype = new Entity();
 // Initial, inheritable, default values
 var KEY_GRAVITY = keyCode('G');
 
-Balloon.prototype.cx = 150;
-Balloon.prototype.cy = 50;
-Balloon.prototype.radius = 30;
-Balloon.prototype.direction = 1;
-Balloon.prototype.velX = -2;
-Balloon.prototype.velY = 1;
-Balloon.prototype.directionX = 1;
-Balloon.prototype.orbit = false;
-Balloon.prototype.NOMINAL_GRAVITY = 0.12;
-Balloon.prototype.powerRandom = 0;
+Bubble.prototype.cx = 150;
+Bubble.prototype.cy = 50;
+Bubble.prototype.radius = 30;
+Bubble.prototype.direction = 1;
+Bubble.prototype.velX = -2;
+Bubble.prototype.velY = 1;
+Bubble.prototype.directionX = 1;
+Bubble.prototype.orbit = false;
+Bubble.prototype.NOMINAL_GRAVITY = 0.12;
+Bubble.prototype.powerRandom = 0;
 
 
-Balloon.prototype.update = function (du) {
+Bubble.prototype.update = function (du) {
     spatialManager.unregister(this);
     if(this._isDeadNow){
         return entityManager.KILL_ME_NOW;
@@ -56,7 +56,7 @@ Balloon.prototype.update = function (du) {
             this.velX *= -1;
         }
         if(nextY <= this.radius/2){
-            if(Balloon.orbit){
+            if(Bubble.orbit){
         }
         else{
             return entityManager.KILL_ME_NOW;
@@ -64,14 +64,14 @@ Balloon.prototype.update = function (du) {
     }
     }
 
-    Balloon.orbit =  g_gravity;
+    Bubble.orbit =  g_gravity;
     
-    if(Balloon.orbit){
+    if(Bubble.orbit){
         this.gravityOn();
     }
     else{
-        Balloon.NOMINAL_GRAVITY = 0.12;
-        var accelY = Balloon.NOMINAL_GRAVITY*du;
+        Bubble.NOMINAL_GRAVITY = 0.12;
+        var accelY = Bubble.NOMINAL_GRAVITY*du;
         this.applyAccel(accelY, du);
     }
     
@@ -81,7 +81,7 @@ Balloon.prototype.update = function (du) {
 };
 
 var pow;
-Balloon.prototype.isItPowerup = function(){
+Bubble.prototype.isItPowerup = function(){
     pow = util.randRange(1, 1000);
    // console.log(pow);
      if(pow > 500){
@@ -95,7 +95,7 @@ Balloon.prototype.isItPowerup = function(){
 }
 
 
-Balloon.prototype.takeWireHit = function (pow) {
+Bubble.prototype.takeWireHit = function (pow) {
    
     this.isItPowerup();
     this.kill();
@@ -107,12 +107,12 @@ Balloon.prototype.takeWireHit = function (pow) {
     }
 };
 
-Balloon.prototype._spawnFragment = function () {
+Bubble.prototype._spawnFragment = function () {
 
     //this.direction *= -1;
     this.velX *= -1;
 
-    entityManager.generateBalloon({
+    entityManager.generateBubble({
         cx : this.cx,
         cy : this.cy,
         scale: this.scale/2,
@@ -123,11 +123,11 @@ Balloon.prototype._spawnFragment = function () {
     });
 };
 
-Balloon.prototype.getRadius = function () {
+Bubble.prototype.getRadius = function () {
     return this.radius;
 };
 
-Balloon.prototype.applyAccel = function(accelY, du) {
+Bubble.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;
     
@@ -139,7 +139,7 @@ Balloon.prototype.applyAccel = function(accelY, du) {
     this.cy += du * aveVelY;
 }
 
-Balloon.prototype.render = function (ctx) {
+Bubble.prototype.render = function (ctx) {
    
     var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
@@ -149,11 +149,11 @@ Balloon.prototype.render = function (ctx) {
 // planetX/Y - the black hole
 var planetX = 300;
 var planetY = 200;
-Balloon.prototype.earthSpeed = 0.02;
-Balloon.prototype.earthRadians = 20;
-Balloon.prototype.dist = 220;
+Bubble.prototype.earthSpeed = 0.02;
+Bubble.prototype.earthRadians = 20;
+Bubble.prototype.dist = 220;
 
-Balloon.prototype.gravityOn = function(){
+Bubble.prototype.gravityOn = function(){
 
     if(this.earthRadians < (Math.PI * 2)){
         this.earthRadians += this.earthSpeed;
@@ -165,7 +165,7 @@ Balloon.prototype.gravityOn = function(){
 }
 //Make the bubbles orbit like earths/panets around the black hole (PlanetX/Y)
 //This part looks kind of jerky and needs some improvement, but I like the idea...
-Balloon.prototype.setEarthPosition = function(){
+Bubble.prototype.setEarthPosition = function(){
 
 
     //find next cx/cy coordinates of the orbit
@@ -189,6 +189,6 @@ Balloon.prototype.setEarthPosition = function(){
 
 // I want to use this later to simplify the update function
 // and put some of the if statements here
-Balloon.prototype.notOrbit = function(){
+Bubble.prototype.notOrbit = function(){
 
 }

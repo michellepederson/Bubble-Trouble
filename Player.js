@@ -85,7 +85,7 @@ if(!this._isDeadNow){
 }
 };
 
-// Works but each balloon can only take one life in a row.
+// Works but each bubble can only take one life in a row.
 // Probably shouldn't be a problem for gameplay
 
 Player.prototype.checkEntity = function (ent) {
@@ -94,7 +94,7 @@ Player.prototype.checkEntity = function (ent) {
         this.isPowerUP = true;
         ent.kill();
         return;
-    // If the entity is still coliding with the player, like the same balloon
+    // If the entity is still coliding with the player, like the same bubble
     } else if(ent === this.lastEnt) {
         return;
     }

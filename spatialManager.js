@@ -72,9 +72,9 @@ findEntityInRange: function(posX, posY, radius) {
 findEntityOverlapWire(wire) {
     var halfwidth = wire.getRadius()/2;
     var entity, pos, posX, posY, radius;
-    var balloons = entityManager.getBalloons();
-    for (var i = 0; i<balloons.length; i += 1) {
-        var e = balloons[i];
+    var bubbles = entityManager.getBubbles();
+    for (var i = 0; i<bubbles.length; i += 1) {
+        var e = bubbles[i];
         pos = e.getPos();
         posX = pos['posX'];
         posY = pos['posY'];
@@ -113,7 +113,7 @@ for(var i = 0; i < this._entities.length; i++){
             //Fæ ekki radius og halfwidth inn svo ég setti gildin bara inn manually
             //til að sjá hvort þetta virkar.
             lim = util.square(radius + halfwidth*2);
-            // check if the circles overlap (wire ball(the small dot) and balloons)
+            // check if the circles overlap (wire ball(the small dot) and bubbles)
             if(distance < lim){
                 // console.log("collision");
                 return ent;
@@ -124,28 +124,28 @@ for(var i = 0; i < this._entities.length; i++){
 // This compares every bubble to every wire. If ent is usued above instead then that compares also to the player and 
 // they collide and the player is killed becouse of the wire or wire ball.
 // what's a better way to do this?
-for(var j = 0; j < entityManager._balloons.length; j++){
+for(var j = 0; j < entityManager._bubbles.length; j++){
             for(var k = 0; k < entityManager._Wires.length; k++){
                 
-                var  dist3 = util.distSq(entityManager._balloons[j].cx, 
-                                        entityManager._balloons[j].cy, 
+                var  dist3 = util.distSq(entityManager._bubbles[j].cx, 
+                                        entityManager._bubbles[j].cy, 
                                         entityManager._Wires[k].cx, 
-                                        entityManager._balloons[j].cy);
+                                        entityManager._bubbles[j].cy);
                 // big bubble limit
-                if(entityManager._balloons[j].scale === 1){
-                    var  lim3 = util.square(entityManager._balloons[j].radius);
+                if(entityManager._bubbles[j].scale === 1){
+                    var  lim3 = util.square(entityManager._bubbles[j].radius);
                 }                
                 //medium bubble limit, adjust to scale
-                if(entityManager._balloons[j].scale === 0.5){
-                     var  lim3 = util.square(entityManager._balloons[j].radius*entityManager._balloons[j].scale);
+                if(entityManager._bubbles[j].scale === 0.5){
+                     var  lim3 = util.square(entityManager._bubbles[j].radius*entityManager._bubbles[j].scale);
                 }
                 //small bubble limit, adjust to scale
-                if(entityManager._balloons[j].scale === 0.25){
-                    var  lim3 = util.square(entityManager._balloons[j].radius*entityManager._balloons[j].scale);
+                if(entityManager._bubbles[j].scale === 0.25){
+                    var  lim3 = util.square(entityManager._bubbles[j].radius*entityManager._bubbles[j].scale);
                 }
                 //Check if the bubble has collided with the wire
-                if(dist3 < lim3 &&  entityManager._balloons[j].cy > entityManager._Wires[k].cy){
-                    return entityManager._balloons[j];
+                if(dist3 < lim3 &&  entityManager._bubbles[j].cy > entityManager._Wires[k].cy){
+                    return entityManager._bubbles[j];
                 }
             }
         }

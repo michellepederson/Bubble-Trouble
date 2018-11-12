@@ -31,7 +31,7 @@ _Wires : [],
 _players  : [],
 _bullets : [],
 _blocks : [],
-_balloons : [],
+_bubbles : [],
 _bricks : [],
 _scores : [],
 _power : [],
@@ -53,7 +53,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons, this._bricks, this._scores, this._power];
+    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._bubbles, this._bricks, this._scores, this._power];
 },
 
 init: function() {
@@ -100,13 +100,13 @@ generateScores : function(descr) {
   this._scores.push(new scores(descr));
 },
 
-generateBalloon : function(descr, g_mouseX, g_mouseY) {
-    var entity = new Balloon(descr);
+generateBubble : function(descr, g_mouseX, g_mouseY) {
+    var entity = new Bubble(descr);
     this._categories[5].push(entity);
 },
 
-addBalloon : function(ballon) {
-    this._categories[5].push(ballon);
+addBubble : function(bubble) {
+    this._categories[5].push(bubble);
 },
 
 noBallonsOnScreen : function() {
@@ -129,7 +129,7 @@ generatePowerUp : function(cx, cy) {
     this._categories[8].push(entity);
 },
 
-getBalloons : function() {
+getBubbles : function() {
     return this._categories[5];
 },
 

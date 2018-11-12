@@ -19,12 +19,12 @@ function init() {
     entityManager.generateBackground();
 
     var level = 2;
-    addBalloons(level);
+    addBubbles(level);
     g_numberOfWaves = g_waves[level] - 1;
     var time = g_waveTime[level];
     g_timeOuts = [
         setTimeout(function(){
-        addBalloons(level);
+        addBubbles(level);
     }, time)]
 
     /*
@@ -73,7 +73,6 @@ function processDiagnostics() {
     if (eatKey(KEY_HALT)) entityManager.haltBubbles();
 
     if (eatKey(KEY_RESET)) entityManager.resetBubbles();
-
     if(eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
 
     if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
@@ -99,31 +98,31 @@ function drawBlackHole() {
     ctx.stroke();
 }
 
-// BALLOON ADDING
-function addBalloons(level) {
+// Bubble ADDING
+function addBubbles(level) {
     var timeOut;
     g_timeOuts = [];
-    var ballonsDescr = g_ballonsDescr[level];
+    var bubblesDescr = g_bubblesDescr[level];
     var time = g_waveTime[level];
-    var numberOfBalloons = ballonsDescr.length;
-    // Time between insertion of balloons for each wave
+    var numberOfBubbles = bubblesDescr.length;
+    // Time between insertion of bubbles for each wave
     var timeInterval = 2000;
-    for(var i = 0; i<numberOfBalloons-1; i += 1) {
-        // Make balloon after 2 secs
-        timeOut = setTimeout(entityManager.addBalloon(new Balloon(ballonsDescr[i]), timeInterval));
+    for(var i = 0; i<numberOfBubbles-1; i += 1) {
+        // Make Bubble after 2 secs
+        timeOut = setTimeout(entityManager.addBubble(new Bubble(bubblesDescr[i]), timeInterval));
         g_timeOuts.push(timeOut);
     }
     if (g_numberOfWaves > 0) {
         // Last timeout resest the global g_timeOuts back to its "original" value
         timeOut = setTimeout(function() {
-            entityManager.addBalloon(new Balloon(ballonsDescr[numberOfBalloons-1]));
+            entityManager.addBubble(new Bubble(bubblesDescr[numberOfBubbles-1]));
             // Rest g_timeOuts
             g_timeOuts = [
                 setTimeout(function() {
-                    addBalloons(level)
+                    addBubbles(level)
                 }, time)
             ];
-        }, timeInterval*numberOfBalloons-1);
+        }, timeInterval*numberOfBubbles-1);
         g_timeOuts.push(timeOut);
         g_numberOfWaves -= 1;
     }

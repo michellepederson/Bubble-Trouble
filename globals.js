@@ -16,8 +16,8 @@ var g_ctx = g_canvas.getContext("2d");
 var g_groundEdge;
 var g_timeOuts;
 var g_playerIsDead = false;
-var g_ballonsDescr;
-var g_addBallonTime;
+var g_bubblesDescr;
+var g_addBubbleTime;
 var g_waves;
 var g_numberOfWaves;
 // The "nominal interval" is the one that all of our time-based units are

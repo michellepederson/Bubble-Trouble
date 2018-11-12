@@ -19,7 +19,7 @@ function handleMouse(evt) {
     var button = evt.buttons === undefined ? evt.which : evt.buttons;
     if (!button) return;
 
-    entityManager.generateBalloon({
+    entityManager.generateBubble({
         cx : g_mouseX, 
         cy : g_mouseY
     });

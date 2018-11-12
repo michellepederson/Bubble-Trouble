@@ -1,7 +1,7 @@
 var x = g_canvas.width/4;
 var posX = [x*1,x*2,x*3];
 
-g_ballonsDescr = {
+g_bubblesDescr = {
     1 : [
         {cx : posX[0]}
     ],
