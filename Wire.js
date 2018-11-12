@@ -18,6 +18,7 @@ Wire.prototype = new Entity();
 Wire.prototype.velY = -6;
 Wire.prototype.radius = 3;
 Wire.prototype.halfHeight = 3;
+Wire.prototype.velToggle = false;
 
 Wire.prototype.update = function (du) {
 
@@ -25,11 +26,17 @@ Wire.prototype.update = function (du) {
     if(this._isDeadNow){
         return -1;
     }
-    
+
+    if(this.velToggle) {
+      this.velY = -12;
+    } else {
+      this.velY = -6;
+    }
     this.cy += this.velY*du;
-    
+    console.log(this.velY);
+
     // If "wire" crosses top edge of canvas
-              
+
     if (this.cy <= 0) {
         return entityManager.KILL_ME_NOW;
     }
@@ -37,14 +44,14 @@ Wire.prototype.update = function (du) {
     hitEntity = spatialManager.findEntityOverlapWire(this);
     if (hitEntity){
         var canTakeHit = hitEntity.takeWireHit;
-        if (canTakeHit) canTakeHit.call(hitEntity); 
+        if (canTakeHit) canTakeHit.call(hitEntity);
         return entityManager.KILL_ME_NOW;
     }
-    
+
     if(!this._isDeadNow){
          spatialManager.register(this);
     }
-   
+
 };
 
 Wire.prototype.takeWireHit = function () {
@@ -67,7 +74,7 @@ Wire.prototype.render = function (ctx) {
     this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
 
     //Draw the 'wire'
-    
+
     ctx.beginPath();
 	ctx.moveTo(this.cx, this.cy);
     g_sprites.wire.drawAt(ctx, this.cx-5, this.cy+5);
@@ -82,7 +89,7 @@ Wire.prototype.render = function (ctx) {
     //ctx.strokeStyle = 'red';
    // ctx.fill();
 	//ctx.stroke();
-    
+
 
 
 };

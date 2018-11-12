@@ -91,11 +91,13 @@ if(!this._isDeadNow){
 Player.prototype.checkEntity = function (ent) {
     // If the entity is power up element
     if (ent.isPowerUp()) {
-        if (ent.color === 1) Player.prototype.lives += 1;
         if (ent.color === 0) Player.prototype.eWires += 1;
+        if (ent.color === 1) Player.prototype.lives += 1;
+        if (ent.color === 2) Wire.prototype.velToggle = true;
+        if (ent.color === 3) Wire.prototype.velToggle = false;
         ent.kill();
         return;
-    // If the entity is still coliding with the player, like the same bubble
+    // If the entity is still colliding with the player, like the same bubble
     } else if(ent === this.lastEnt) {
         return;
     }

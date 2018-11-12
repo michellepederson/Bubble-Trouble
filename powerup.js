@@ -65,7 +65,7 @@ powerUp.prototype.getRadius = function() {
 
 powerUp.prototype.render = function (ctx) {
 	ctx.beginPath();
-	var colors = ['blue', 'red'];
+	var colors = ['blue', 'red', 'green', 'yellow'];
 	ctx.fillStyle = colors[this.color];
 	ctx.arc(this.cx,this.cy,this.radius,0,2*Math.PI);
 	ctx.fill();
