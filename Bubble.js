@@ -84,12 +84,13 @@ Bubble.prototype.update = function (du) {
 var pow;
 Bubble.prototype.isItPowerup = function(){
     pow = util.randRange(1, 1000);
-   // console.log(pow);
+    console.log(pow);
      if(pow > 500){
         //console.log(pow);
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
+            color : Math.floor(Math.random()*2),
         });
 
     }

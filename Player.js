@@ -44,7 +44,7 @@ Player.prototype.shoot = false;
 Player.prototype.spriteMode = 1;
 Player.prototype.lives = 3;
 Player.prototype.lastEnt;
-Player.prototype.isPowerUP = false;
+Player.prototype.eWires = -1;
 
 //var NOMINAL_GRAVITY = 0.12;
 
@@ -91,7 +91,8 @@ if(!this._isDeadNow){
 Player.prototype.checkEntity = function (ent) {
     // If the entity is power up element
     if (ent.isPowerUp()) {
-        this.isPowerUP = true;
+        if (ent.color === 1) Player.prototype.lives += 1;
+        if (ent.color === 0) Player.prototype.eWires += 1;
         ent.kill();
         return;
     // If the entity is still coliding with the player, like the same bubble
@@ -278,8 +279,9 @@ Player.prototype.maybeAttack = function () {
     //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
 
     if (eatKey(KEY_FIRE)){
-        if(entityManager._Wires.length < 1 || this.isPowerUP){
+        if(entityManager._Wires.length < 1 || this.eWires > 0){
             entityManager.fire(this.cx, this.cy-this.getRadius());
+            if (entityManager._Wires.length === 2) this.eWires -= 1;
             //console.log(this.isPowerUP, 69);
         }
         if(!this.shoot){
