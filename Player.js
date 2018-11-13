@@ -45,6 +45,9 @@ Player.prototype.spriteMode = 1;
 Player.prototype.lives = 3;
 Player.prototype.lastEnt;
 Player.prototype.eWires = -1;
+Player.prototype.shield = false;
+Player.prototype.sword = false;
+
 
 //var NOMINAL_GRAVITY = 0.12;
 
@@ -62,55 +65,73 @@ if(this._isDeadNow && Player.prototype.lives === 1){
 if(this.spriteMode!==0){
 
     this.movePlayer(du);
-// Shoot wire or swing sword
-this.maybeAttack();
+    // Shoot wire or swing sword
+    this.maybeAttack();
 
-this.maybeJump(du);
+    this.maybeJump(du);
 
-}
-//Update sprite to next animation frame
-this.spriteUpdate();
+    }
+    //Update sprite to next animation frame
+    this.spriteUpdate();
 
-// Check if player has been hit
-var entity = this.findHitEntity();
-if (entity) {
-    this.checkEntity(entity);
-} else {
-    this.lastEnt = undefined;
-}
+    // Check if player has been hit
+    var entity = this.findHitEntity();
 
-//Check for death and re-register
-if(!this._isDeadNow){
-    spatialManager.register(this);
-}
-};
+    if (entity) {
+        this.checkEntity(entity);
+    } else {
+        this.lastEnt = undefined;
+    }
+
+    //If in sword mode, collison check for sword swings
+    if(this.spriteMode === 4){
+        var hitEntity = this.findHitEntity();
+        hitEntity = spatialManager.findEntityOnSword(this.cx, this.cy, this.sprite.width, this.sprite.height, this.spriteCell);
+
+        if (hitEntity){
+
+            var canTakeHit = hitEntity.takeWireHit;
+            if (canTakeHit) canTakeHit.call(hitEntity);
+
+        }
+    }
+        //Check for death and re-register
+        if(!this._isDeadNow){
+            spatialManager.register(this);
+        }
+    };
 
 // Works but each bubble can only take one life in a row.
 // Probably shouldn't be a problem for gameplay
 
 Player.prototype.checkEntity = function (ent) {
-    // If the entity is power up element
+    // If the entity is power up element.
+    // Should the below code change the eWires / lives on this, rather than the prototype?
     if (ent.isPowerUp()) {
         if (ent.color === 0) Player.prototype.eWires += 1;
-        if (ent.color === 1) Player.prototype.lives += 1;
-        if (ent.color === 2) Wire.prototype.velToggle = true;
-        if (ent.color === 3) Wire.prototype.velToggle = false;
-        if (ent.color === 4) g_gravity = !g_gravity;
+        else if (ent.color === 1) Player.prototype.lives += 1;
+        else if (ent.color === 2) Wire.prototype.velToggle = true;
+        else if (ent.color === 3) Wire.prototype.velToggle = false;
+        else if (ent.color === 4) g_gravity = !g_gravity;
+        else if (ent.color === 5) this.shield = true;
+        else if (ent.color === 6) this.sword = true;
         ent.kill();
         return;
     // If the entity is still colliding with the player, like the same bubble
-    } else if(ent === this.lastEnt) {
-        return;
-    }
+} else if(ent === this.lastEnt) {
+    return;
+}
+//If the shield is activated, skip collision check for non-powerups
+else if(this.shield) return;
     // Lifecheck
     else {
         if (Player.prototype.lives === 1) {
-        this.spriteMode = 0;
-        this.spriteCell = 0;
-    } else {
-        Player.prototype.lives -= 1;
-        this.lastEnt = ent;
-    }
+            this.spriteMode = 0;
+            this.spriteCell = 0;
+        } else {
+            Player.prototype.lives -= 1;
+            this.lastEnt = ent;
+        }
     }
 };
 
@@ -280,29 +301,38 @@ var KEY_FIRE = keyCode(' ');
 Player.prototype.maybeAttack = function () {
 
     //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
-
     if (eatKey(KEY_FIRE)){
-        if(entityManager._Wires.length < 1 || this.eWires > 0){
-            entityManager.fire(this.cx, this.cy-this.getRadius());
-            if (entityManager._Wires.length === 2) this.eWires -= 1;
-            //console.log(this.isPowerUP, 69);
-        }
-        if(!this.shoot){
+        if(this.sword){
+            this.spriteMode = 4;
             this.spriteCell = 0;
         }
         else{
-           this.shoot = true;
-       }
-
-       if(eatKey(this.KEY_SWORD)) {
-        this.spriteMode = 4;
-        this.spriteCell = 0;
-    }
-
-    if(this.shoot){
-        this.spriteMode = 3;
+            if(entityManager._Wires.length < 1 || this.eWires > 0){
+                entityManager.fire(this.cx, this.cy-this.getRadius());
+                if (entityManager._Wires.length === 2) this.eWires -= 1;
+                //console.log(this.isPowerUP, 69);
+            }
+            if(!this.shoot){
+                this.spriteCell = 0;
+            }
+            else{
+               this.shoot = true;
+           }
     }
 }
+
+/*
+   if(eatKey(this.KEY_SWORD)) {
+
+    this.spriteMode = 4;
+    this.spriteCell = 0;
+}
+*/
+
+if(this.shoot){
+    this.spriteMode = 3;
+}
+
 };
 
 Player.prototype.maybeJump = function (du) {
@@ -368,6 +398,7 @@ Player.prototype.render = function (ctx) {
     this.sprite.drawSpriteAt(
         ctx, this.cx, this.cy, this.scale, this
         );
+    this.renderPowerup();
   // this.drawcenter(ctx);
 };
 
@@ -379,6 +410,17 @@ Player.prototype.jump = function(du,nextY){
     this.velY = -jumphightSquared;
     this.cy += this.velY;
 };
+
+// Renders additioinal sprites on top of player sprite, for relevant power ups.
+Player.prototype.renderPowerup = function () {
+    if(this.shield) {
+        ctx.save();
+        ctx.translate(-this.cx, -this.cy);
+        ctx.scale(2, 2);
+        g_sprites.shield.drawCentredAt(ctx, this.cx, this.cy);
+        ctx.restore();
+    }
+}
 
 
 Player.prototype.applyAccel = function(accelY, du) {

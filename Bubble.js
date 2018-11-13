@@ -29,6 +29,9 @@ Bubble.prototype.velY = 1;
 Bubble.prototype.directionX = 1;
 Bubble.prototype.orbit = false;
 Bubble.prototype.NOMINAL_GRAVITY = 0.12;
+Bubble.prototype.popped = false;
+Bubble.prototype.spriteCell = 0;
+Bubble.prototype.animationLag = 3;
 Bubble.prototype.powerRandom = 0;
 
 
@@ -76,6 +79,8 @@ Bubble.prototype.update = function (du) {
         this.applyAccel(accelY, du);
     }
 
+    if(this.popped) this.spriteUpdate();
+
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
@@ -89,7 +94,7 @@ Bubble.prototype.isItPowerup = function(){
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
-            color : Math.floor(Math.random()*5),
+            color : Math.floor(Math.random()*7),
         });
 
     }
@@ -99,7 +104,8 @@ Bubble.prototype.isItPowerup = function(){
 Bubble.prototype.takeWireHit = function (pow) {
 
     this.isItPowerup();
-    this.kill();
+    //this.kill();
+    this.popped = true;
     scores.raisePoints();
 
     if (this.scale > 0.25) {
@@ -144,7 +150,13 @@ Bubble.prototype.render = function (ctx) {
 
     var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
-    this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
+    if(!this.popped)this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
+    else {
+            this.scale = 0.5;
+            this.sprite.drawSpriteAt(
+        ctx, this.cx, this.cy, this.scale, this
+        );
+    }
 };
 
 // planetX/Y - the black hole
@@ -192,4 +204,22 @@ Bubble.prototype.setEarthPosition = function(){
 // and put some of the if statements here
 Bubble.prototype.notOrbit = function(){
 
+}
+
+Bubble.prototype.spriteUpdate = function () {
+    this.sprite = g_sprite_cycles[7][this.spriteCell];
+
+    //Manage the speed - better way of doing this ?
+    if(this.animationLag > 0) this.animationLag--;
+
+    else {
+        //Go to next frame of sprite animation after each passage of given duration
+        ++this.spriteCell;
+        this.animationLag = 5;
+
+        if (this.spriteCell === g_sprite_cycles[7].length){ 
+            //If sprite is in death animation cycle, kill once he reaches the end of the animation.
+            return this.kill();
+        }
+    } 
 }

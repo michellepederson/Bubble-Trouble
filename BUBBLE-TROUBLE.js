@@ -137,6 +137,19 @@ function resetGame() {
 }
 
 
+      //START SCREEN
+function startScreen() {
+
+
+    entityManager.init();
+    init();
+
+    main.init();
+
+    document.getElementById('startScreen').style.display = "none";
+
+}
+
 /// PRELOAD
 
 var g_images = {};
@@ -145,6 +158,8 @@ function requestPreloads() {
 
     var requiredImages = {
         bubble : "img/bubbles/bubble_2.png",
+        pop : "img/bubbles/pop/pop-sheet.png",
+
 
         //Background One
         bkgBulkhead1 : "img/bkg-bulkhead/bulkhead-walls-back.png",
@@ -158,15 +173,27 @@ function requestPreloads() {
         bkgIndustrial3 : "img/bkg-industrial/skill-desc_0001_buildings.png",
         bkgIndustrial4 : "img/bkg-industrial/skill-desc_0000_foreground.png",
 
-        //Spokes
+        //Spikes
         spike: "img/spike.png",
 
         //Wire and arrow
         wire : "img/player/chain.png",
         arrow : "img/player/arrow.png",
 
-        //Platform
+        //Platform aka purple turds
         platform : "img/tile_cave_platform.png",
+
+        //Powerups
+        shield : "img/powerups/shield.png",
+        powerupShield : "img/powerups/powerup-shield.png",
+        powerupPotion : "img/powerups/powerup-potion.png",
+        powerupOrb : "img/powerups/powerup-orb.png",
+        powerupRing : "img/powerups/powerup-ring.png",
+        duck : "img/powerups/duck.png",
+        gun : "img/powerups/gun.png",
+        grenade : "img/powerups/grenade.png",
+        sword : "img/powerups/powerup-sword.png",
+        trap : "img/powerups/trap.png",
 
         //Player Sprites
         idle : "img/player/idle-sheet.png",
@@ -212,8 +239,21 @@ function preloadDone() {
     //Platform tile
     g_sprites.platform = new Sprite(g_images.platform);
 
+    //Powerups
+    g_sprites.shield = new Sprite(g_images.shield);
+    g_sprites.powerupShield = new Sprite(g_images.powerupShield);
+    g_sprites.powerupPotion = new Sprite(g_images.powerupPotion);
+    g_sprites.powerupOrb = new Sprite(g_images.powerupOrb);
+    g_sprites.powerupRing = new Sprite(g_images.powerupRing);
+    g_sprites.duck = new Sprite(g_images.duck);
+    g_sprites.gun = new Sprite(g_images.gun);
+    g_sprites.grenade = new Sprite(g_images.grenade);
+    g_sprites.sword = new Sprite(g_images.sword);
+    g_sprites.trap = new Sprite(g_images.trap);
+
+
     //Player Animations
-    g_sprite_cycles = [ [], [], [], [], [], [], [] ];
+    g_sprite_cycles = [ [], [], [], [], [], [], [], [] ];
     var sprite, celWidth, celHeight, numCols, numRows, numCels, image, offsetX, offsetY;
 
     g_sprite_setup = [];
@@ -259,8 +299,8 @@ function preloadDone() {
             spriteSheet : g_images.swipe,
             offsetX : -45,
             offsetY : -25
-
-
+    
+            
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -278,11 +318,23 @@ function preloadDone() {
             numRows : 1,
             numCels : 2,
             spriteSheet : g_images.crouch,
-            offsetY: 12
+            offsetY: 22
+    };
+
+
+            g_sprite_setup[7] = {
+            celWidth : 172,
+            celHeight : 168,
+            numCols : 3,
+            numRows : 1,
+            numCels : 3,
+            spriteSheet : g_images.pop
+  
     };
 
 
 
+    
     for(var i = 0; i < g_sprite_setup.length; i++){
 
          celWidth  = g_sprite_setup[i].celWidth;
@@ -299,19 +351,17 @@ function preloadDone() {
         for (var col = 0; col < numCols; ++col) {
 
             sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight, offsetX, offsetY)
+                                celWidth, celHeight, offsetX, offsetY) 
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);
+          //  console.log(sprite);     
 
         }
     }
 }
 
-    entityManager.init();
-    init();
 
-    main.init();
+
 }
 
 requestPreloads();

@@ -15,13 +15,35 @@
       padding: 10px;
       text-align: center;
     }
+
+    #robot {
+      width: 50%;
+      float: right;
+    }
+
+    #newGame {
+      margin-top: 100px;
+    }
+
+    #newGame:hover {
+      filter: grayscale(100%);
+    }
+
+    .myStyle {
+      display: none;
+    }
+
   </style>
   <body>
-
+    <div id="startScreen">
+      <img id="newGame" onclick="startScreen()" src="img/start/newgame.png">
+      <img id="robot" src="img/start/robot.png">
+    </div>
     <canvas id="myCanvas" width="600" height="600"
         style="border: 1px solid black;">
     Sorry, but your browser does not support the HTML5 canvas tag.
     </canvas>
+
 
     <div id="output"></div>
 
@@ -54,6 +76,9 @@
     <script src="main.js"></script>
 
     <script src="BUBBLE-TROUBLE.js"></script>
+    <script>
+
+    </script>
 
   </body>
 </html>

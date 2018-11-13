@@ -89,6 +89,45 @@ findEntityOverlapWire(wire) {
     return entity;
 },
 
+//Special collision check for sword mode
+findEntityOnSword(cx, cy, width, height, frame){
+
+    //if(frame!== 1 || frame!== 2) return;
+    var x1, x2, y1, y2;
+    var entity, pos, posX, posY, radius;
+    var bubbles = entityManager.getBubbles();
+
+    if(frame === 0 || frame === 3) return;
+
+    if(frame === 1){
+        x1 = cx - width/2 + 83;
+        y1 = cy - height/2 + 10;
+        x2 = cx - width/2 + 246;
+        y2 = cy - height/2 +58;
+    }
+    else {
+        x1 = cx - width/2 + 2;
+        y1 = cy - height/2 + 34;
+        x2 = cx - width/2 + 239;
+        y2 = cy - height/2 + 115;
+    }
+
+    for (var i = 0; i<bubbles.length; i += 1) {
+        var e = bubbles[i];
+        pos = e.getPos();
+        posX = pos['posX'];
+        posY = pos['posY'];
+        radius = e.getRadius();
+
+        if(posX + radius >= x1 && posX - radius <= x2){
+            if(posY + radius <= y2 && posY - radius >= y1) entity = e;
+        }
+
+    }
+    return entity;
+
+},
+
 /*findEntityInRange: function(posX, posY, radius){
     // TODO: YOUR STUFF HERE!
 var distance;
