@@ -64,6 +64,16 @@ main._iterCore = function (dt) {
         this.gameOver();
         return;
     }
+
+    if (g_playerIsDead) {
+        this.gameOver();
+        return;
+    }
+
+    if (g_numberOfWaves == 0 && entityManager.noBallonsOnScreen()) {
+        this.gameOver();
+        return;
+    }
     
     gatherInputs();
     update(dt);
@@ -74,6 +84,7 @@ main._isGameOver = false;
 
 main.gameOver = function () {
     this._isGameOver = true;
+    resetGame();
     console.log("gameOver: quitting...");
 };
 

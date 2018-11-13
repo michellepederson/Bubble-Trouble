@@ -13,8 +13,6 @@ function Background(descr) {
     this.scale  = this.scale  || 1;
 }
 
-Background.prototype = new Entity();
-
 Background.prototype.KEY_LEFT   = 'A'.charCodeAt(0);
 Background.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 Background.prototype.KEY_BACKGROUND = 'B'.charCodeAt(0);

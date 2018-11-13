@@ -31,7 +31,7 @@ _Wires : [],
 _players  : [],
 _bullets : [],
 _blocks : [],
-_balloons : [],
+_bubbles : [],
 _bricks : [],
 _scores : [],
 _power : [],
@@ -53,7 +53,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._balloons, this._bricks, this._scores, this._power];
+    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._bubbles, this._bricks, this._scores, this._power];
 },
 
 init: function() {
@@ -79,7 +79,10 @@ generateBackground : function () {
 generatePlayer : function(cx, ground_edge) {
     var player = new Player();
     var cy = ground_edge - player.getRadius();
-    this._players.push(new Player({cx, cy,}))
+    this._players.push(new Player({
+        cx,
+        cy,
+    }))
 },
 
 generateGround : function(cx,cy, halfWidth,halfHeight) {
@@ -97,9 +100,17 @@ generateScores : function(descr) {
   this._scores.push(new scores(descr));
 },
 
-generateBalloon : function(descr, g_mouseX, g_mouseY) {
-    var entity = new Balloon(descr);
+generateBubble : function(descr, g_mouseX, g_mouseY) {
+    var entity = new Bubble(descr);
     this._categories[5].push(entity);
+},
+
+addBubble : function(bubble) {
+    this._categories[5].push(bubble);
+},
+
+noBallonsOnScreen : function() {
+    return this._categories[5].length === 0;
 },
 
 brick : function(cx, cy,status) {
@@ -114,10 +125,17 @@ brick : function(cx, cy,status) {
 },
 
 generatePowerUp : function(cx, cy) {
-    var entity = new powerUp(cx,cy);
+    var entity = new powerUp(cx, cy);
     this._categories[8].push(entity);
 },
 
+getBubbles : function() {
+    return this._categories[5];
+},
+
+getWires : function() {
+    return this._categories[2];
+},
 
 resetBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.reset);
@@ -128,8 +146,8 @@ haltBubbles: function() {
 },	
 
 update: function(du) {
-    for (var c = 0; c < this._categories.length; ++c) {
 
+    for (var c = 0; c < this._categories.length; ++c) {
         var aCategory = this._categories[c];
         var i = 0;
 
