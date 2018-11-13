@@ -18,6 +18,7 @@ powerUp.prototype.velY = 3;
 powerUp.prototype.isPowerON = false;
 powerUp.prototype.NOMINAL_GRAVITY = 0.12;
 powerUp.prototype.radius = 20;
+powerUp.prototype.color;
 
 powerUp.prototype.update = function (du) {
 	spatialManager.unregister(this);
@@ -41,11 +42,11 @@ powerUp.prototype.getPower = function (nextX,nextY,radius) {
 	var prevYY = this.cy;
 	var nextX = prevXX + this.velX;
 	var nextY = prevYY + this.velY;
-	
+
 
 	var PlayerDist = util.distSq(nextX, nextY, prevXX, prevYY);
 	var limit = util.square(20 + radius);
-		
+
 	if(limit < PlayerDist){
 		powerUp.prototype.isPowerON = true;
 	}
@@ -64,9 +65,9 @@ powerUp.prototype.getRadius = function() {
 
 powerUp.prototype.render = function (ctx) {
 	ctx.beginPath();
-	ctx.fillStyle = 'black';
+	var colors = ['blue', 'red', 'green', 'yellow', 'black'];
+	ctx.fillStyle = colors[this.color];
 	ctx.arc(this.cx,this.cy,this.radius,0,2*Math.PI);
 	ctx.fill();
 	//console.log(this.cx, this.cy);
 };
-

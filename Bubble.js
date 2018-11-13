@@ -9,7 +9,7 @@ function Bubble(descr) {
     /*
     for (var property in descr) {
         this[property] = descr[property];
-    } 
+    }
     */
     this.velX *= this.directionX;
     this.sprite = this.sprite || g_sprites.bubble;
@@ -41,9 +41,9 @@ Bubble.prototype.update = function (du) {
     var prevY = this.cy;
     var nextX = prevX + this.velX;
     var nextY = prevY + this.velY;
-   
 
-    // Simple collision detection to keep the bubbles inside the canvas 
+
+    // Simple collision detection to keep the bubbles inside the canvas
     // Lines 45-60 i'd like to be in a function below (notOrbit).
     if(this.orbit === false){
         if(nextY > g_groundEdge - this.radius/2){
@@ -59,13 +59,14 @@ Bubble.prototype.update = function (du) {
             if(Bubble.orbit){
         }
         else{
+            scores.raisePoints();
             return entityManager.KILL_ME_NOW;
         }
     }
     }
 
     Bubble.orbit =  g_gravity;
-    
+
     if(Bubble.orbit){
         this.gravityOn();
     }
@@ -74,7 +75,7 @@ Bubble.prototype.update = function (du) {
         var accelY = Bubble.NOMINAL_GRAVITY*du;
         this.applyAccel(accelY, du);
     }
-    
+
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
@@ -83,12 +84,12 @@ Bubble.prototype.update = function (du) {
 var pow;
 Bubble.prototype.isItPowerup = function(){
     pow = util.randRange(1, 1000);
-   // console.log(pow);
      if(pow > 500){
         //console.log(pow);
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
+            color : Math.floor(Math.random()*5),
         });
 
     }
@@ -96,7 +97,7 @@ Bubble.prototype.isItPowerup = function(){
 
 
 Bubble.prototype.takeWireHit = function (pow) {
-   
+
     this.isItPowerup();
     this.kill();
     scores.raisePoints();
@@ -130,9 +131,9 @@ Bubble.prototype.getRadius = function () {
 Bubble.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;
-    
-    this.velY += accelY * du; 
- 
+
+    this.velY += accelY * du;
+
     var aveVelY = (oldVelY + this.velY) / 2;
 
     this.cx += du * this.velX;
@@ -140,7 +141,7 @@ Bubble.prototype.applyAccel = function(accelY, du) {
 }
 
 Bubble.prototype.render = function (ctx) {
-   
+
     var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
     this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
@@ -171,8 +172,8 @@ Bubble.prototype.setEarthPosition = function(){
     //find next cx/cy coordinates of the orbit
     this.cx = planetX + Math.cos(this.earthRadians) * this.dist;
     this.cy = planetY + Math.sin(this.earthRadians) * this.dist;
-        
-    // increase speed and reduce distance to black hole if bubbles are popped. 
+
+    // increase speed and reduce distance to black hole if bubbles are popped.
     if(this.scale === 1){
         this.cx += 25;
     }
@@ -184,7 +185,7 @@ Bubble.prototype.setEarthPosition = function(){
         this.dist = 80;
 
     }
-   
+
 }
 
 // I want to use this later to simplify the update function

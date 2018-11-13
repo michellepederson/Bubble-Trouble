@@ -44,7 +44,7 @@ Player.prototype.shoot = false;
 Player.prototype.spriteMode = 1;
 Player.prototype.lives = 3;
 Player.prototype.lastEnt;
-Player.prototype.isPowerUP = false;
+Player.prototype.eWires = -1;
 
 //var NOMINAL_GRAVITY = 0.12;
 
@@ -91,10 +91,14 @@ if(!this._isDeadNow){
 Player.prototype.checkEntity = function (ent) {
     // If the entity is power up element
     if (ent.isPowerUp()) {
-        this.isPowerUP = true;
+        if (ent.color === 0) Player.prototype.eWires += 1;
+        if (ent.color === 1) Player.prototype.lives += 1;
+        if (ent.color === 2) Wire.prototype.velToggle = true;
+        if (ent.color === 3) Wire.prototype.velToggle = false;
+        if (ent.color === 4) g_gravity = !g_gravity;
         ent.kill();
         return;
-    // If the entity is still coliding with the player, like the same bubble
+    // If the entity is still colliding with the player, like the same bubble
     } else if(ent === this.lastEnt) {
         return;
     }
@@ -147,7 +151,7 @@ Player.prototype.movePlayer = function (du) {
         this.spriteMode = 2;
 
     }
-    
+
 
     else {
         //If player just stopped moving, set flag to false
@@ -178,28 +182,28 @@ Player.prototype.movePlayer = function (du) {
             if((nextY + 50 > entityManager._bricks[n].cy &&
                nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
 
-                ((this.cx - 20 > entityManager._bricks[n].cx && 
+                ((this.cx - 20 > entityManager._bricks[n].cx &&
                     this.cx - 20 < entityManager._bricks[n].cx + brickwidth)||
                 (this.cx + 20 > entityManager._bricks[n].cx &&
-                    this.cx + 20 < entityManager._bricks[n].cx + brickwidth))){    
+                    this.cx + 20 < entityManager._bricks[n].cx + brickwidth))){
 
                 this.velY = 0;
             this.cy = temp-50;
-            
+
             if (keys[this.KEY_JUMP]){
                 this.jump(du,nextY);
-            } 
+            }
             return;
         }
 
             // jumping under bricks collision
-            else if((nextY - 50 < entityManager._bricks[n].cy + 40 && 
+            else if((nextY - 50 < entityManager._bricks[n].cy + 40 &&
                nextY - 50 > entityManager._bricks[n].cy) &&
 
-                ((this.cx + 20 > entityManager._bricks[n].cx && 
+                ((this.cx + 20 > entityManager._bricks[n].cx &&
                   this.cx - 20 < entityManager._bricks[n].cx + 60))){
 
-                this.cy = entityManager._bricks[n].cy + 41 + 50; 
+                this.cy = entityManager._bricks[n].cy + 41 + 50;
             this.velY = 0;
             return;
         }
@@ -207,7 +211,7 @@ Player.prototype.movePlayer = function (du) {
             //Bricks on left collision
             else if(this.cx - 20 < entityManager._bricks[n].cx + 60 && this.cx + 20 > entityManager._bricks[n].cx + 60){
 
-                if((this.cy + 20 >= entityManager._bricks[n].cy && 
+                if((this.cy + 20 >= entityManager._bricks[n].cy &&
                     this.cy - 20 <  entityManager._bricks[n].cy) ||
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
@@ -222,7 +226,7 @@ Player.prototype.movePlayer = function (du) {
             // Bricks on right colision
             else if(this.cx + 20 > entityManager._bricks[n].cx  && this.cx < entityManager._bricks[n].cx){
 
-                if((this.cy + 20 >= entityManager._bricks[n].cy && 
+                if((this.cy + 20 >= entityManager._bricks[n].cy &&
                     this.cy - 20 <  entityManager._bricks[n].cy) ||
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
@@ -232,13 +236,13 @@ Player.prototype.movePlayer = function (du) {
                 this.cy = prevY-0.4;
                 return;
             }
-        }    
+        }
             /*
             if (playerVMiddle > entityManager._bricks[n].cy && playerVMiddle < entityManager._bricks[n].cy+40) { // If player vertical-middle is inside block vertical bounds
                 if ((this.cx + 50 > entityManager._bricks[n].cx && this.cx + 50  < entityManager._bricks[n].cx + 60)) { // If player vmiddle-right goes through block-left
                    // p.x = blockLeft - p.w;
                     this.cx = entityManager._bricks[n].cx - 50; // ????????
-                } 
+                }
             else if ((this.cx - 50 < entityManager._bricks[n].cx + 60 && this.cx + 50 > entityManager._bricks[n].cx)) { // If player vmiddle-left goes through block-right
                     //p.x = blockRight;
                     this.cx = entityManager._bricks[n].cx+60+50;
@@ -247,7 +251,7 @@ Player.prototype.movePlayer = function (du) {
 
             */
 
-            
+
             /*
             else if(prevX > entityManager._bricks[n].cx && this.cx  < entityManager._bricks[n].cx + 60 && nextY > entityManager._bricks[n].cy+70){
                return;
@@ -278,8 +282,9 @@ Player.prototype.maybeAttack = function () {
     //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
 
     if (eatKey(KEY_FIRE)){
-        if(entityManager._Wires.length < 1 || this.isPowerUP){
+        if(entityManager._Wires.length < 1 || this.eWires > 0){
             entityManager.fire(this.cx, this.cy-this.getRadius());
+            if (entityManager._Wires.length === 2) this.eWires -= 1;
             //console.log(this.isPowerUP, 69);
         }
         if(!this.shoot){
@@ -287,7 +292,7 @@ Player.prototype.maybeAttack = function () {
         }
         else{
            this.shoot = true;
-       }    
+       }
 
        if(eatKey(this.KEY_SWORD)) {
         this.spriteMode = 4;
@@ -336,16 +341,16 @@ Player.prototype.spriteUpdate = function () {
         ++this.spriteCell;
         this.animationLag = 5;
 
-        if (this.spriteCell === g_sprite_cycles[this.spriteMode].length){ 
+        if (this.spriteCell === g_sprite_cycles[this.spriteMode].length){
             //If sprite is in death animation cycle, kill once he reaches the end of the animation.
             if(this.spriteMode === 0) return this.kill();
             //Likewise if sprite is in sword slashing animation cycle, return to idle once animation is complete.
             if(this.spriteMode === 4) this.spriteMode = 1;
             if(this.shoot) this.shoot = false;
-            //Reset to beginning of whatever animation cycle you are in 
+            //Reset to beginning of whatever animation cycle you are in
             this.spriteCell = 0;
         }
-    } 
+    }
 };
 
 Player.prototype.getRadius = function () {
@@ -380,7 +385,7 @@ Player.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;
 
-    this.velY += accelY * du; 
+    this.velY += accelY * du;
 
     var aveVelY = (oldVelY + this.velY) / 2;
 
