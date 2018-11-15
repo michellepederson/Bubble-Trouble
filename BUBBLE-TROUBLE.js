@@ -147,6 +147,7 @@ function startScreen() {
     main.init();
 
     document.getElementById('startScreen').style.display = "none";
+    start.play();
 
 }
 

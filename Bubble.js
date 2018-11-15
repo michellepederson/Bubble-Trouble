@@ -107,6 +107,7 @@ Bubble.prototype.takeWireHit = function (pow) {
     //this.kill();
     this.popped = true;
     scores.raisePoints();
+    pop1.play();
 
     if (this.scale > 0.25) {
         this._spawnFragment();

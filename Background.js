@@ -34,7 +34,6 @@ Background.prototype.update = function (du) {
 
     this.maybeToggleBackground();
 
-
 };
 
 Background.prototype.maybeToggleBackground = function () {

@@ -89,7 +89,7 @@ if(this.spriteMode!==0){
         hitEntity = spatialManager.findEntityOnSword(this.cx, this.cy, this.sprite.width, this.sprite.height, this.spriteCell);
 
         if (hitEntity){
-
+            
             var canTakeHit = hitEntity.takeWireHit;
             if (canTakeHit) canTakeHit.call(hitEntity);
 
@@ -108,13 +108,37 @@ Player.prototype.checkEntity = function (ent) {
     // If the entity is power up element.
     // Should the below code change the eWires / lives on this, rather than the prototype?
     if (ent.isPowerUp()) {
-        if (ent.color === 0) Player.prototype.eWires += 1;
-        else if (ent.color === 1) Player.prototype.lives += 1;
-        else if (ent.color === 2) Wire.prototype.velToggle = true;
-        else if (ent.color === 3) Wire.prototype.velToggle = false;
-        else if (ent.color === 4) g_gravity = !g_gravity;
-        else if (ent.color === 5) this.shield = true;
-        else if (ent.color === 6) this.sword = true;
+        if (ent.color === 0) {
+            Player.prototype.eWires += 1;
+            armor.play();
+            this.sword = false;
+        }
+        else if (ent.color === 1) {
+            Player.prototype.lives += 1;
+            potion.play();
+        }
+        else if (ent.color === 2) {
+            Wire.prototype.velToggle = true;
+            collect.play();
+        }
+        else if (ent.color === 3) {
+
+         Wire.prototype.velToggle = false;
+         quack.play();
+          }
+        else if (ent.color === 4) {
+            g_gravity = !g_gravity;
+            coin.play();
+            if(g_gravity) bass.play();
+        }
+        else if (ent.color === 5) {
+            this.shield = true;
+            shield.play();
+        }
+        else if (ent.color === 6) {
+             this.sword = true;
+             unsheath.play();
+         }
         ent.kill();
         return;
     // If the entity is still colliding with the player, like the same bubble
@@ -128,8 +152,10 @@ else if(this.shield) return;
         if (Player.prototype.lives === 1) {
             this.spriteMode = 0;
             this.spriteCell = 0;
+            death.play();
         } else {
             Player.prototype.lives -= 1;
+            hurt.play();
             this.lastEnt = ent;
         }
     }
@@ -213,6 +239,7 @@ Player.prototype.movePlayer = function (du) {
 
             if (keys[this.KEY_JUMP]){
                 this.jump(du,nextY);
+
             }
             return;
         }
@@ -303,11 +330,13 @@ Player.prototype.maybeAttack = function () {
     //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
     if (eatKey(KEY_FIRE)){
         if(this.sword){
+            swoosh.play();
             this.spriteMode = 4;
             this.spriteCell = 0;
         }
         else{
             if(entityManager._Wires.length < 1 || this.eWires > 0){
+                throw1.play();
                 entityManager.fire(this.cx, this.cy-this.getRadius());
                 if (entityManager._Wires.length === 2) this.eWires -= 1;
                 //console.log(this.isPowerUP, 69);
@@ -407,6 +436,7 @@ var jumphight = 3.8;
 var jumphightSquared = jumphight * jumphight;
 
 Player.prototype.jump = function(du,nextY){
+    jump.play();
     this.velY = -jumphightSquared;
     this.cy += this.velY;
 };
