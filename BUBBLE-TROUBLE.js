@@ -60,12 +60,20 @@ var g_allowMixedActions = true;
 var g_gravity = false;
 var g_useAveVel = true;
 var g_renderSpatialDebug = false;
+var g_bricks = false;
+var g_bricksFlag = 1;
+
 
 
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
 var KEY_GRAVITY = keyCode('G');
+var KEY_BRICK = keyCode('M');
+
+
+
+
 
 function processDiagnostics() {
 
@@ -77,6 +85,8 @@ function processDiagnostics() {
 
     if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
 
+    if(eatKey(KEY_BRICK)) g_bricks = !g_bricks;
+
 }
 
 // GAME-SPECIFIC RENDERING
@@ -86,6 +96,8 @@ function renderSimulation(ctx) {
     entityManager.render(ctx);
     // Blackhole would be object in entityManager if it has some behavior (features)
     if (g_gravity) drawBlackHole();
+    if(g_bricks) makeBricks();
+    
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
@@ -135,6 +147,23 @@ function resetGame() {
         clearTimeout(g_timeOuts[i]);
     }
 }
+
+
+function makeBricks(){
+    if(g_bricksFlag === 1){
+
+        var brickwidth = 60;
+        var brickheight = 40;
+        var brickOffsetTop = 100;
+        for(var i = 0; i < 10; i++){
+            for(var j = 0; j < 10; j++){
+                entityManager._bricks.push(new Brick ({cx: j*brickwidth, cy: (i*brickheight) + brickOffsetTop ,status: 0}));
+            }
+        }
+        g_bricksFlag += 1;
+    }
+}
+
 
 
       //START SCREEN

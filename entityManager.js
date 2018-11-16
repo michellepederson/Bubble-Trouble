@@ -35,6 +35,7 @@ _bubbles : [],
 _bricks : [],
 _scores : [],
 _power : [],
+_grenade: [],
 
 _forEachOf: function(aCategory, fn) {
     for (var i = 0; i < aCategory.length; ++i) {
@@ -53,14 +54,25 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bullets, this._Wires, this._players, this._blocks, this._bubbles, this._bricks, this._scores, this._power];
+    this._categories = [this._backgrounds, this._bricks, this._bullets, this._Wires, this._players, this._blocks, this._bubbles, this._scores, this._power, this._grenade];
 },
 
 init: function() {
 },
 
+makeGrenade: function(cx,cy,radius){
+    this._grenade.push(
+            new Grenade({
+                cx: cx,
+                cy: cy,
+                radius: radius,
+            })
+    );
+},
+
+
 fire: function(cx, cy) {
-    this._categories[2].push(
+    this._categories[3].push(
         new Wire({
             cx,
             // temporary solution cy. -40 because otherwise the wire shot collides with the player
@@ -102,15 +114,15 @@ generateScores : function(descr) {
 
 generateBubble : function(descr, g_mouseX, g_mouseY) {
     var entity = new Bubble(descr);
-    this._categories[5].push(entity);
+    this._categories[6].push(entity);
 },
 
 addBubble : function(bubble) {
-    this._categories[5].push(bubble);
+    this._categories[6].push(bubble);
 },
 
 noBallonsOnScreen : function() {
-    return this._categories[5].length === 0;
+    return this._categories[6].length === 0;
 },
 
 brick : function(cx, cy,status) {
@@ -129,12 +141,15 @@ generatePowerUp : function(cx, cy) {
     this._categories[8].push(entity);
 },
 
+
+
+
 getBubbles : function() {
-    return this._categories[5];
+    return this._categories[6];
 },
 
 getWires : function() {
-    return this._categories[2];
+    return this._categories[3];
 },
 
 resetBubbles: function() {

@@ -29,6 +29,11 @@ Player.prototype.KEY_JUMP   = 'W'.charCodeAt(0);
 Player.prototype.KEY_CROUCH = 'S'.charCodeAt(0);
 Player.prototype.KEY_SWORD = 'Z'.charCodeAt(0);
 
+
+//grenade key
+//Player.prototype.KEY_GRENADE = 'N'.charCodeAt(0);
+var KEY_GRENADE = keyCode('N');
+
 // Initial, inheritable, default values
 Player.prototype.rotation = 0;
 Player.prototype.cx = 200;
@@ -71,6 +76,7 @@ if(this.spriteMode!==0){
     this.maybeJump(du);
 
     }
+    this.grenade();
     //Update sprite to next animation frame
     this.spriteUpdate();
 
@@ -92,14 +98,21 @@ if(this.spriteMode!==0){
             
             var canTakeHit = hitEntity.takeWireHit;
             if (canTakeHit) canTakeHit.call(hitEntity);
-
         }
     }
         //Check for death and re-register
         if(!this._isDeadNow){
             spatialManager.register(this);
         }
-    };
+};
+
+
+
+Player.prototype.grenade = function () {
+    if(eatKey(KEY_GRENADE)){
+        entityManager.makeGrenade(this.cx,this.cy-50, 10);
+    }
+};
 
 // Works but each bubble can only take one life in a row.
 // Probably shouldn't be a problem for gameplay
