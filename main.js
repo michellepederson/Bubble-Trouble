@@ -83,9 +83,13 @@ main._iterCore = function (dt) {
 main._isGameOver = false;
 
 main.gameOver = function () {
-    this._isGameOver = true;
-    resetGame();
-    console.log("gameOver: quitting...");
+
+    g_playerIsDead = true;
+
+    //Forces the page to refresh - should replace with reset functions?
+    location.reload();
+    
+    
 };
 
 // Simple voluntary quit mechanism

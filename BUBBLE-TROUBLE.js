@@ -60,12 +60,20 @@ var g_allowMixedActions = true;
 var g_gravity = false;
 var g_useAveVel = true;
 var g_renderSpatialDebug = false;
+var g_bricks = false;
+var g_bricksFlag = 1;
+
 
 
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
 var KEY_GRAVITY = keyCode('G');
+var KEY_BRICK = keyCode('M');
+
+
+
+
 
 function processDiagnostics() {
 
@@ -77,6 +85,8 @@ function processDiagnostics() {
 
     if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
 
+    if(eatKey(KEY_BRICK)) g_bricks = !g_bricks;
+
 }
 
 // GAME-SPECIFIC RENDERING
@@ -86,17 +96,23 @@ function renderSimulation(ctx) {
     entityManager.render(ctx);
     // Blackhole would be object in entityManager if it has some behavior (features)
     if (g_gravity) drawBlackHole();
+    if(g_bricks) makeBricks();
+    
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
 // BLACKHOLE-DRAWING
 function drawBlackHole() {
+    /*
     ctx.beginPath();
     ctx.arc(planetX,planetY,12,0,360, false);
     ctx.fillStyle = 'black';
     ctx.fill();
     ctx.stroke();
+    */
+    g_sprites.sauron.drawCentredAt(ctx, planetX, planetY, 0);
 }
+
 
 // Bubble ADDING
 function addBubbles(level) {
@@ -131,14 +147,39 @@ function addBubbles(level) {
 // RESETTING OF THE GAME
 function resetGame() {
     // Clear all timeouts
+    
     for(var i = 0; i<g_timeOuts.length; i += 1) {
         clearTimeout(g_timeOuts[i]);
+    }
+    
+
+
+}
+
+
+function makeBricks(){
+    if(g_bricksFlag === 1){
+
+        var brickwidth = 60;
+        var brickheight = 40;
+        var brickOffsetTop = 100;
+        for(var i = 0; i < 10; i++){
+            for(var j = 0; j < 10; j++){
+                entityManager._bricks.push(new Brick ({cx: j*brickwidth, cy: (i*brickheight) + brickOffsetTop ,status: 0}));
+            }
+        }
+        g_bricksFlag += 1;
     }
 }
 
 
+
       //START SCREEN
 function startScreen() {
+
+    g_playerIsDead = false;
+    spatialManager.reset();
+    entityManager.reset();
 
 
     entityManager.init();
@@ -180,6 +221,8 @@ function requestPreloads() {
         //Wire and arrow
         wire : "img/player/chain.png",
         arrow : "img/player/arrow.png",
+        //Separate spike sprite because we change the scale for the wire/powerup arrows
+        spike : "img/player/arrow.png",
 
         //Platform aka purple turds
         platform : "img/tile_cave_platform.png",
@@ -191,10 +234,20 @@ function requestPreloads() {
         powerupOrb : "img/powerups/powerup-orb.png",
         powerupRing : "img/powerups/powerup-ring.png",
         duck : "img/powerups/duck.png",
-        gun : "img/powerups/gun.png",
-        grenade : "img/powerups/grenade.png",
+        //gun : "img/powerups/gun.png",
         sword : "img/powerups/powerup-sword.png",
-        trap : "img/powerups/trap.png",
+        //trap : "img/powerups/trap.png",
+        grenade : "img/powerups/grenade.png",
+        grenadeLive : "img/powerups/grenade-live.png",
+        sauron : "img/powerups/sauron.png",
+
+        //BOOOM
+        explosion1 : "img/powerups/explosion/explosion1.png",
+        explosion2 : "img/powerups/explosion/explosion2.png",
+        explosion3 : "img/powerups/explosion/explosion3.png",
+        explosion4 : "img/powerups/explosion/explosion4.png",
+        explosion5 : "img/powerups/explosion/explosion5.png",
+        explosion6 : "img/powerups/explosion/explosion6.png",
 
         //Player Sprites
         idle : "img/player/idle-sheet.png",
@@ -212,6 +265,7 @@ function requestPreloads() {
 var g_sprites = {}
 var g_sprite_cycles;
 var g_sprite_setup;
+var g_sprites_explosion = [];
 
 
 function preloadDone() {
@@ -247,10 +301,20 @@ function preloadDone() {
     g_sprites.powerupOrb = new Sprite(g_images.powerupOrb);
     g_sprites.powerupRing = new Sprite(g_images.powerupRing);
     g_sprites.duck = new Sprite(g_images.duck);
-    g_sprites.gun = new Sprite(g_images.gun);
-    g_sprites.grenade = new Sprite(g_images.grenade);
+    //g_sprites.gun = new Sprite(g_images.gun);
     g_sprites.sword = new Sprite(g_images.sword);
-    g_sprites.trap = new Sprite(g_images.trap);
+    //g_sprites.trap = new Sprite(g_images.trap);
+    g_sprites.grenade = new Sprite(g_images.grenade);
+    g_sprites.grenadeLive = new Sprite(g_images.grenadeLive);
+    g_sprites.sauron = new Sprite(g_images.sauron);
+
+    //Explosion
+    g_sprites_explosion[0] = new Sprite(g_images.explosion1);
+    g_sprites_explosion[1] = new Sprite(g_images.explosion2);
+    g_sprites_explosion[2] = new Sprite(g_images.explosion3);
+    g_sprites_explosion[3] = new Sprite(g_images.explosion4);
+    g_sprites_explosion[4] = new Sprite(g_images.explosion5);
+    g_sprites_explosion[5] = new Sprite(g_images.explosion6);
 
 
     //Player Animations

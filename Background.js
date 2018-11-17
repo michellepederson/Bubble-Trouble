@@ -88,9 +88,9 @@ Background.prototype.render = function (ctx) {
     for(var i=0; i< 650; i+=g_sprites.spike.width){
         ctx.beginPath();
         ctx.save();
-        //ctx.scale(1, -1);
+        ctx.scale(1, 1);
         //ctx.translate(i, 0);
-        g_sprites.arrow.drawCentredAt(ctx, i, 0, 3.14);
+        g_sprites.spike.drawCentredAt(ctx, i, 0, 3.14);
         ctx.restore();
     }
 

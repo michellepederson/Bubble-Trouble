@@ -2,7 +2,7 @@
 // SOUND
 // =============
 
-var start, pop1, pop2, pop3, swoosh, throw1, unsheath, bass, hurt, coin, collect, jump, potion, quack, shield, death, armor;
+var start, pop1, pop2, pop3, swoosh, throw1, unsheath, bass, hurt, coin, collect, jump, potion, quack, shield, death, armor, explosion, throwGrenade, pin;
 
 start = new sound("sound/start.m4a");
 pop1 = new sound("sound/pop1.m4a");
@@ -21,6 +21,9 @@ quack = new sound("sound/quack.m4a");
 shield = new sound("sound/shield.m4a");
 death = new sound("sound/death.m4a");
 armor = new sound("sound/armor.m4a");
+explosion = new sound("sound/explosion.m4a");
+throwGrenade = new sound("sound/throw-grenade.m4a");
+pin = new sound("sound/pin.m4a");
 
 function sound(src) {
     this.sound = document.createElement("audio");
