@@ -21,7 +21,7 @@ Bubble.prototype = new Entity();
 var KEY_GRAVITY = keyCode('G');
 
 Bubble.prototype.cx = 150;
-Bubble.prototype.cy = 50;
+Bubble.prototype.cy = 80;
 Bubble.prototype.radius = 30;
 Bubble.prototype.direction = 1;
 Bubble.prototype.velX = -2;
@@ -58,12 +58,14 @@ Bubble.prototype.update = function (du) {
         if(nextX >= g_canvas.width-this.radius/2){
             this.velX *= -1;
         }
-        if(nextY <= this.radius/2){
+        if(nextY <= this.radius*2){
             if(Bubble.orbit){
-        }
+            }
         else{
             scores.raisePoints();
-            return entityManager.KILL_ME_NOW;
+            this.popped = true;
+            pop1.play();
+            //return entityManager.KILL_ME_NOW;
         }
     }
     }
@@ -89,12 +91,12 @@ Bubble.prototype.update = function (du) {
 var pow;
 Bubble.prototype.isItPowerup = function(){
     pow = util.randRange(1, 1000);
-     if(pow > 500){
+     if(pow > 800){
         //console.log(pow);
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
-            color : Math.floor(Math.random()*7),
+            color : Math.floor(Math.random()*8),
         });
 
     }
@@ -102,16 +104,17 @@ Bubble.prototype.isItPowerup = function(){
 
 
 Bubble.prototype.takeWireHit = function (pow) {
+    if(!this.popped){
+        this.isItPowerup();
+        //this.kill();
+        this.popped = true;
+        scores.raisePoints();
+        pop1.play();
 
-    this.isItPowerup();
-    //this.kill();
-    this.popped = true;
-    scores.raisePoints();
-    pop1.play();
-
-    if (this.scale > 0.25) {
-        this._spawnFragment();
-        this._spawnFragment();
+        if (this.scale > 0.25) {
+            this._spawnFragment();
+            this._spawnFragment();
+        }
     }
 };
 
