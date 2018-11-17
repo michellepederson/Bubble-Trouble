@@ -64,7 +64,7 @@ Bubble.prototype.update = function (du) {
         else{
             scores.raisePoints();
             this.popped = true;
-            pop1.play();
+     
             //return entityManager.KILL_ME_NOW;
         }
     }
@@ -109,11 +109,13 @@ Bubble.prototype.takeWireHit = function (pow) {
         //this.kill();
         this.popped = true;
         scores.raisePoints();
-        pop1.play();
-
+        //pop1.play();
+        if(this.scale === 1)pop1.play();
+        if (this.scale === 0.25) pop3.play();
         if (this.scale > 0.25) {
             this._spawnFragment();
             this._spawnFragment();
+            if(this.scale === 0.5) pop2. play();
         }
     }
 };

@@ -49,6 +49,7 @@ _forEachOf: function(aCategory, fn) {
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
+COUNTER : 20,
 
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
@@ -74,16 +75,18 @@ init: function() {
     g_playerIsDead = false;
 },
 
-makeGrenade: function(cx,cy,radius){
+makeGrenade: function(cx,cy,radius, left){
     this._grenade.push(
             new Grenade({
                 cx: cx,
                 cy: cy,
                 radius: radius,
+                left: left
             })
     );
 },
 
+explosion: false,
 
 fire: function(cx, cy) {
     this._categories[3].push(
@@ -178,7 +181,27 @@ reset : function() {
     Player.prototype.lives = 3;
 },
 
+
 update: function(du) {
+
+  //For shaking screen on explosion
+  if(this.explosion){
+
+    if(this.COUNTER > 0){
+  
+      ctx.save();
+      var dx = Math.random()*10;
+      var dy = Math.random()*10;
+      ctx.translate(dx, dy);  
+
+      this.COUNTER--;
+  }
+  else {
+    this.explosion = false;
+    this.COUNTER = 20;
+  }
+}
+  
 
     for (var c = 0; c < this._categories.length; ++c) {
         var aCategory = this._categories[c];
@@ -203,6 +226,7 @@ update: function(du) {
 
 render: function(ctx) {
 
+
     for (var c = 0; c < this._categories.length; ++c) {
 
         var aCategory = this._categories[c];
@@ -213,10 +237,15 @@ render: function(ctx) {
 
         }
     }
+    //Restore if shaking screen
+    if(this.explosion){
+    ctx.restore();
+}
 }
 
 }
 
 // Some deferred setup which needs the object to have been created first
 entityManager.deferredSetup();
+
 

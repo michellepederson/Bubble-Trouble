@@ -20,10 +20,15 @@ powerUp.prototype.isPowerON = false;
 powerUp.prototype.NOMINAL_GRAVITY = 0.12;
 powerUp.prototype.radius = 20;
 powerUp.prototype.color;
+powerUp.prototype.lifespan = 2000 / NOMINAL_UPDATE_INTERVAL;
 
 powerUp.prototype.update = function (du) {
 	spatialManager.unregister(this);
 	if (this._isDeadNow) return entityManager.KILL_ME_NOW;
+
+	this.lifespan -= du;
+    if (this.lifespan < 0 ) return entityManager.KILL_ME_NOW;
+
 	var prevY = this.cy;
 	var nextY = prevY + this.velY*du;
 

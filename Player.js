@@ -29,6 +29,11 @@ Player.prototype.KEY_JUMP   = 'W'.charCodeAt(0);
 Player.prototype.KEY_CROUCH = 'S'.charCodeAt(0);
 Player.prototype.KEY_SWORD = 'Z'.charCodeAt(0);
 
+
+//grenade key
+//Player.prototype.KEY_GRENADE = 'N'.charCodeAt(0);
+var KEY_GRENADE = keyCode('N');
+
 // Initial, inheritable, default values
 Player.prototype.rotation = 0;
 Player.prototype.cx = 200;
@@ -65,12 +70,13 @@ if(this._isDeadNow && Player.prototype.lives === 1){
 if(this.spriteMode!==0){
 
     this.movePlayer(du);
+
+    this.maybeJump(du);
     // Shoot wire or swing sword
     this.maybeAttack();
 
-    this.maybeJump(du);
-
     }
+    this.grenade();
     //Update sprite to next animation frame
     this.spriteUpdate();
 
@@ -83,23 +89,21 @@ if(this.spriteMode!==0){
         this.lastEnt = undefined;
     }
 
-    //If in sword mode, collison check for sword swings
-    if(this.spriteMode === 4){
-        var hitEntity = this.findHitEntity();
-        hitEntity = spatialManager.findEntityOnSword(this.cx, this.cy, this.sprite.width, this.sprite.height, this.spriteCell);
-
-        if (hitEntity){
-            
-            var canTakeHit = hitEntity.takeWireHit;
-            if (canTakeHit) canTakeHit.call(hitEntity);
-
-        }
-    }
         //Check for death and re-register
         if(!this._isDeadNow){
             spatialManager.register(this);
         }
-    };
+};
+
+
+
+Player.prototype.grenade = function () {
+    if(eatKey(KEY_GRENADE)){
+        entityManager.makeGrenade(this.cx,this.cy-50, 10, this.left);
+        pin.play();
+        throwGrenade.play();
+    }
+};
 
 // Works but each bubble can only take one life in a row.
 // Probably shouldn't be a problem for gameplay
@@ -169,7 +173,7 @@ Player.prototype.movePlayer = function (du) {
     var nextX = prevX + this.velX;
     var nextY = prevY + this.velY;
 
-    if(keys[this.KEY_CROUCH]){
+    if(keys[this.KEY_CROUCH] && !this.move){
         if(this.spriteMode!==6) this.spriteCell =0;
         this.spriteMode = 6;
     }
@@ -265,6 +269,7 @@ Player.prototype.movePlayer = function (du) {
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
                        this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx + 61+20;
+                    this.move = false;
                 this.velY = 0;
                 this.cy = prevY-0.4;
                 return;
@@ -280,6 +285,7 @@ Player.prototype.movePlayer = function (du) {
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
                        this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx-21;
+                    this.move = false;
                 this.velY = 0;
                 this.cy = prevY-0.4;
                 return;
@@ -350,13 +356,16 @@ Player.prototype.maybeAttack = function () {
     }
 }
 
-/*
-   if(eatKey(this.KEY_SWORD)) {
+    //If in sword mode, collison check for sword swings
+    if(this.sword && this.spriteMode === 4 &&(this.spriteCell === 1 || this.spriteCell === 2)){
+        var hitEntity;
+        hitEntity = spatialManager.findEntityOnSword(this.cx, this.cy, this.sprite.width, this.sprite.height, this.spriteCell);
 
-    this.spriteMode = 4;
-    this.spriteCell = 0;
-}
-*/
+        if (hitEntity){           
+            var canTakeHit = hitEntity.takeWireHit;
+            if (canTakeHit) canTakeHit.call(hitEntity);
+        }
+    }
 
 if(this.shoot){
     this.spriteMode = 3;
@@ -381,7 +390,7 @@ Player.prototype.maybeJump = function (du) {
 
     }
     else{
-        if(this.velY !== 0){
+        if(this.velY !== 0 && this.spriteMode!==4){
             this.spriteMode = 5;
             this.spriteCell = 0;
         }

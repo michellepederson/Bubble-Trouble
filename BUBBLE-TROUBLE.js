@@ -147,7 +147,7 @@ function addBubbles(level) {
 // RESETTING OF THE GAME
 function resetGame() {
     // Clear all timeouts
-    
+
     for(var i = 0; i<g_timeOuts.length; i += 1) {
         clearTimeout(g_timeOuts[i]);
     }
@@ -214,6 +214,11 @@ function requestPreloads() {
         bkgIndustrial2 : "img/bkg-industrial/skill-desc_0002_far-buildings.png",
         bkgIndustrial3 : "img/bkg-industrial/skill-desc_0001_buildings.png",
         bkgIndustrial4 : "img/bkg-industrial/skill-desc_0000_foreground.png",
+
+        //Background Three
+        bkgUnderwater1 : "img/bkg-underwater/far.png",
+        bkgUnderwater2 : "img/bkg-underwater/sand.png",
+        bkgUnderwater3 : "img/bkg-underwater/foreground-merged.png",
 
         //Spikes
         spike: "img/spike.png",
@@ -283,6 +288,11 @@ function preloadDone() {
     g_sprites.bgkIndustrial2 = new Sprite(g_images.bkgIndustrial2);
     g_sprites.bgkIndustrial3 = new Sprite(g_images.bkgIndustrial3);
     g_sprites.bgkIndustrial4 = new Sprite(g_images.bkgIndustrial4);
+
+    //Background Three
+    g_sprites.bkgUnderwater1 = new Sprite(g_images.bkgUnderwater1);
+    g_sprites.bkgUnderwater2 = new Sprite(g_images.bkgUnderwater2);
+    g_sprites.bkgUnderwater3 = new Sprite(g_images.bkgUnderwater3);
 
     //Spikes
     g_sprites.spike = new Sprite (g_images.spike);

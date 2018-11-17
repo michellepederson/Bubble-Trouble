@@ -37,6 +37,11 @@ getNewSpatialID : function() {
     return id;
 },
 
+reset : function (){
+    this._nextSpatialID = 1;
+    this._entities.length = 0;
+},
+
 // Had some problems with registering and unregistering the entities so I just changed this until i got my code to work...
 
 
@@ -127,6 +132,56 @@ findEntityOnSword(cx, cy, width, height, frame){
     return entity;
 
 },
+
+
+/*
+findEntityOnGrenade : function(posX, posY, radius){
+
+    var entity, pos, posX, posY, radius;
+    var bubbles = entityManager.getBubbles();
+
+     for (var i = 0; i<bubbles.length; i += 1) {
+        var e = bubbles[i];
+        pos = e.getPos();
+        posX = pos['posX'];
+        posY = pos['posY'];
+        radius = e.getRadius();
+        var insideRange = util.distSq(posX, posY, e.posX, e.posY) < util.square(e.radius + radius)
+        if (insideRange) {
+            console.log("hit");
+            entity = e;
+        }
+    }
+    return entity;
+},
+*/
+
+findEntityOnGrenade(Grenade) {
+    var halfwidth = Grenade.sprite.width;
+    //console.log(halfwidth);
+    var entity, pos, posX, posY, radius;
+    var bubbles = entityManager.getBubbles();
+    for (var i = 0; i<bubbles.length; i += 1) {
+        var e = bubbles[i];
+        pos = e.getPos();
+        posX = pos['posX'];
+        posY = pos['posY'];
+        radius = e.getRadius();
+        var insideRange = util.distSq(Grenade.cx, Grenade.cy, e.posX, e.posY) < util.square(e.radius + halfwidth);
+        if (insideRange) {
+           // console.log("hit");
+            entity = e;
+        }
+    }
+    return entity;
+},
+
+
+
+
+
+
+
 
 /*findEntityInRange: function(posX, posY, radius){
     // TODO: YOUR STUFF HERE!

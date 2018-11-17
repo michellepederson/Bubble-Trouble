@@ -30,25 +30,14 @@ Brick.prototype.KEY_BRICK = 'M'.charCodeAt(0);
 Brick.prototype.ONOFF = false;
 //Brick.prototype.buildBricks = function() 
 Brick.prototype.update = function (du){
-	spatialManager.unregister(this);
-
-    	if(this._isDeadNow){
-        	return -1;
-    	}
-
-		if(eatKey(this.KEY_BRICK)){
-			Brick.ONOFF = !Brick.ONOFF;
-			if(Brick.ONOFF === true){
-				this.isStatus(); 
-			}
-			else{
-				this.changeStatus();
-			}
-		}
 	
-	    if(!this._isDeadNow){
-        spatialManager.register(this);
-    }
+	if(g_bricks){
+
+		this.isStatus(); 
+	}			
+	else{
+		this.changeStatus();
+	}
 };
 
 Brick.prototype.render = function (ctx) {
@@ -85,19 +74,14 @@ Brick.prototype.isStatus = function(){
 			entityManager._bricks[65].status = 1;
 			entityManager._bricks[79].status = 1;
 			*/
+			entityManager._bricks[3].status = 1;
 			entityManager._bricks[8].status = 1;
-			//entityManager._bricks[18].status = 1;
-			entityManager._bricks[17].status = 1;
-			entityManager._bricks[16].status = 1;
-			entityManager._bricks[15].status = 1;
-			entityManager._bricks[33].status = 1;
+			entityManager._bricks[7].status = 1;
+			entityManager._bricks[6].status = 1;
+			entityManager._bricks[5].status = 1;
+			entityManager._bricks[31].status = 1;
 			//entityManager._bricks[45].status = 1;
-			entityManager._bricks[60].status = 1;
-			//entityManager._bricks[65].status = 1;
-			entityManager._bricks[81].status = 1;
-			entityManager._bricks[82].status = 1;
-			entityManager._bricks[87].status = 1;
-			entityManager._bricks[97].status = 1;
+			entityManager._bricks[70].status = 1;
 }
 
 

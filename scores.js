@@ -17,8 +17,8 @@ scores.raisePoints = function() {
 }
 
 scores.prototype.update = function (du) {
-  ctx.fillText(scores.prototype.points,500,560);
-  ctx.fillText(Player.prototype.lives,200,565);
+ // ctx.fillText(scores.prototype.points,500,560);
+ // ctx.fillText(Player.prototype.lives,200,565);
 };
 
 scores.prototype.render = function (ctx) {
