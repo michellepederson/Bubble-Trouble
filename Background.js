@@ -39,7 +39,7 @@ Background.prototype.update = function (du) {
 Background.prototype.maybeToggleBackground = function () {
 
     if(keys[this.KEY_BACKGROUND]){
-        this.backgroundMode *= -1;
+        this.backgroundMode++;
     }
 
 };
@@ -67,7 +67,7 @@ Background.prototype.render = function (ctx) {
         ctx.restore();
     }
 
-    else {
+    else if(this.backgroundMode === 2) {
 
         ctx.save();
         ctx.scale(2.75, 2.75);
@@ -82,6 +82,18 @@ Background.prototype.render = function (ctx) {
 
         ctx.restore();
 
+    }
+
+    else {
+        ctx.save();
+        ctx.scale(3.25,3.25);
+        ctx.translate(cx/60, 0);
+        g_sprites.bkgUnderwater1.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bkgUnderwater2.drawAt(ctx, -50, 0);
+        ctx.translate(cx/60, 0);
+        g_sprites.bkgUnderwater3.drawAt(ctx, -50, 0);
+        ctx.restore();
     }
 
     //Draw the spikes
