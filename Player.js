@@ -328,10 +328,9 @@ Player.prototype.movePlayer = function (du) {
 };
 
 var KEY_FIRE = keyCode(' ');
-//var KEY_GRAVITY = keyCode('G');
+
 Player.prototype.maybeAttack = function () {
 
-    //var power = powerUp.prototype.getPower(this.cx,this.cy, this.getRadius());
     if (eatKey(KEY_FIRE)){
         if(this.sword){
             swoosh.play();
@@ -342,9 +341,7 @@ Player.prototype.maybeAttack = function () {
             if(entityManager._Wires.length < 1 || this.eWires){
                 throw1.play();
                 entityManager.fire(this.cx, this.cy-this.getRadius());
-                console.log(entityManager._Wires.length);
                 if (entityManager._Wires.length > 1) this.eWires = false;
-                //console.log(this.isPowerUP, 69);
             }
             if(!this.shoot){
                 this.spriteCell = 0;

@@ -17,7 +17,7 @@ with suitable 'data' and 'methods'.
 
 
 // Tell jslint not to complain about my use of underscore prefixes (nomen),
-// my flattening of some indentation (white), or my use of incr/decr ops 
+// my flattening of some indentation (white), or my use of incr/decr ops
 // (plusplus).
 //
 /*jslint nomen: true, white: true, plusplus: true*/
@@ -70,7 +70,7 @@ init: function() {
     this._power.length = 0;
     this._grenade.length = 0;
 
-    
+
     this._isGameOver = true;
     g_playerIsDead = false;
 },
@@ -175,7 +175,7 @@ resetBubbles: function() {
 
 haltBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.halt);
-},	
+},
 
 reset : function() {
     Player.prototype.lives = 3;
@@ -188,11 +188,11 @@ update: function(du) {
   if(this.explosion){
 
     if(this.COUNTER > 0){
-  
+
       ctx.save();
       var dx = Math.random()*10;
       var dy = Math.random()*10;
-      ctx.translate(dx, dy);  
+      ctx.translate(dx, dy);
 
       this.COUNTER--;
   }
@@ -201,7 +201,7 @@ update: function(du) {
     this.COUNTER = 20;
   }
 }
-  
+
 
     for (var c = 0; c < this._categories.length; ++c) {
         var aCategory = this._categories[c];
@@ -247,5 +247,3 @@ render: function(ctx) {
 
 // Some deferred setup which needs the object to have been created first
 entityManager.deferredSetup();
-
-
