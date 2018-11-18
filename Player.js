@@ -49,7 +49,7 @@ Player.prototype.shoot = false;
 Player.prototype.spriteMode = 1;
 Player.prototype.lives = 3;
 Player.prototype.lastEnt;
-Player.prototype.eWires = -1;
+Player.prototype.eWires = false;
 Player.prototype.shield = false;
 Player.prototype.sword = false;
 
@@ -113,7 +113,7 @@ Player.prototype.checkEntity = function (ent) {
     // Should the below code change the eWires / lives on this, rather than the prototype?
     if (ent.isPowerUp()) {
         if (ent.color === 0) {
-            Player.prototype.eWires += 1;
+            this.eWires = true;
             armor.play();
             this.sword = false;
         }
@@ -341,10 +341,11 @@ Player.prototype.maybeAttack = function () {
             this.spriteCell = 0;
         }
         else{
-            if(entityManager._Wires.length < 1 || this.eWires > 0){
+            if(entityManager._Wires.length < 1 || this.eWires){
                 throw1.play();
                 entityManager.fire(this.cx, this.cy-this.getRadius());
-                if (entityManager._Wires.length === 2) this.eWires -= 1;
+                console.log(entityManager._Wires.length);
+                if (entityManager._Wires.length > 1) this.eWires = false;
                 //console.log(this.isPowerUP, 69);
             }
             if(!this.shoot){
@@ -361,7 +362,7 @@ Player.prototype.maybeAttack = function () {
         var hitEntity;
         hitEntity = spatialManager.findEntityOnSword(this.cx, this.cy, this.sprite.width, this.sprite.height, this.spriteCell);
 
-        if (hitEntity){           
+        if (hitEntity){
             var canTakeHit = hitEntity.takeWireHit;
             if (canTakeHit) canTakeHit.call(hitEntity);
         }
