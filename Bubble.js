@@ -62,10 +62,12 @@ Bubble.prototype.update = function (du) {
             if(Bubble.orbit){
             }
         else{
+          // change direction to raise points only once.
+            this.velY *= -1;
             scores.raisePoints();
             this.popped = true;
-     
-            //return entityManager.KILL_ME_NOW;
+
+            // return entityManager.KILL_ME_NOW;
         }
     }
     }
@@ -223,9 +225,9 @@ Bubble.prototype.spriteUpdate = function () {
         ++this.spriteCell;
         this.animationLag = 5;
 
-        if (this.spriteCell === g_sprite_cycles[7].length){ 
+        if (this.spriteCell === g_sprite_cycles[7].length){
             //If sprite is in death animation cycle, kill once he reaches the end of the animation.
             return this.kill();
         }
-    } 
+    }
 }

@@ -110,7 +110,6 @@ Player.prototype.grenade = function () {
 
 Player.prototype.checkEntity = function (ent) {
     // If the entity is power up element.
-    // Should the below code change the eWires / lives on this, rather than the prototype?
     if (ent.isPowerUp()) {
         if (ent.color === 0) {
             this.eWires = true;
@@ -126,7 +125,6 @@ Player.prototype.checkEntity = function (ent) {
             collect.play();
         }
         else if (ent.color === 3) {
-
          Wire.prototype.velToggle = false;
          quack.play();
           }
