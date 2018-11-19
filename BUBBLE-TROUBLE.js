@@ -26,16 +26,6 @@ function init() {
         setTimeout(function(){
         addBubbles(level);
     }, time)]
-
-    /*
-    var brickwidth = 60;
-    var brickheight = 40;
-    var brickOffsetTop = 100;
-    for(var i = 0; i < 10; i++){
-        for(var j = 0; j < 10; j++){
-             entityManager.brick(j*brickwidth, (i*brickheight) + brickOffsetTop , 0);
-        }
-    }*/
 }
 
 // GATHER INPUTS
@@ -84,9 +74,18 @@ function processDiagnostics() {
     if(eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
 
     if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
+    
+    if(eatKey(KEY_BRICK)){
+       
 
-    if(eatKey(KEY_BRICK)) g_bricks = !g_bricks;
-
+        if(!g_bricks){
+            g_bricksFlag = 1;
+        }
+        else if(g_bricks){
+            killbricks();
+        }
+        g_bricks = !g_bricks;
+    } 
 }
 
 // GAME-SPECIFIC RENDERING
@@ -152,26 +151,29 @@ function resetGame() {
         clearTimeout(g_timeOuts[i]);
     }
     
-
-
 }
 
 
 function makeBricks(){
     if(g_bricksFlag === 1){
-
-        var brickwidth = 60;
-        var brickheight = 40;
-        var brickOffsetTop = 100;
-        for(var i = 0; i < 10; i++){
-            for(var j = 0; j < 10; j++){
-                entityManager._bricks.push(new Brick ({cx: j*brickwidth, cy: (i*brickheight) + brickOffsetTop ,status: 0}));
-            }
-        }
-        g_bricksFlag += 1;
+        entityManager._bricks.push(new Brick ({cx:   0, cy: 365 ,status: 1}));
+        entityManager._bricks.push(new Brick ({cx: 120, cy: 230 ,status: 1}));
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 150 ,status: 1}));
+        entityManager._bricks.push(new Brick ({cx: 360, cy: 150 ,status: 1}));
+        entityManager._bricks.push(new Brick ({cx: 420, cy: 150 ,status: 1}));
+        entityManager._bricks.push(new Brick ({cx: 480, cy: 150 ,status: 1}));
+        entityManager._bricks.push(new Brick ({cx: 540, cy: 150 ,status: 1}));
     }
+        g_bricksFlag += 1;
 }
 
+function killbricks(){
+    for(var i = entityManager._bricks.length-1; i >= 0; i--){
+       
+        // didn't get KILL_ME_NOW to work so I use .pop(); for now.
+        entityManager._bricks.pop();
+    }
+}
 
 
       //START SCREEN

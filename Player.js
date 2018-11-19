@@ -53,7 +53,6 @@ Player.prototype.eWires = false;
 Player.prototype.shield = false;
 Player.prototype.sword = false;
 
-
 //var NOMINAL_GRAVITY = 0.12;
 
 Player.prototype.update = function (du) {
@@ -211,6 +210,9 @@ Player.prototype.movePlayer = function (du) {
             this.spriteMode = 1;
         }
     }
+
+    if(g_bricks){
+
     var brickheight = 40;
     var brickwidth = 60;
     var PlayerWidth = 98;
@@ -222,11 +224,13 @@ Player.prototype.movePlayer = function (du) {
     var playerHMiddle = this.cx;
     var playerVMiddle = this.cy;
 
+
+    // The  player to brick collision checking: 
     for(var n = 0; n < entityManager._bricks.length; n++){
 
         if(entityManager._bricks[n].status === 1){
             var temp = entityManager._bricks[n].cy;
-            //console.log(prevX,this.cx, entityManager._bricks[n].cx);
+            
             //falling/walking on bricks collision
             if((nextY + 50 > entityManager._bricks[n].cy &&
                nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
@@ -241,7 +245,6 @@ Player.prototype.movePlayer = function (du) {
 
             if (keys[this.KEY_JUMP]){
                 this.jump(du,nextY);
-
             }
             return;
         }
@@ -268,8 +271,8 @@ Player.prototype.movePlayer = function (du) {
                        this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx + 61+20;
                     this.move = false;
-                this.velY = 0;
-                this.cy = prevY-0.4;
+                //this.velY = 0;
+                this.cy = prevY;
                 return;
             }
         }
@@ -284,46 +287,13 @@ Player.prototype.movePlayer = function (du) {
                        this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx-21;
                     this.move = false;
-                this.velY = 0;
-                this.cy = prevY-0.4;
+                //this.velY = 0;
+                this.cy = prevY;
                 return;
+               }
             }
         }
-            /*
-            if (playerVMiddle > entityManager._bricks[n].cy && playerVMiddle < entityManager._bricks[n].cy+40) { // If player vertical-middle is inside block vertical bounds
-                if ((this.cx + 50 > entityManager._bricks[n].cx && this.cx + 50  < entityManager._bricks[n].cx + 60)) { // If player vmiddle-right goes through block-left
-                   // p.x = blockLeft - p.w;
-                    this.cx = entityManager._bricks[n].cx - 50; // ????????
-                }
-            else if ((this.cx - 50 < entityManager._bricks[n].cx + 60 && this.cx + 50 > entityManager._bricks[n].cx)) { // If player vmiddle-left goes through block-right
-                    //p.x = blockRight;
-                    this.cx = entityManager._bricks[n].cx+60+50;
-                }
-            }
-
-            */
-
-
-            /*
-            else if(prevX > entityManager._bricks[n].cx && this.cx  < entityManager._bricks[n].cx + 60 && nextY > entityManager._bricks[n].cy+70){
-               return;
-            }
-             else if(prevX  < entityManager._bricks[n].cx && this.cx > entityManager._bricks[n].cx && nextY > entityManager._bricks[n].cy+70){
-               return;
-            }
-
-            else if(prevX > entityManager._bricks[n].cx && this.cx < entityManager._bricks[n].cx + 60 && prevY > entityManager._bricks[n].cy){
-              // console.log("return true");
-               this.cx = entityManager._bricks[n].cx + 61;
-               return;
-            }
-             else if(prevX < entityManager._bricks[n].cx && this.cx > entityManager._bricks[n].cx && prevY > entityManager._bricks[n].cy){
-               //console.log("return true");
-               this.cx = entityManager._bricks[n].cx - 1;
-               return;
-            }
-            */
-        }
+    }
     }
 };
 
@@ -363,9 +333,9 @@ Player.prototype.maybeAttack = function () {
         }
     }
 
-if(this.shoot){
-    this.spriteMode = 3;
-}
+    if(this.shoot){
+        this.spriteMode = 3;
+    }
 
 };
 
@@ -436,7 +406,6 @@ Player.prototype.render = function (ctx) {
   // this.drawcenter(ctx);
 };
 
-
 var jumphight = 3.8;
 var jumphightSquared = jumphight * jumphight;
 
@@ -457,7 +426,6 @@ Player.prototype.renderPowerup = function () {
     }
 }
 
-
 Player.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;
@@ -469,27 +437,6 @@ Player.prototype.applyAccel = function(accelY, du) {
     this.cx += du * this.velX;
     this.cy += du * aveVelY;
 };
-
-/*
-Player.prototype.PlayerToBrickCollision = function(ctx){
-    var prevX = this.cx;
-    var prevY = this.cy;
-    var nextX = prevX + this.velX;
-    var nextY = prevY + this.velY;
-
-
-    for(var n = 0; n < entityManager._bricks.length; n++){
-        if(entityManager._bricks[n].status === 1){
-            console.log(prevX,nextX, entityManager._bricks[n].cx, this.velX);
-            if(prevX < entityManager._bricks[n].cx && nextX >= entityManager._bricks[n].cx){
-               // console.log("return true");
-            }
-           // console.log("not working");
-        }
-    }
-}
-
-*/
 
 Player.prototype.drawcenter = function(ctx){
 

@@ -31,57 +31,28 @@ Brick.prototype.ONOFF = false;
 //Brick.prototype.buildBricks = function() 
 Brick.prototype.update = function (du){
 	
-	if(g_bricks){
-
-		this.isStatus(); 
-	}			
-	else{
-		this.changeStatus();
-	}
+	
+	
 };
 
 Brick.prototype.render = function (ctx) {
-	
-	for(var i = 0; i < entityManager._bricks.length; i++ ){
-		if(entityManager._bricks[i].status === 1){
-			 //ctx.fillStyle = 'black';
-   			 //ctx.fillRect(entityManager._bricks[i].cx, entityManager._bricks[i].cy, 60, 40);
-   			 this.sprite.drawAt(ctx, entityManager._bricks[i].cx, entityManager._bricks[i].cy, 0);
+	if(g_bricks){
+		for(var i = 0; i < entityManager._bricks.length; i++ ){
+			if(entityManager._bricks[i].status === 1){
+				//ctx.fillStyle = 'black';
+   				//ctx.fillRect(entityManager._bricks[i].cx, entityManager._bricks[i].cy, 60, 40);
+   				this.sprite.drawAt(ctx, entityManager._bricks[i].cx, entityManager._bricks[i].cy, 0);
+			}
 		}
 	}
 };
 
 
 Brick.prototype.changeStatus = function(){
-
-	for(var i = 0; i < entityManager._bricks.length; i++ ){
-		entityManager._bricks[i].status = 0;
-	}
 }
 
 Brick.prototype.isStatus = function(){
-/*
-			entityManager._bricks[10].status = 1;
-			entityManager._bricks[21].status = 1;
-			entityManager._bricks[32].status = 1;
-			entityManager._bricks[43].status = 1;
-			entityManager._bricks[54].status = 1;
-			entityManager._bricks[65].status = 1;
-			entityManager._bricks[79].status = 1;
-			
-			entityManager._bricks[43].status = 1;
-			entityManager._bricks[54].status = 1;
-			entityManager._bricks[65].status = 1;
-			entityManager._bricks[79].status = 1;
-			*/
-			entityManager._bricks[3].status = 1;
-			entityManager._bricks[8].status = 1;
-			entityManager._bricks[7].status = 1;
-			entityManager._bricks[6].status = 1;
-			entityManager._bricks[5].status = 1;
-			entityManager._bricks[31].status = 1;
-			//entityManager._bricks[45].status = 1;
-			entityManager._bricks[70].status = 1;
+
 }
 
 
