@@ -18,7 +18,6 @@ Wire.prototype = new Entity();
 Wire.prototype.velY = -6;
 Wire.prototype.radius = 3;
 Wire.prototype.halfHeight = 3;
-Wire.prototype.velToggle = false;
 
 Wire.prototype.update = function (du) {
 
@@ -27,7 +26,7 @@ Wire.prototype.update = function (du) {
         return -1;
     }
 
-    if(this.velToggle) {
+    if(g_wireVelToggle) {
       this.velY = -12;
     } else {
       this.velY = -6;

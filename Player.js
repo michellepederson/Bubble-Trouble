@@ -87,7 +87,6 @@ if(this.spriteMode!==0){
     } else {
         this.lastEnt = undefined;
     }
-
         //Check for death and re-register
         if(!this._isDeadNow){
             spatialManager.register(this);
@@ -111,34 +110,68 @@ Player.prototype.checkEntity = function (ent) {
     // If the entity is power up element.
     if (ent.isPowerUp()) {
         if (ent.color === 0) {
-            this.eWires = true;
+            g_eWires = true;
             armor.play();
-            this.sword = false;
+            g_sword = false;
         }
+        // Powerup that gives extra life
         else if (ent.color === 1) {
             Player.prototype.lives += 1;
             potion.play();
         }
+        // Powerup that increases the speed of the wire
         else if (ent.color === 2) {
-            Wire.prototype.velToggle = true;
+            g_wireVelToggle = true;
+            if(g_powerUpTimeOuts[0]) {
+                clearTimeout(g_powerUpTimeOuts[0]);
+            }
+            // Remove the powerup from the player after 7 sec
+            g_powerUpTimeOuts[0] = setTimeout(function() {
+                g_wireVelToggle = false;
+            }, 7000);
             collect.play();
         }
+        // Bad powerup, removes the increased speed of the wire
         else if (ent.color === 3) {
-         Wire.prototype.velToggle = false;
+         g_wireVelToggle = false;
          quack.play();
           }
+        // Powerup that toggles the sauron eye on which the bubbles spin around
         else if (ent.color === 4) {
-            g_gravity = !g_gravity;
+            g_gravity = true;
+            if (g_powerUpTimeOuts[1]) {
+                clearTimeout(g_powerUpTimeOuts[1]);
+            }
+            // Remove the powerup from the player after 7 sec
+            g_powerUpTimeOuts[1] = setTimeout(function() {
+                g_gravity = false;
+            }, 7000);
             coin.play();
-            if(g_gravity) bass.play();
+            bass.play();
         }
+        // Power up that gives the player a shield
         else if (ent.color === 5) {
-            this.shield = true;
+            g_shield = true;
+            if (g_powerUpTimeOuts[2]) {
+                clearTimeout(g_powerUpTimeOuts[2]);
+            }
+            // Remove the powerup from the player after 7 sec
+            g_powerUpTimeOuts[2] = setTimeout(function() {
+                g_shield = false;
+            }, 7000);
             shield.play();
         }
+        // Power up that gives the player a sword
         else if (ent.color === 6) {
-             this.sword = true;
-             unsheath.play();
+            g_sword = true;
+            if (g_powerUpTimeOuts[3]) {
+                clearTimeout(g_powerUpTimeOuts[3]);
+            }
+            // Remove the powerup from the player after 7 sec
+            g_powerUpTimeOuts[3] = setTimeout(function() {
+                g_sword = false;
+            }, 7000);
+            unsheath.play();
          }
         ent.kill();
         return;
@@ -147,7 +180,7 @@ Player.prototype.checkEntity = function (ent) {
     return;
 }
 //If the shield is activated, skip collision check for non-powerups
-else if(this.shield) return;
+else if(g_shield) return;
     // Lifecheck
     else {
         if (Player.prototype.lives === 1) {
@@ -302,16 +335,16 @@ var KEY_FIRE = keyCode(' ');
 Player.prototype.maybeAttack = function () {
 
     if (eatKey(KEY_FIRE)){
-        if(this.sword){
+        if(g_sword){
             swoosh.play();
             this.spriteMode = 4;
             this.spriteCell = 0;
         }
         else{
-            if(entityManager._Wires.length < 1 || this.eWires){
+            if(entityManager._Wires.length < 1 ||  g_eWires){
                 throw1.play();
                 entityManager.fire(this.cx, this.cy-this.getRadius());
-                if (entityManager._Wires.length > 1) this.eWires = false;
+                if (entityManager._Wires.length > 1) g_eWires = false;
             }
             if(!this.shoot){
                 this.spriteCell = 0;
@@ -323,7 +356,7 @@ Player.prototype.maybeAttack = function () {
 }
 
     //If in sword mode, collison check for sword swings
-    if(this.sword && this.spriteMode === 4 &&(this.spriteCell === 1 || this.spriteCell === 2)){
+    if(g_sword && this.spriteMode === 4 &&(this.spriteCell === 1 || this.spriteCell === 2)){
         var hitEntity;
         hitEntity = spatialManager.findEntityOnSword(this.cx, this.cy, this.sprite.width, this.sprite.height, this.spriteCell);
 
@@ -417,7 +450,7 @@ Player.prototype.jump = function(du,nextY){
 
 // Renders additioinal sprites on top of player sprite, for relevant power ups.
 Player.prototype.renderPowerup = function () {
-    if(this.shield) {
+    if(g_shield) {
         ctx.save();
         ctx.translate(-this.cx, -this.cy);
         ctx.scale(2, 2);
@@ -439,7 +472,6 @@ Player.prototype.applyAccel = function(accelY, du) {
 };
 
 Player.prototype.drawcenter = function(ctx){
-
    ctx.beginPath();
    ctx.fillStyle = 'black';
    ctx.rect(this.cx-25, this.cy-50, 50, 100);

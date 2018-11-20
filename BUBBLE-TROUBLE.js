@@ -22,6 +22,7 @@ function init() {
     addBubbles(level);
     g_numberOfWaves = g_waves[level] - 1;
     var time = g_waveTime[level];
+    g_powerUpTimeOuts = []
     g_timeOuts = [
         setTimeout(function(){
         addBubbles(level);
@@ -53,21 +54,13 @@ var g_renderSpatialDebug = false;
 var g_bricks = false;
 var g_bricksFlag = 1;
 
-
-
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
 var KEY_GRAVITY = keyCode('G');
 var KEY_BRICK = keyCode('M');
 
-
-
-
-
 function processDiagnostics() {
-
-
     if (eatKey(KEY_HALT)) entityManager.haltBubbles();
 
     if (eatKey(KEY_RESET)) entityManager.resetBubbles();
@@ -146,11 +139,14 @@ function addBubbles(level) {
 // RESETTING OF THE GAME
 function resetGame() {
     // Clear all timeouts
-
     for(var i = 0; i<g_timeOuts.length; i += 1) {
         clearTimeout(g_timeOuts[i]);
     }
-    
+    for(var i = 0; i<g_powerUpTimeOuts; i += 1) {
+        if(g_powerUpTimeOuts[i]) {
+            clearTimeout(g_powerUpTimeOuts[i]);
+        }
+    }
 }
 
 
@@ -436,9 +432,6 @@ function preloadDone() {
         }
     }
 }
-
-
-
 }
 
 requestPreloads();
