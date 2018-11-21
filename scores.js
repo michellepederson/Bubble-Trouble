@@ -34,5 +34,7 @@ scores.prototype.render = function (ctx) {
     var lives = player ? player.lives : 0;
     ctx.fillText("Lives:",30,565);
     ctx.fillText(lives,120,565);
+    ctx.fillText("Stage",450,50);
+    ctx.fillText(g_level,550,50);
     ctx.fillStyle = "black";
 };

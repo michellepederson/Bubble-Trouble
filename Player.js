@@ -149,7 +149,7 @@ Player.prototype.checkEntity = function (ent) {
             coin.play();
             bass.play();
         }
-        // Power up that gives the player a shield
+        // Powerup that gives the player a shield
         else if (ent.powerUpId === 5) {
             g_shield = true;
             if (g_powerUpTimeOuts[2]) {
@@ -161,7 +161,7 @@ Player.prototype.checkEntity = function (ent) {
             }, 7000);
             shield.play();
         }
-        // Power up that gives the player a sword
+        // Powerup that gives the player a sword
         else if (ent.powerUpId === 6) {
             g_sword = true;
             if (g_powerUpTimeOuts[3]) {
@@ -173,7 +173,8 @@ Player.prototype.checkEntity = function (ent) {
             }, 7000);
             unsheath.play();
          }
-         else if (ent.powerUpId === 7) {
+        // Powerup that gives the player a grenade
+        else if (ent.powerUpId === 7) {
             g_grenades += 1;
          }
         ent.kill();
@@ -181,6 +182,10 @@ Player.prototype.checkEntity = function (ent) {
     // If the entity is still colliding with the player, like the same bubble
 } else if(ent === this.lastEnt) {
     return;
+}
+// If the entity is a grenade, do not lose lives.
+else if (ent.isGrenade === true) {
+  return;
 }
 //If the shield is activated, skip collision check for non-powerups
 else if(g_shield) return;
@@ -260,12 +265,12 @@ Player.prototype.movePlayer = function (du) {
     var playerVMiddle = this.cy;
 
 
-    // The  player to brick collision checking: 
+    // The  player to brick collision checking:
     for(var n = 0; n < entityManager._bricks.length; n++){
 
         if(entityManager._bricks[n].status === 1){
             var temp = entityManager._bricks[n].cy;
-            
+
             //falling/walking on bricks collision
             if((nextY + 50 > entityManager._bricks[n].cy &&
             nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
@@ -328,7 +333,7 @@ Player.prototype.movePlayer = function (du) {
             }
             }
         }
-    }   
+    }
 };
 
 var KEY_FIRE = keyCode(' ');

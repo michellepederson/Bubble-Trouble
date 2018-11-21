@@ -72,7 +72,7 @@ function processDiagnostics() {
         if(g_bricks) makeBricks(g_level);
         else killbricks();
     }
-    
+
     if(eatKey(KEY_SHIELD)) g_shield = !g_shield;
 }
 
@@ -84,7 +84,7 @@ function renderSimulation(ctx) {
     // Blackhole would be object in entityManager if it has some behavior (features)
     if (g_gravity) drawBlackHole();
     //if(g_bricks) makeBricks();
-    
+
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
@@ -142,8 +142,11 @@ function resetGame() {
 function playerKilled() {
     resetGame();
     g_playerIsDead = false;
+    // Code to be placed elsewhere, here for debugging purposes only
     if (g_level < 3) g_level += 1;
     else g_level = 1;
+    if (g_level === 1) g_bricks = false;
+    else g_bricks = true;
     init();
     main.gameStart();
 }
@@ -190,7 +193,7 @@ function makeBricks(level){
 
 function killbricks(){
     for(var i = entityManager._bricks.length-1; i >= 0; i--){
-       
+
         // didn't get KILL_ME_NOW to work so I use .pop(); for now.
         entityManager._bricks.pop();
     }
@@ -394,8 +397,8 @@ function preloadDone() {
             spriteSheet : g_images.swipe,
             offsetX : -45,
             offsetY : -25
-    
-            
+
+
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -424,12 +427,12 @@ function preloadDone() {
             numRows : 1,
             numCels : 3,
             spriteSheet : g_images.pop
-  
+
     };
 
 
 
-    
+
     for(var i = 0; i < g_sprite_setup.length; i++){
 
          celWidth  = g_sprite_setup[i].celWidth;
@@ -446,10 +449,10 @@ function preloadDone() {
         for (var col = 0; col < numCols; ++col) {
 
             sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight, offsetX, offsetY) 
+                                celWidth, celHeight, offsetX, offsetY)
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);     
+          //  console.log(sprite);
 
         }
     }
