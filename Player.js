@@ -60,7 +60,7 @@ Player.prototype.update = function (du) {
 spatialManager.unregister(this);
 
 //Quit game if the player dies
-if(this._isDeadNow && Player.prototype.lives === 1){
+if(this._isDeadNow && this.lives === 1){
     g_playerIsDead = true;
     return entityManager.KILL_ME_NOW;
 }
@@ -116,7 +116,7 @@ Player.prototype.checkEntity = function (ent) {
         }
         // Powerup that gives extra life
         else if (ent.powerUpId === 1) {
-            Player.prototype.lives += 1;
+            this.lives += 1;
             potion.play();
         }
         // Powerup that increases the speed of the wire
@@ -186,12 +186,12 @@ Player.prototype.checkEntity = function (ent) {
 else if(g_shield) return;
     // Lifecheck
     else {
-        if (Player.prototype.lives === 1) {
+        if (this.lives === 1) {
             this.spriteMode = 0;
             this.spriteCell = 0;
             death.play();
         } else {
-            Player.prototype.lives -= 1;
+            this.lives -= 1;
             hurt.play();
             this.lastEnt = ent;
         }
@@ -247,7 +247,6 @@ Player.prototype.movePlayer = function (du) {
         }
     }
 
-    if(g_bricks){
 
     var brickheight = 40;
     var brickwidth = 60;
@@ -269,7 +268,7 @@ Player.prototype.movePlayer = function (du) {
             
             //falling/walking on bricks collision
             if((nextY + 50 > entityManager._bricks[n].cy &&
-               nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
+            nextY + 50 < entityManager._bricks[n].cy + brickheight) &&
 
                 ((this.cx - 20 > entityManager._bricks[n].cx &&
                     this.cx - 20 < entityManager._bricks[n].cx + brickwidth)||
@@ -287,10 +286,10 @@ Player.prototype.movePlayer = function (du) {
 
             // jumping under bricks collision
             else if((nextY - 50 < entityManager._bricks[n].cy + 40 &&
-               nextY - 50 > entityManager._bricks[n].cy) &&
+            nextY - 50 > entityManager._bricks[n].cy) &&
 
                 ((this.cx + 20 > entityManager._bricks[n].cx &&
-                  this.cx - 20 < entityManager._bricks[n].cx + 60))){
+                this.cx - 20 < entityManager._bricks[n].cx + 60))){
 
                 this.cy = entityManager._bricks[n].cy + 41 + 50;
             this.velY = 0;
@@ -304,7 +303,7 @@ Player.prototype.movePlayer = function (du) {
                     this.cy - 20 <  entityManager._bricks[n].cy) ||
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
-                       this.cy - 20 < entityManager._bricks[n].cy+40)){
+                    this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx + 61+20;
                     this.move = false;
                 //this.velY = 0;
@@ -320,17 +319,16 @@ Player.prototype.movePlayer = function (du) {
                     this.cy - 20 <  entityManager._bricks[n].cy) ||
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
-                       this.cy - 20 < entityManager._bricks[n].cy+40)){
+                    this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx-21;
                     this.move = false;
                 //this.velY = 0;
                 this.cy = prevY;
                 return;
-               }
+            }
             }
         }
-    }
-    }
+    }   
 };
 
 var KEY_FIRE = keyCode(' ');

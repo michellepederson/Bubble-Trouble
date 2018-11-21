@@ -25,6 +25,7 @@ var g_eWires = false;
 var g_grenades = 1;
 var g_addBubbleTime;
 var g_waves;
+var g_level = 1;
 var g_numberOfWaves;
 // The "nominal interval" is the one that all of our time-based units are
 // calibrated to e.g. a velocity unit is "pixels per nominal interval"

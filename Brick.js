@@ -25,26 +25,12 @@ Brick.prototype.Width = 50;
 Brick.prototype.Height = 50;
 Brick.prototype.status = 0;
 Brick.prototype.KEY_BRICK = 'M'.charCodeAt(0);
-//Brick.prototype.brickArray = [[]];
-//var KEY_BRICK = keyCode('M');
-Brick.prototype.ONOFF = false;
-//Brick.prototype.buildBricks = function() 
-Brick.prototype.update = function (du){
-	
-	
-	
+Brick.prototype.rotation = 0;
+Brick.prototype.update = function (du){	
 };
 
 Brick.prototype.render = function (ctx) {
-	if(g_bricks){
-		for(var i = 0; i < entityManager._bricks.length; i++ ){
-			if(entityManager._bricks[i].status === 1){
-				//ctx.fillStyle = 'black';
-   				//ctx.fillRect(entityManager._bricks[i].cx, entityManager._bricks[i].cy, 60, 40);
-   				this.sprite.drawAt(ctx, entityManager._bricks[i].cx, entityManager._bricks[i].cy, 0);
-			}
-		}
-	}
+	this.sprite.drawCentredAt(ctx, this.cx, this.cy, this.rotation);
 };
 
 

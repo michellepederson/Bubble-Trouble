@@ -30,7 +30,9 @@ scores.prototype.render = function (ctx) {
     for(var i = 0; i<g_grenades; i += 1) {
         g_sprites.grenade.drawCentredAt(ctx, 340+(g_sprites.grenade.width*1.5)*i, 555, 0)
     }
+    var player = entityManager.getPlayers()[0];
+    var lives = player ? player.lives : 0;
     ctx.fillText("Lives:",30,565);
-    ctx.fillText(Player.prototype.lives,120,565);
+    ctx.fillText(lives,120,565);
     ctx.fillStyle = "black";
 };

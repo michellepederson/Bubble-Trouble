@@ -5,7 +5,6 @@
 
 // INITIALIZE GAME
 function init() {
-
     var ground_y = 500;
     var cx = 300;
     // Returns y coordinate of the edge of the ground, its needed to place the player
@@ -16,16 +15,15 @@ function init() {
     g_groundEdge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generateScores();
     entityManager.generatePlayer(cx, g_groundEdge);
-    entityManager.generateBackground();
-
-    var level = 2;
-    addBubbles(level);
-    g_numberOfWaves = g_waves[level] - 1;
-    var time = g_waveTime[level];
+    entityManager.generateBackground(g_level);
+    if (g_bricks) makeBricks(g_level);
+    addBubbles(g_level);
+    g_numberOfWaves = g_waves[g_level] - 1;
+    var time = g_waveTime[g_level];
     g_powerUpTimeOuts = []
     g_timeOuts = [
         setTimeout(function(){
-        addBubbles(level);
+        addBubbles(g_level);
     }, time)]
 }
 
@@ -68,17 +66,11 @@ function processDiagnostics() {
     if(eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
 
     if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
-    
-    if(eatKey(KEY_BRICK)){
-       
 
-        if(!g_bricks){
-            g_bricksFlag = 1;
-        }
-        else if(g_bricks){
-            killbricks();
-        }
+    if(eatKey(KEY_BRICK)) {
         g_bricks = !g_bricks;
+        if(g_bricks) makeBricks(g_level);
+        else killbricks();
     }
     
     if(eatKey(KEY_SHIELD)) g_shield = !g_shield;
@@ -91,20 +83,13 @@ function renderSimulation(ctx) {
     entityManager.render(ctx);
     // Blackhole would be object in entityManager if it has some behavior (features)
     if (g_gravity) drawBlackHole();
-    if(g_bricks) makeBricks();
+    //if(g_bricks) makeBricks();
     
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
 // BLACKHOLE-DRAWING
 function drawBlackHole() {
-    /*
-    ctx.beginPath();
-    ctx.arc(planetX,planetY,12,0,360, false);
-    ctx.fillStyle = 'black';
-    ctx.fill();
-    ctx.stroke();
-    */
     g_sprites.sauron.drawCentredAt(ctx, planetX, planetY, 0);
 }
 
@@ -150,20 +135,56 @@ function resetGame() {
             clearTimeout(g_powerUpTimeOuts[i]);
         }
     }
+    spatialManager.reset();
+    entityManager.reset();
+}
+
+function playerKilled() {
+    resetGame();
+    g_playerIsDead = false;
+    g_level += 1;
+    init();
+    main.gameStart();
+}
+
+function levelComplete() {
+    resetGame();
+    g_playerIsDead = false;
+    g_level += 1;
+    init();
+    main.gameStart();
 }
 
 
-function makeBricks(){
-    if(g_bricksFlag === 1){
-        entityManager._bricks.push(new Brick ({cx:   0, cy: 365 ,status: 1}));
-        entityManager._bricks.push(new Brick ({cx: 120, cy: 230 ,status: 1}));
-        entityManager._bricks.push(new Brick ({cx: 300, cy: 150 ,status: 1}));
-        entityManager._bricks.push(new Brick ({cx: 360, cy: 150 ,status: 1}));
-        entityManager._bricks.push(new Brick ({cx: 420, cy: 150 ,status: 1}));
-        entityManager._bricks.push(new Brick ({cx: 480, cy: 150 ,status: 1}));
-        entityManager._bricks.push(new Brick ({cx: 540, cy: 150 ,status: 1}));
+function makeBricks(level){
+    switch(level) {
+        case 2:
+        entityManager._bricks.push(new Brick ({cx:   0, cy: 400}));
+        entityManager._bricks.push(new Brick ({cx: 120, cy: 300}));
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 200}));
+        entityManager._bricks.push(new Brick ({cx: 360, cy: 200}));
+        entityManager._bricks.push(new Brick ({cx: 420, cy: 200}));
+        entityManager._bricks.push(new Brick ({cx: 480, cy: 200}));
+        entityManager._bricks.push(new Brick ({cx: 540, cy: 200}));
+        break;
+
+        case 3:
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 100}));
+        entityManager._bricks.push(new Brick ({cx: 360, cy: 100}));
+        entityManager._bricks.push(new Brick ({cx: 420, cy: 100}));
+        entityManager._bricks.push(new Brick ({cx: 480, cy: 100}));
+        entityManager._bricks.push(new Brick ({cx: 540, cy: 100}));
+
+        var height = Brick.prototype.Height;
+        var deg90 = 90 * Math.PI / 180;
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 200 , rotation : deg90}));
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*1 ,rotation : deg90}));
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*2, rotation : deg90}));
+        entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*3, rotation : deg90}));
+        break;
+        default:
+        break;
     }
-        g_bricksFlag += 1;
 }
 
 function killbricks(){
@@ -178,18 +199,15 @@ function killbricks(){
       //START SCREEN
 function startScreen() {
 
-    g_playerIsDead = false;
-    spatialManager.reset();
-    entityManager.reset();
-
-
     entityManager.init();
     init();
-
     main.init();
-
     document.getElementById('startScreen').style.display = "none";
     start.play();
+
+    // Handle "down" and "move" events the same way.
+    window.addEventListener("mousedown", handleMouse);
+    window.addEventListener("mousemove", handleMouse);
 
 }
 
