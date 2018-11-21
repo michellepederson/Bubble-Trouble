@@ -41,26 +41,6 @@ powerUp.prototype.update = function (du) {
 	spatialManager.register(this);
 };
 
-/*
-powerUp.prototype.getPower = function (nextX,nextY,radius) {
-
-	var prevXX = this.cx;
-	var prevYY = this.cy;
-	var nextX = prevXX + this.velX;
-	var nextY = prevYY + this.velY;
-
-
-	var PlayerDist = util.distSq(nextX, nextY, prevXX, prevYY);
-	var limit = util.square(20 + radius);
-
-	if(limit < PlayerDist){
-		powerUp.prototype.isPowerON = true;
-	}
-
-	return powerUp.prototype.isPowerON;
-};
-*/
-
 powerUp.prototype.isPowerUp = function() {
 	return true;
 }

@@ -83,7 +83,6 @@ function renderSimulation(ctx) {
     entityManager.render(ctx);
     // Blackhole would be object in entityManager if it has some behavior (features)
     if (g_gravity) drawBlackHole();
-    //if(g_bricks) makeBricks();
 
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
@@ -142,7 +141,6 @@ function resetGame() {
 function playerKilled() {
     resetGame();
     g_playerIsDead = false;
-    // Code to be placed elsewhere, here for debugging purposes only
     if (g_level < 3) g_level += 1;
     else g_level = 1;
     init();
@@ -453,8 +451,6 @@ function preloadDone() {
                                 celWidth, celHeight, offsetX, offsetY)
             g_sprite_cycles[i].push(sprite);
             g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);
-
         }
     }
 }

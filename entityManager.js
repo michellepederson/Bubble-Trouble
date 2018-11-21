@@ -30,7 +30,7 @@ _backgrounds : [],
 _Wires : [],
 _players  : [],
 _bullets : [],
-_blocks : [],
+_grounds : [],
 _bubbles : [],
 _bricks : [],
 _scores : [],
@@ -55,7 +55,9 @@ COUNTER : 20,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bricks, this._bullets, this._Wires, this._players, this._blocks, this._bubbles, this._scores, this._power, this._grenade];
+    this._categories = [this._backgrounds, this._bricks, this._bullets,
+      this._Wires, this._players, this._grounds, this._bubbles, this._scores,
+      this._power, this._grenade];
 },
 
 init: function() {
@@ -78,7 +80,6 @@ fire: function(cx, cy) {
     this._categories[3].push(
         new Wire({
             cx,
-            // temporary solution cy. -40 because otherwise the wire shot collides with the player
             cy: cy - 40,
         })
     );
@@ -103,8 +104,8 @@ generatePlayer : function(cx, ground_edge) {
 },
 
 generateGround : function(cx,cy, halfWidth,halfHeight) {
-    this._blocks.push(
-        new Block({
+    this._grounds.push(
+        new Ground({
             cx,
             cy,
             halfWidth,
@@ -126,7 +127,7 @@ addBubble : function(bubble) {
     this._categories[6].push(bubble);
 },
 
-noBallonsOnScreen : function() {
+noBubblesOnScreen : function() {
     return this._categories[6].length === 0;
 },
 
@@ -155,7 +156,7 @@ getWires : function() {
 },
 
 getPlayers : function() {
-    return this._categories[4]
+    return this._categories[4];
 },
 
 resetBubbles: function() {
@@ -171,7 +172,7 @@ reset : function() {
     this._Wires = [];
     this._players = [];
     this._bullets = [];
-    this._blocks = [];
+    this._grounds = [];
     this._bubbles = [];
     this._bricks = [];
     this._scores = [];

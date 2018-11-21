@@ -6,12 +6,7 @@
 function Bubble(descr) {
         // Common inherited setup logic from Entity
     this.setup(descr);
-    /*
-    for (var property in descr) {
-        this[property] = descr[property];
-    }
-    */
-    this.velX *= this.directionX;
+
     this.sprite = this.sprite || g_sprites.bubble;
     this.scale  = this.scale  || 1;
 };
@@ -21,11 +16,10 @@ Bubble.prototype = new Entity();
 var KEY_GRAVITY = keyCode('G');
 
 Bubble.prototype.cx = 150;
-Bubble.prototype.cy = 80;
+Bubble.prototype.cy = 100;
 Bubble.prototype.radius = 30;
 Bubble.prototype.velX = -2;
 Bubble.prototype.velY = 0.5;
-Bubble.prototype.directionX = 1;
 Bubble.prototype.orbit = false;
 Bubble.prototype.NOMINAL_GRAVITY = 0.12;
 Bubble.prototype.popped = false;
@@ -46,7 +40,6 @@ Bubble.prototype.update = function (du) {
 
 
     // Simple collision detection to keep the bubbles inside the canvas
-    // Lines 45-60 i'd like to be in a function below (notOrbit).
     if(this.orbit === false){
         if(nextY > g_groundEdge - this.radius/2){
             this.velY *= -1;
@@ -65,8 +58,6 @@ Bubble.prototype.update = function (du) {
             this.velY *= -1;
             scores.raisePoints();
             this.popped = true;
-
-            // return entityManager.KILL_ME_NOW;
         }
     }
     }
@@ -93,7 +84,6 @@ var pow;
 Bubble.prototype.isItPowerup = function(){
     pow = util.randRange(1, 1000);
      if(pow > 800){
-        //console.log(pow);
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
@@ -107,11 +97,9 @@ Bubble.prototype.isItPowerup = function(){
 Bubble.prototype.takeWireHit = function (pow) {
     if(!this.popped){
         this.isItPowerup();
-        //this.kill();
         this.popped = true;
         scores.raisePoints();
-        //pop1.play();
-        if(this.scale === 1)pop1.play();
+        if(this.scale === 1) pop1.play();
         if (this.scale === 0.25) pop3.play();
         if (this.scale > 0.25) {
             this._spawnFragment();
@@ -123,7 +111,6 @@ Bubble.prototype.takeWireHit = function (pow) {
 
 Bubble.prototype._spawnFragment = function () {
 
-    //this.direction *= -1;
     this.velX *= -1;
 
     entityManager.generateBubble({
@@ -131,7 +118,6 @@ Bubble.prototype._spawnFragment = function () {
         cy : this.cy,
         scale: this.scale/2,
         radius: this.radius*this.scale/2,
-        //velX : this.direction,
         velX : this.velX*0.8,
         velY : -5.5
     });
@@ -183,6 +169,7 @@ Bubble.prototype.gravityOn = function(){
     }
     this.setEarthPosition();
 }
+
 //Make the bubbles orbit like earths/panets around the black hole (PlanetX/Y)
 //This part looks kind of jerky and needs some improvement, but I like the idea...
 Bubble.prototype.setEarthPosition = function(){
@@ -207,11 +194,6 @@ Bubble.prototype.setEarthPosition = function(){
 
 }
 
-// I want to use this later to simplify the update function
-// and put some of the if statements here
-Bubble.prototype.notOrbit = function(){
-
-}
 
 Bubble.prototype.spriteUpdate = function () {
     this.sprite = g_sprite_cycles[7][this.spriteCell];

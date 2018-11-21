@@ -6,10 +6,9 @@
 function Background(descr) {
     for (var property in descr) {
         this[property] = descr[property];
-    } 
+    }
 
-    // Default sprite and scale, if not otherwise specified
-    //this.sprite = this.sprite || g_sprites.bubble;
+    // Default scale, if not otherwise specified
     this.scale  = this.scale  || 1;
 }
 
@@ -22,7 +21,7 @@ Background.prototype.cx = 0;
 Background.prototype.backgroundMode = 1;
 
 Background.prototype.update = function (du) {
-    
+
     //Update x coord for parallax, but only if the player is moving
     if(entityManager._players[0].move) {
         if (keys[this.KEY_LEFT]) {
@@ -31,17 +30,6 @@ Background.prototype.update = function (du) {
             this.cx += 2.5*du;
         }
     }
-
-    this.maybeToggleBackground();
-
-};
-
-Background.prototype.maybeToggleBackground = function () {
-
-    /*if(keys[this.KEY_BACKGROUND]){
-        this.backgroundMode++;
-    }*/
-
 };
 
 Background.prototype.render = function (ctx) {
@@ -100,12 +88,8 @@ Background.prototype.render = function (ctx) {
         ctx.beginPath();
         ctx.save();
         ctx.scale(1, 1);
-        //ctx.translate(i, 0);
         g_sprites.spike.drawCentredAt(ctx, i, 0, 3.14);
         ctx.restore();
     }
-
-
-
 
 };

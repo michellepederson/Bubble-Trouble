@@ -6,11 +6,7 @@
 
 function Grenade(descr) {
    this.setup(descr);
-   /*
-    for (var property in descr) {
-        this[property] = descr[property];
-    }
-    */
+
     this.sprite = g_sprites.grenadeLive;
 };
 
@@ -94,7 +90,6 @@ Grenade.prototype.update = function (du){
             this.sprite = g_sprites_explosion[this.spriteCell];
         }
 
-        //console.log(this.radius);
             if(this.radius > 70){
                 return entityManager.KILL_ME_NOW;
             }
@@ -109,15 +104,11 @@ Grenade.prototype.update = function (du){
 };
 
 Grenade.prototype.render = function (ctx) {
-
   this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
-
-
 };
 
 
 Grenade.prototype.getRadius = function () {
-    //return 50; // weird bug
     return this.radius;
 };
 
@@ -128,17 +119,14 @@ Grenade.prototype.getRadius = function () {
 // Basically copy paste from Patrick's code in entities.
 Grenade.prototype.applyAccel = function (accelX, accelY, du) {
 
-    // u = original velocity
     if(this.left) this.velX = -5;
 
     var oldVelX = this.velX;
     var oldVelY = this.velY;
 
-    // v = u + at
     this.velX += accelX * du;
     this.velY += accelY * du;
 
-    // v_ave = (u + v) / 2
     var aveVelX = (oldVelX + this.velX) / 2;
     var aveVelY = (oldVelY + this.velY) / 2;
 
@@ -146,7 +134,6 @@ Grenade.prototype.applyAccel = function (accelX, accelY, du) {
     var intervalVelX = g_useAveVel ? aveVelX : this.velX;
     var intervalVelY = g_useAveVel ? aveVelY : this.velY;
 
-    // s = s + v_ave * t
     var nextX = this.cx + intervalVelX * du;
     var nextY = this.cy + intervalVelY * du;
 
@@ -165,7 +152,6 @@ Grenade.prototype.applyAccel = function (accelX, accelY, du) {
             intervalVelY = this.velY;
     }
 
-    // s = s + v_ave * t
     this.cx += du * intervalVelX;
     this.cy += du * intervalVelY;
 };
