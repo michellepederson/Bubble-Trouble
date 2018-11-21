@@ -59,20 +59,6 @@ deferredSetup : function () {
 },
 
 init: function() {
-    this._backgrounds.length = 0;
-    this._Wires.length = 0;
-    this._players.length = 0;
-    this._bullets.length = 0;
-    this._blocks.length = 0;
-    this._bubbles.length = 0;
-    this._bricks.length = 0;
-    this._scores.length = 0;
-    this._power.length = 0;
-    this._grenade.length = 0;
-
-
-    this._isGameOver = true;
-    g_playerIsDead = false;
 },
 
 makeGrenade: function(cx,cy,radius, left){
@@ -98,9 +84,11 @@ fire: function(cx, cy) {
     );
 },
 
-generateBackground : function () {
+generateBackground : function (level) {
 
-   var background = new Background();
+   var background = new Background({
+       level,
+   });
    this._backgrounds.push(background);
 
 },
@@ -158,15 +146,16 @@ generatePowerUp : function(cx, cy) {
     this._categories[8].push(entity);
 },
 
-
-
-
 getBubbles : function() {
     return this._categories[6];
 },
 
 getWires : function() {
     return this._categories[3];
+},
+
+getPlayers : function() {
+    return this._categories[4]
 },
 
 resetBubbles: function() {
@@ -178,12 +167,21 @@ haltBubbles: function() {
 },
 
 reset : function() {
-    Player.prototype.lives = 3;
+    this._backgrounds = [];
+    this._Wires = [];
+    this._players = [];
+    this._bullets = [];
+    this._blocks = [];
+    this._bubbles = [];
+    this._bricks = [];
+    this._scores = [];
+    this._power = [];
+    this._grenade = [];
+    entityManager.deferredSetup();
 },
 
 
 update: function(du) {
-
   //For shaking screen on explosion
   if(this.explosion){
 
@@ -225,8 +223,6 @@ update: function(du) {
 },
 
 render: function(ctx) {
-
-
     for (var c = 0; c < this._categories.length; ++c) {
 
         var aCategory = this._categories[c];

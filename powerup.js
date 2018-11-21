@@ -71,12 +71,7 @@ powerUp.prototype.getRadius = function() {
 
 powerUp.prototype.render = function (ctx) {
 	ctx.beginPath();
-	//var colors = ['blue', 'red', 'green', 'yellow', 'black'];
-	var colors = [g_sprites.arrow, g_sprites.powerupPotion, g_sprites.powerupOrb, g_sprites.duck, g_sprites.powerupRing, g_sprites.powerupShield, g_sprites.sword, g_sprites.grenade]
-	//ctx.fillStyle = colors[this.color];
-//	ctx.arc(this.cx,this.cy,this.radius,0,2*Math.PI);
-//	ctx.fill();
-	//console.log(this.cx, this.cy);
-	this.sprite = colors[this.color];
+	var powerUpIds = [g_sprites.arrow, g_sprites.powerupPotion, g_sprites.powerupOrb, g_sprites.duck, g_sprites.powerupRing, g_sprites.powerupShield, g_sprites.sword, g_sprites.grenade]
+	this.sprite = powerUpIds[this.powerUpId];
 	this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
 };

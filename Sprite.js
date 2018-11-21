@@ -43,8 +43,8 @@ function Sprite(image, sx, sy, width, height, offsetX, offsetY) {
     this.scale = 1;
 };
 
-Sprite.prototype.drawAt = function (ctx, x, y) {
-
+Sprite.prototype.drawAt = function (ctx, x, y, rotation) {
+    if(rotation === undefined) rotation = 0;
      ctx.drawImage(this.image, 
                   this.sx, this.sy, this.width, this.height,
                   x, y, this.width, this.height);

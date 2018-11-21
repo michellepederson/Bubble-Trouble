@@ -38,9 +38,9 @@ Background.prototype.update = function (du) {
 
 Background.prototype.maybeToggleBackground = function () {
 
-    if(keys[this.KEY_BACKGROUND]){
+    /*if(keys[this.KEY_BACKGROUND]){
         this.backgroundMode++;
-    }
+    }*/
 
 };
 
@@ -48,10 +48,9 @@ Background.prototype.render = function (ctx) {
 
     var cx = this.cx;
 
-
     util.clearCanvas(ctx);
 
-    if(this.backgroundMode === 1){
+    if(this.level === 1){
 
         ctx.save();
         ctx.scale(4, 4);
@@ -67,7 +66,7 @@ Background.prototype.render = function (ctx) {
         ctx.restore();
     }
 
-    else if(this.backgroundMode === 2) {
+    else if(this.level === 2) {
 
         ctx.save();
         ctx.scale(2.75, 2.75);

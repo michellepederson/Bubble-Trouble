@@ -64,32 +64,27 @@ main._iterCore = function (dt) {
         this.gameOver();
         return;
     }
-
     if (g_playerIsDead) {
         this.gameOver();
+        playerKilled();
         return;
     }
 
     if (g_numberOfWaves == 0 && entityManager.noBallonsOnScreen()) {
         this.gameOver();
+        levelComplete();
         return;
     }
-    
     gatherInputs();
     update(dt);
     render(g_ctx);
 };
 
-main._isGameOver = false;
-
+main.gameStart = function() {
+    this._isGameOver = false;
+}
 main.gameOver = function () {
-
-    g_playerIsDead = true;
-
-    //Forces the page to refresh - should replace with reset functions?
-    location.reload();
-    
-    
+    main._isGameOver = true;
 };
 
 // Simple voluntary quit mechanism
@@ -144,6 +139,8 @@ main.init = function () {
     // so let's use a fillStyle which works against that...
     //
     g_ctx.fillStyle = "white";
+
+    this.gameStart();
 
     this._requestNextIteration();
 };
