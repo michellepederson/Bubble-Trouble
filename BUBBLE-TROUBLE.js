@@ -58,6 +58,7 @@ var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
 var KEY_GRAVITY = keyCode('G');
+var KEY_SHIELD = keyCode('C');
 var KEY_BRICK = keyCode('M');
 
 function processDiagnostics() {
@@ -78,7 +79,9 @@ function processDiagnostics() {
             killbricks();
         }
         g_bricks = !g_bricks;
-    } 
+    }
+    
+    if(eatKey(KEY_SHIELD)) g_shield = !g_shield;
 }
 
 // GAME-SPECIFIC RENDERING

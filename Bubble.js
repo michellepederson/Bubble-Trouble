@@ -97,7 +97,7 @@ Bubble.prototype.isItPowerup = function(){
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
-            color : Math.floor(Math.random()*8),
+            powerUpId : Math.floor(Math.random()*8),
         });
 
     }

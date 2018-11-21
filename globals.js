@@ -22,6 +22,7 @@ var g_wireVelToggle = false;
 var g_shield = false;
 var g_sword = false;
 var g_eWires = false;
+var g_grenades = 1;
 var g_addBubbleTime;
 var g_waves;
 var g_numberOfWaves;
