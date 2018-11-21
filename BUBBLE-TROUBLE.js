@@ -16,7 +16,7 @@ function init() {
     entityManager.generateScores();
     entityManager.generatePlayer(cx, g_groundEdge);
     entityManager.generateBackground(g_level);
-    if (g_bricks) makeBricks(g_level);
+    makeBricks(g_level);
     addBubbles(g_level);
     g_numberOfWaves = g_waves[g_level] - 1;
     var time = g_waveTime[g_level];
@@ -109,7 +109,7 @@ function addBubbles(level) {
         g_timeOuts.push(timeOut);
     }
     if (g_numberOfWaves > 0) {
-        // Last timeout resest the global g_timeOuts back to its "original" value
+        // Last timeout resets the global g_timeOuts back to its "original" value
         timeOut = setTimeout(function() {
             entityManager.addBubble(new Bubble(bubblesDescr[numberOfBubbles-1]));
             // Rest g_timeOuts
@@ -145,8 +145,6 @@ function playerKilled() {
     // Code to be placed elsewhere, here for debugging purposes only
     if (g_level < 3) g_level += 1;
     else g_level = 1;
-    if (g_level === 1) g_bricks = false;
-    else g_bricks = true;
     init();
     main.gameStart();
 }
@@ -170,6 +168,7 @@ function makeBricks(level){
         entityManager._bricks.push(new Brick ({cx: 420, cy: 200}));
         entityManager._bricks.push(new Brick ({cx: 480, cy: 200}));
         entityManager._bricks.push(new Brick ({cx: 540, cy: 200}));
+        g_bricks = true;
         break;
 
         case 3:
@@ -178,6 +177,7 @@ function makeBricks(level){
         entityManager._bricks.push(new Brick ({cx: 420, cy: 100}));
         entityManager._bricks.push(new Brick ({cx: 480, cy: 100}));
         entityManager._bricks.push(new Brick ({cx: 540, cy: 100}));
+        g_bricks = true;
 
         var height = Brick.prototype.Height;
         var deg90 = 90 * Math.PI / 180;
@@ -187,6 +187,7 @@ function makeBricks(level){
         entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*3, rotation : deg90}));
         break;
         default:
+        g_bricks = false;
         break;
     }
 }
