@@ -142,7 +142,8 @@ function resetGame() {
 function playerKilled() {
     resetGame();
     g_playerIsDead = false;
-    g_level += 1;
+    if (g_level < 3) g_level += 1;
+    else g_level = 1;
     init();
     main.gameStart();
 }
