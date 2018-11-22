@@ -24,15 +24,12 @@ this.reset_rotation = this.rotation;
 
 Player.prototype.KEY_LEFT   = 'A'.charCodeAt(0);
 Player.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
-//Player.prototype.KEY_FIRE   = ' '.charCodeAt(0);
+Player.prototype.KEY_FIRE   = ' '.charCodeAt(0);
 Player.prototype.KEY_JUMP   = 'W'.charCodeAt(0);
 Player.prototype.KEY_CROUCH = 'S'.charCodeAt(0);
-Player.prototype.KEY_SWORD = 'Z'.charCodeAt(0);
+Player.prototype.KEY_SWORD  = 'Z'.charCodeAt(0);
+Player.prototype.KEY_GRENADE = 'N'.charCodeAt(0);
 
-
-//grenade key
-//Player.prototype.KEY_GRENADE = 'N'.charCodeAt(0);
-var KEY_GRENADE = keyCode('N');
 
 // Initial, inheritable, default values
 Player.prototype.rotation = 0;
@@ -52,7 +49,6 @@ Player.prototype.lastEnt;
 Player.prototype.eWires = false;
 Player.prototype.shield = false;
 Player.prototype.sword = false;
-//var NOMINAL_GRAVITY = 0.12;
 
 Player.prototype.update = function (du) {
 
@@ -95,7 +91,7 @@ if(this.spriteMode!==0){
 
 
 Player.prototype.grenade = function () {
-    if(eatKey(KEY_GRENADE) && g_grenades > 0){
+    if(eatKey(this.KEY_GRENADE) && g_grenades > 0){
         g_grenades -= 1;
         entityManager.makeGrenade(this.cx,this.cy-50, 10, this.left);
         pin.play();
@@ -224,8 +220,6 @@ Player.prototype.movePlayer = function (du) {
         this.move = true;
         this.cx -= 5*du;
         this.spriteMode = 2;
-
-           // console.log("not working");
        }
 
 
@@ -253,15 +247,6 @@ Player.prototype.movePlayer = function (du) {
 
     var brickheight = 40;
     var brickwidth = 60;
-    var PlayerWidth = 98;
-    var PlayerHeight = 103.5;
-    var PHMiddle = this.cx + 25;
-
-    var playerHalfLeft = this.cx - 15;
-    var playerHalfRight =this.cx + 15;
-    var playerHMiddle = this.cx;
-    var playerVMiddle = this.cy;
-
 
     // The  player to brick collision checking:
     for(var n = 0; n < entityManager._bricks.length; n++){
@@ -308,7 +293,6 @@ Player.prototype.movePlayer = function (du) {
                     this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx + 61+20;
                     this.move = false;
-                //this.velY = 0;
                 this.cy = prevY;
                 return;
             }
@@ -324,7 +308,6 @@ Player.prototype.movePlayer = function (du) {
                     this.cy - 20 < entityManager._bricks[n].cy+40)){
                     this.cx = entityManager._bricks[n].cx-21;
                     this.move = false;
-                //this.velY = 0;
                 this.cy = prevY;
                 return;
             }
@@ -333,11 +316,10 @@ Player.prototype.movePlayer = function (du) {
     }
 };
 
-var KEY_FIRE = keyCode(' ');
 
 Player.prototype.maybeAttack = function () {
 
-    if (eatKey(KEY_FIRE)){
+    if (eatKey(this.KEY_FIRE)){
         if(g_sword){
             swoosh.play();
             this.spriteMode = 4;
@@ -424,7 +406,6 @@ Player.prototype.spriteUpdate = function () {
 };
 
 Player.prototype.getRadius = function () {
-    //return 50; // weird bug
     return 20;
 };
 
@@ -439,7 +420,6 @@ Player.prototype.render = function (ctx) {
         ctx, this.cx, this.cy, this.scale, this
         );
     this.renderPowerup();
-  // this.drawcenter(ctx);
 };
 
 var jumphight = 3.8;
