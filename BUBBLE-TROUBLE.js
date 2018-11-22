@@ -66,7 +66,6 @@ function processDiagnostics() {
     if(eatKey(KEY_BRICK)) {
         g_bricks = !g_bricks;
         if(g_bricks) makeBricks(g_level);
-        // Exsterminate bricks if they are not being used.
         else killbricks();
     }
 
@@ -150,14 +149,33 @@ function playerKilled() {
     main.gameStart();
 }
 
-function levelComplete() {
+function nextLevel() {
+
     resetGame();
     g_playerIsDead = false;
     if (g_level < 3) g_level += 1;
     else g_level = 1;
+
     init();
     main.gameStart();
+    //Hide the start screen artwork once the player presses play
+    document.getElementById('startScreen').style.display = "none";
+    start.play();
+    //ctx.fillStyle = "black";
+    //ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
 }
+
+
+function levelComplete() {
+    document.getElementById('startScreen').style.display = "block";
+    document.getElementById('nextLevel').style.display = "block";
+    document.getElementById('newGame').style.display = "none";
+    document.getElementById("nextLevel").addEventListener("click", nextLevel);
+
+}
+
+
 
 // Hardcoded bricks for levels 2 and 3
 function makeBricks(level){
@@ -196,7 +214,7 @@ function makeBricks(level){
 function killbricks(){
     for(var i = entityManager._bricks.length-1; i >= 0; i--){
 
-        // Didn't get KILL_ME_NOW to work so I use .pop(); for now.
+        // didn't get KILL_ME_NOW to work so I use .pop(); for now.
         entityManager._bricks.pop();
     }
 }

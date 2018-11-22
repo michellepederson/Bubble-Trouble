@@ -72,7 +72,8 @@ main._iterCore = function (dt) {
 
     if (g_numberOfWaves == 0 && entityManager.noBubblesOnScreen()) {
         this.gameOver();
-        levelComplete();
+        //levelComplete();
+        nextLevel();
         return;
     }
     gatherInputs();

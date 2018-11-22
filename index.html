@@ -21,15 +21,15 @@
       float: right;
     }
 
-    #newGame {
+    #newGame, #nextLevel {
       margin-top: 100px;
     }
 
-    #newGame:hover {
+    #newGame:hover, #nextLevel:hover {
       filter: grayscale(100%);
     }
 
-    .myStyle {
+    #nextLevel {
       display: none;
     }
 
@@ -37,6 +37,7 @@
   <body>
     <div id="startScreen">
       <img id="newGame" onclick="startScreen()" src="img/start/newgame.png">
+      <img id="nextLevel" src="img/start/nextlevel.png">
       <img id="robot" src="img/start/robot.png">
     </div>
     <canvas id="myCanvas" width="600" height="600"
@@ -80,9 +81,7 @@
     <script src="main.js"></script>
 
     <script src="BUBBLE-TROUBLE.js"></script>
-    <script>
 
-    </script>
 
   </body>
 </html>
