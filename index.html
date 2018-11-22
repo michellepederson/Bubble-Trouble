@@ -21,15 +21,15 @@
       float: right;
     }
 
-    #newGame, #nextLevel {
+    #newGame, #nextLevel, #tryAgain {
       margin-top: 100px;
     }
 
-    #newGame:hover, #nextLevel:hover {
+    #newGame:hover, #nextLevel:hover, #tryAgain:hover {
       filter: grayscale(100%);
     }
 
-    #nextLevel {
+    #nextLevel, #tryAgain {
       display: none;
     }
 
@@ -38,6 +38,7 @@
     <div id="startScreen">
       <img id="newGame" onclick="startScreen()" src="img/start/newgame.png">
       <img id="nextLevel" src="img/start/nextlevel.png">
+      <img id="tryAgain" src="img/start/tryagain.png">
       <img id="robot" src="img/start/robot.png">
     </div>
     <canvas id="myCanvas" width="600" height="600"

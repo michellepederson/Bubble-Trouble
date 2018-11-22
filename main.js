@@ -66,14 +66,14 @@ main._iterCore = function (dt) {
     }
     if (g_playerIsDead) {
         this.gameOver();
-        playerKilled();
+        //playerKilled();
+        dead();
         return;
     }
 
     if (g_numberOfWaves == 0 && entityManager.noBubblesOnScreen()) {
         this.gameOver();
-        //levelComplete();
-        nextLevel();
+        levelComplete();
         return;
     }
     gatherInputs();

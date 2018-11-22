@@ -135,18 +135,15 @@ function resetGame() {
 }
 
 // Kill player and reset game
-// Raises the level as well for now
-function playerKilled() {
+function tryAgain() {
+    document.getElementById('startScreen').style.display = "none";
     resetGame();
     g_playerIsDead = false;
 
-    // Code to be removed
-    if (g_level < 3) g_level += 1;
-    else g_level = 1;
-    if (g_level === 1) g_bricks = false;
-    else g_bricks = true;
     init();
     main.gameStart();
+    start.play();
+    main._requestNextIteration();
 }
 
 function nextLevel() {
@@ -161,8 +158,7 @@ function nextLevel() {
     //Hide the start screen artwork once the player presses play
     document.getElementById('startScreen').style.display = "none";
     start.play();
-    //ctx.fillStyle = "black";
-    //ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    main._requestNextIteration();
 
 }
 
@@ -171,7 +167,21 @@ function levelComplete() {
     document.getElementById('startScreen').style.display = "block";
     document.getElementById('nextLevel').style.display = "block";
     document.getElementById('newGame').style.display = "none";
+    document.getElementById('tryAgain').style.display = "none";
     document.getElementById("nextLevel").addEventListener("click", nextLevel);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+}
+
+function dead() {
+    document.getElementById('startScreen').style.display = "block";
+    document.getElementById('tryAgain').style.display = "block";
+    document.getElementById('newGame').style.display = "none";
+    document.getElementById('nextLevel').style.display = "none";
+    document.getElementById("tryAgain").addEventListener("click", tryAgain);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 }
 
