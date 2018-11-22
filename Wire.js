@@ -17,7 +17,6 @@ Wire.prototype = new Entity();
 // Initial, inheritable, default values
 Wire.prototype.velY = -6;
 Wire.prototype.radius = 3;
-Wire.prototype.halfHeight = 3;
 
 Wire.prototype.update = function (du) {
 
@@ -58,14 +57,6 @@ Wire.prototype.takeWireHit = function () {
 
 
 Wire.prototype.render = function (ctx) {
-
-    /*
-	ctx.beginPath();
-    ctx.arc(this.cx,this.cy,this.radius,0,360, false);
-    ctx.fillStyle = 'red';
-    ctx.fill();
-    ctx.stroke();
-    */
     //Draw the arrow
     var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
@@ -74,20 +65,11 @@ Wire.prototype.render = function (ctx) {
     //Draw the 'wire'
 
     ctx.beginPath();
-	ctx.moveTo(this.cx, this.cy);
+	   ctx.moveTo(this.cx, this.cy);
     g_sprites.wire.drawAt(ctx, this.cx-5, this.cy+5);
 
      for (var i = this.cy; i < 475; i+= g_sprites.wire.height){
         g_sprites.wire.drawAt(ctx, this.cx-5, i);
     }
-
-
-
-    //g_sprites.wire.drawAt(ctx, this.cx-5, this.cy+5);
-    //ctx.strokeStyle = 'red';
-   // ctx.fill();
-	//ctx.stroke();
-
-
 
 };
