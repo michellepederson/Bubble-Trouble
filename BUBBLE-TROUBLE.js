@@ -10,8 +10,6 @@ function init() {
     // Returns y coordinate of the edge of the ground, its needed to place the player
     // on top of the ground edge
 
-                                    //    cx           - cy       - g_canvas.width/2-   5
-                                    //g_canvas.width/2 - ground_y - halfWidth   -     halfHeight
     g_groundEdge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generateScores();
     entityManager.generatePlayer(cx, g_groundEdge);
@@ -50,7 +48,6 @@ var g_gravity = false;
 var g_useAveVel = true;
 var g_renderSpatialDebug = false;
 var g_bricks = false;
-var g_bricksFlag = 1;
 
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
@@ -83,7 +80,6 @@ function renderSimulation(ctx) {
     entityManager.render(ctx);
     // Blackhole would be object in entityManager if it has some behavior (features)
     if (g_gravity) drawBlackHole();
-    //if(g_bricks) makeBricks();
 
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
@@ -109,7 +105,7 @@ function addBubbles(level) {
         g_timeOuts.push(timeOut);
     }
     if (g_numberOfWaves > 0) {
-        // Last timeout resest the global g_timeOuts back to its "original" value
+        // Last timeout resets the global g_timeOuts back to its "original" value
         timeOut = setTimeout(function() {
             entityManager.addBubble(new Bubble(bubblesDescr[numberOfBubbles-1]));
             // Rest g_timeOuts
@@ -139,10 +135,13 @@ function resetGame() {
     entityManager.reset();
 }
 
+// Kill player and reset game
+// Raises the level as well for now
 function playerKilled() {
     resetGame();
     g_playerIsDead = false;
-    // Code to be placed elsewhere, here for debugging purposes only
+
+    // Code to be removed
     if (g_level < 3) g_level += 1;
     else g_level = 1;
     if (g_level === 1) g_bricks = false;
@@ -154,12 +153,13 @@ function playerKilled() {
 function levelComplete() {
     resetGame();
     g_playerIsDead = false;
-    g_level += 1;
+    if (g_level < 3) g_level += 1;
+    else g_level = 1;
     init();
     main.gameStart();
 }
 
-
+// Hardcoded bricks for levels 2 and 3
 function makeBricks(level){
     switch(level) {
         case 2:
@@ -191,6 +191,8 @@ function makeBricks(level){
     }
 }
 
+// Remove all bricks when toggled with brick key
+// Could be removed when brick key is removed
 function killbricks(){
     for(var i = entityManager._bricks.length-1; i >= 0; i--){
 
@@ -212,7 +214,6 @@ function startScreen() {
     // Handle "down" and "move" events the same way.
     window.addEventListener("mousedown", handleMouse);
     window.addEventListener("mousemove", handleMouse);
-
 }
 
 /// PRELOAD
@@ -444,18 +445,16 @@ function preloadDone() {
          offsetX = g_sprite_setup[i].offsetX;
          offsetY = g_sprite_setup[i].offsetY;
 
-    for (var row = 0; row < numRows; ++row) {
+        for (var row = 0; row < numRows; ++row) {
 
-        for (var col = 0; col < numCols; ++col) {
+            for (var col = 0; col < numCols; ++col) {
 
-            sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                celWidth, celHeight, offsetX, offsetY)
-            g_sprite_cycles[i].push(sprite);
-            g_sprite_cycles[i].splice(numCels);
-          //  console.log(sprite);
-
+                sprite = new Sprite(image, col * celWidth, row * celHeight,
+                                    celWidth, celHeight, offsetX, offsetY)
+                g_sprite_cycles[i].push(sprite);
+                g_sprite_cycles[i].splice(numCels);
+            }
         }
-    }
 }
 }
 
