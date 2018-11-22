@@ -190,7 +190,7 @@ function dead() {
 // Hardcoded bricks for level 1
 function makeBricks(level){
     switch(level) {
-        case 1:
+        case 2:
         entityManager._bricks.push(new Brick ({cx:   0, cy: 400, rotation:0 }));
         entityManager._bricks.push(new Brick ({cx: 120, cy: 300,rotation:0 }));
         entityManager._bricks.push(new Brick ({cx: 300, cy: 200,rotation:0}));
