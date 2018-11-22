@@ -11,7 +11,6 @@ function Bubble(descr) {
         this[property] = descr[property];
     }
     */
-    this.velX *= this.directionX;
     this.sprite = this.sprite || g_sprites.bubble;
     this.scale  = this.scale  || 1;
 };
@@ -25,13 +24,11 @@ Bubble.prototype.cy = 80;
 Bubble.prototype.radius = 30;
 Bubble.prototype.velX = -2;
 Bubble.prototype.velY = 0.5;
-Bubble.prototype.directionX = 1;
 Bubble.prototype.orbit = false;
 Bubble.prototype.NOMINAL_GRAVITY = 0.12;
 Bubble.prototype.popped = false;
 Bubble.prototype.spriteCell = 0;
 Bubble.prototype.animationLag = 3;
-Bubble.prototype.powerRandom = 0;
 
 
 Bubble.prototype.update = function (du) {
@@ -46,84 +43,86 @@ Bubble.prototype.update = function (du) {
 
 
     // Simple collision detection to keep the bubbles inside the canvas
-    // Lines 45-60 i'd like to be in a function below (notOrbit).
-    if(this.orbit === false){
-        if(nextY > g_groundEdge - this.radius/2){
-            this.velY *= -1;
-        }
-        if(nextX <= this.radius/2){
-            this.velX *= -1;
-        }
-        if(nextX >= g_canvas.width-this.radius/2){
-            this.velX *= -1;
-        }
-        if(nextY <= this.radius*2){
-            if(Bubble.orbit){
-            }
-        else{
-          // change direction to raise points only once.
-            this.velY *= -1;
-            scores.raisePoints();
-            this.popped = true;
-
-            // return entityManager.KILL_ME_NOW;
-        }
+    // Bounce from ground
+    if(nextY > g_groundEdge - this.radius/2){
+        this.velY *= -1;
     }
+    // Bounce from left side
+    if(nextX <= this.radius/2){
+        this.velX *= -1;
+    }
+    // Bounce from right side
+    if(nextX >= g_canvas.width-this.radius/2){
+        this.velX *= -1;
+    }
+    // If bubble hits the roof.
+    if(nextY <= this.radius*2){
+      // Do not pop if in orbit
+        if(Bubble.orbit){
+        }
+    else{
+      // Pop the bubble if it hits the roof and not in orbit
+      // change direction to raise points only once when hitting roof
+        this.velY *= -1;
+        scores.raisePoints();
+        this.popped = true;
+        }
     }
 
     Bubble.orbit =  g_gravity;
 
+    // If orbit is on, set gravity orbit on
     if(Bubble.orbit){
         this.gravityOn();
     }
+    // Otherwise have regular gravity
     else{
-        Bubble.NOMINAL_GRAVITY = 0.12;
-        var accelY = Bubble.NOMINAL_GRAVITY*du;
+        var accelY = this.NOMINAL_GRAVITY*du;
         this.applyAccel(accelY, du);
     }
 
+    // Pop the bubble if it is popped
     if(this.popped) this.spriteUpdate();
 
+    // If it isn't popped, register it
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
 };
 
 var pow;
+// Make a powerup fall from the bubble in 20% of the cases
+// Powerup is chosen at random
 Bubble.prototype.isItPowerup = function(){
     pow = util.randRange(1, 1000);
      if(pow > 800){
-        //console.log(pow);
         entityManager.generatePowerUp({
             cx : this.cx,
             cy : this.cy,
             powerUpId : Math.floor(Math.random()*8),
         });
-
     }
 }
 
-
+// If the bubble is hit with a wire, check for powerUp
+// Pop the bubble in two if it's not the smallest size already
 Bubble.prototype.takeWireHit = function (pow) {
     if(!this.popped){
         this.isItPowerup();
-        //this.kill();
         this.popped = true;
         scores.raisePoints();
-        //pop1.play();
-        if(this.scale === 1)pop1.play();
+        if (this.scale === 1) pop1.play();
         if (this.scale === 0.25) pop3.play();
         if (this.scale > 0.25) {
             this._spawnFragment();
             this._spawnFragment();
-            if(this.scale === 0.5) pop2. play();
+            if(this.scale === 0.5) pop2.play();
         }
     }
 };
 
+// Create two bubbles, half the size of the bubble popped
 Bubble.prototype._spawnFragment = function () {
-
-    //this.direction *= -1;
     this.velX *= -1;
 
     entityManager.generateBubble({
@@ -131,7 +130,6 @@ Bubble.prototype._spawnFragment = function () {
         cy : this.cy,
         scale: this.scale/2,
         radius: this.radius*this.scale/2,
-        //velX : this.direction,
         velX : this.velX*0.8,
         velY : -5.5
     });
@@ -142,7 +140,6 @@ Bubble.prototype.getRadius = function () {
 };
 
 Bubble.prototype.applyAccel = function(accelY, du) {
-
     var oldVelY = this.velY;
 
     this.velY += accelY * du;
@@ -157,11 +154,11 @@ Bubble.prototype.render = function (ctx) {
 
     var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
-    if(!this.popped)this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
+    if(!this.popped) this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
     else {
-            this.scale = 0.5;
-            this.sprite.drawSpriteAt(
-        ctx, this.cx, this.cy, this.scale, this
+        this.scale = 0.5;
+        this.sprite.drawSpriteAt(
+          ctx, this.cx, this.cy, this.scale, this
         );
     }
 };
@@ -173,8 +170,8 @@ Bubble.prototype.earthSpeed = 0.02;
 Bubble.prototype.earthRadians = 20;
 Bubble.prototype.dist = 220;
 
+// Turning on gravity
 Bubble.prototype.gravityOn = function(){
-
     if(this.earthRadians < (Math.PI * 2)){
         this.earthRadians += this.earthSpeed;
     }
@@ -183,10 +180,9 @@ Bubble.prototype.gravityOn = function(){
     }
     this.setEarthPosition();
 }
-//Make the bubbles orbit like earths/panets around the black hole (PlanetX/Y)
-//This part looks kind of jerky and needs some improvement, but I like the idea...
-Bubble.prototype.setEarthPosition = function(){
 
+//Make the bubbles orbit like earths/planets around the black hole (PlanetX/Y)
+Bubble.prototype.setEarthPosition = function(){
 
     //find next cx/cy coordinates of the orbit
     this.cx = planetX + Math.cos(this.earthRadians) * this.dist;
@@ -202,21 +198,14 @@ Bubble.prototype.setEarthPosition = function(){
     else if(this.scale === 0.25){
         this.earthSpeed = 0.1;
         this.dist = 80;
-
     }
-
 }
 
-// I want to use this later to simplify the update function
-// and put some of the if statements here
-Bubble.prototype.notOrbit = function(){
-
-}
 
 Bubble.prototype.spriteUpdate = function () {
     this.sprite = g_sprite_cycles[7][this.spriteCell];
 
-    //Manage the speed - better way of doing this ?
+    //Manage the speed
     if(this.animationLag > 0) this.animationLag--;
 
     else {
