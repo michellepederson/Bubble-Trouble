@@ -70,7 +70,7 @@ main._iterCore = function (dt) {
         return;
     }
 
-    if (g_numberOfWaves == 0 && entityManager.noBallonsOnScreen()) {
+    if (g_numberOfWaves == 0 && entityManager.noBubblesOnScreen()) {
         this.gameOver();
         levelComplete();
         return;

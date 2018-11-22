@@ -2,7 +2,7 @@
 
 entityManager.js
 
-A module which handles arbitrary entity-management for "Asteroids"
+A module which handles arbitrary entity-management for "Bubble-Trouble"
 
 
 We create this module as a single global object, and initialise it
@@ -78,7 +78,6 @@ fire: function(cx, cy) {
     this._categories[3].push(
         new Wire({
             cx,
-            // temporary solution cy. -40 because otherwise the wire shot collides with the player
             cy: cy - 40,
         })
     );
@@ -126,7 +125,7 @@ addBubble : function(bubble) {
     this._categories[6].push(bubble);
 },
 
-noBallonsOnScreen : function() {
+noBubblesOnScreen : function() {
     return this._categories[6].length === 0;
 },
 
@@ -157,10 +156,12 @@ getPlayers : function() {
     return this._categories[4]
 },
 
+// Not implemented
 resetBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.reset);
 },
 
+// Not implemented
 haltBubbles: function() {
     //this._forEachOf(this._ships, Ship.prototype.halt);
 },
@@ -192,31 +193,31 @@ update: function(du) {
       ctx.translate(dx, dy);
 
       this.COUNTER--;
+    }
+    else {
+      this.explosion = false;
+      this.COUNTER = 20;
+    }
   }
-  else {
-    this.explosion = false;
-    this.COUNTER = 20;
-  }
-}
 
 
-    for (var c = 0; c < this._categories.length; ++c) {
-        var aCategory = this._categories[c];
-        var i = 0;
+  for (var c = 0; c < this._categories.length; ++c) {
+      var aCategory = this._categories[c];
+      var i = 0;
 
-        while (i < aCategory.length) {
+      while (i < aCategory.length) {
 
-            var status = aCategory[i].update(du);
+          var status = aCategory[i].update(du);
 
-            if (status === this.KILL_ME_NOW) {
-                // remove the dead guy, and shuffle the others down to
-                // prevent a confusing gap from appearing in the array
-                aCategory.splice(i,1);
-            }
-            else {
-                ++i;
-            }
-        }
+          if (status === this.KILL_ME_NOW) {
+              // remove the dead guy, and shuffle the others down to
+              // prevent a confusing gap from appearing in the array
+              aCategory.splice(i,1);
+          }
+          else {
+              ++i;
+          }
+      }
     }
 
 },
@@ -234,8 +235,8 @@ render: function(ctx) {
     }
     //Restore if shaking screen
     if(this.explosion){
-    ctx.restore();
-}
+      ctx.restore();
+    }
 }
 
 }
