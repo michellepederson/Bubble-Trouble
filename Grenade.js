@@ -118,7 +118,7 @@ Grenade.prototype.getRadius = function () {
 
 
 // Makes the grenade bounce off ground and handles it's gravity.
-// Basically copy paste from Patrick's code in entities.
+// This function is mostly copy pasted from Patrick's code in entities/asteroids, 
 Grenade.prototype.applyAccel = function (accelX, accelY, du) {
 
     if(this.left) this.velX = -5;

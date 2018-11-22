@@ -28,9 +28,10 @@ powerUp.prototype.update = function (du) {
 	this.lifespan -= du;
   if (this.lifespan < 0 ) return entityManager.KILL_ME_NOW;
 
+  	// Make the powerups fall with no gravity acceleration so that the player can dodge them 
+	// in case he would like to just keep the current one.
 	var prevY = this.cy;
 	var nextY = prevY + this.velY*du;
-
 	if (nextY >= g_groundEdge - this.radius) {
 		this.velY = 0;
 		this.cy = g_groundEdge - this.radius;

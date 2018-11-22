@@ -253,6 +253,11 @@ Player.prototype.movePlayer = function (du) {
     var brickwidth = 60;
 
     // The  player to brick collision checking:
+    // I just used numbers in the following for loop instead of variables in this brick checking as i was 
+    // making and debugging the collisions, probably bad practice but as we are only having the player 
+    // collide with the bricks I'll just leave it like that.
+
+
     for(var n = 0; n < entityManager._bricks.length; n++){
         if(g_bricks) {
             var temp = entityManager._bricks[n].cy;
@@ -267,15 +272,15 @@ Player.prototype.movePlayer = function (du) {
                     this.cx + 20 < entityManager._bricks[n].cx + brickwidth))){
 
                 this.velY = 0;
-            this.cy = temp-50;
+                this.cy = temp-50;
 
-            if (keys[this.KEY_JUMP]){
-                this.jump(du,nextY);
+                if (keys[this.KEY_JUMP]){
+                    this.jump(du,nextY);
+                }
+                return;
             }
-            return;
-        }
 
-            // jumping under bricks collision
+            // jumping under bricks collision, lets not allow the player to jump though the bricks from below.
             else if((nextY - 50 < entityManager._bricks[n].cy + 40 &&
             nextY - 50 > entityManager._bricks[n].cy) &&
 
@@ -283,9 +288,9 @@ Player.prototype.movePlayer = function (du) {
                 this.cx - 20 < entityManager._bricks[n].cx + 60))){
 
                 this.cy = entityManager._bricks[n].cy + 41 + 50;
-            this.velY = 0;
-            return;
-        }
+                this.velY = 0;
+                return;
+            }
 
             //Bricks on left collision
             else if(this.cx - 20 < entityManager._bricks[n].cx + 60 && this.cx + 20 > entityManager._bricks[n].cx + 60){
@@ -295,12 +300,13 @@ Player.prototype.movePlayer = function (du) {
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
                     this.cy - 20 < entityManager._bricks[n].cy+40)){
+
                     this.cx = entityManager._bricks[n].cx + 61+20;
                     this.move = false;
-                this.cy = prevY;
-                return;
+                    this.cy = prevY;
+                    return;
+                }
             }
-        }
 
             // Bricks on right colision
             else if(this.cx + 20 > entityManager._bricks[n].cx  && this.cx < entityManager._bricks[n].cx){
@@ -310,11 +316,12 @@ Player.prototype.movePlayer = function (du) {
 
                     (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
                     this.cy - 20 < entityManager._bricks[n].cy+40)){
+
                     this.cx = entityManager._bricks[n].cx-21;
                     this.move = false;
-                this.cy = prevY;
-                return;
-            }
+                    this.cy = prevY;
+                    return;
+                }
             }
         }
     }
@@ -377,9 +384,10 @@ Player.prototype.maybeJump = function (du) {
     if (keys[this.KEY_JUMP] && this.cy >= entityManager._ground[0].cy-this.getRadius()*2) {
         this.jump();
     }
+    // If the players gravity has pulled him lower than the ground the player cy is set to the ground.
+    // Notice that the Yvel is not set to 0 so the gravity is always pulling on him.
     if(nextY > entityManager._ground[0].cy-this.getRadius()*2){
         this.cy = entityManager._ground[0].cy-this.getRadius()*2;
-
     }
     else{
         if(this.velY !== 0 && this.spriteMode!==4){
@@ -430,6 +438,7 @@ Player.prototype.render = function (ctx) {
     this.renderPowerup();
 };
 
+//handles how high the player can jump
 var jumphight = 3.8;
 var jumphightSquared = jumphight * jumphight;
 
@@ -450,6 +459,7 @@ Player.prototype.renderPowerup = function () {
     }
 }
 
+//handles players gravity
 Player.prototype.applyAccel = function(accelY, du) {
 
     var oldVelY = this.velY;

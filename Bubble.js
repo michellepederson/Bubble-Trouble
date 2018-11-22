@@ -159,7 +159,7 @@ Bubble.prototype.render = function (ctx) {
     }
 };
 
-// planetX/Y - the black hole
+// planetX/Y - the black hole - eye of sauron
 var planetX = 300;
 var planetY = 200;
 Bubble.prototype.earthSpeed = 0.02;

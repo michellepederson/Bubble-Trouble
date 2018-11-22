@@ -66,6 +66,7 @@ function processDiagnostics() {
     if(eatKey(KEY_BRICK)) {
         g_bricks = !g_bricks;
         if(g_bricks) makeBricks(g_level);
+        // Exsterminate bricks if they are not being used.
         else killbricks();
     }
 
@@ -195,7 +196,7 @@ function makeBricks(level){
 function killbricks(){
     for(var i = entityManager._bricks.length-1; i >= 0; i--){
 
-        // didn't get KILL_ME_NOW to work so I use .pop(); for now.
+        // Didn't get KILL_ME_NOW to work so I use .pop(); for now.
         entityManager._bricks.pop();
     }
 }
