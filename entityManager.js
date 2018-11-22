@@ -130,13 +130,12 @@ noBallonsOnScreen : function() {
     return this._categories[6].length === 0;
 },
 
-brick : function(cx, cy,status) {
+brick : function(cx, cy) {
 
    this._bricks.push(
         new Brick({
             cx,
             cy,
-            status,
         })
     );
 },
