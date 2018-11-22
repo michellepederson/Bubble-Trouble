@@ -138,13 +138,13 @@ Player.prototype.checkEntity = function (ent) {
 
         // Powerup that toggles the sauron eye on which the bubbles spin around
         else if (ent.powerUpId === 4) {
-            g_gravity = true;
+            g_sauronEye = true;
             if (g_powerUpTimeOuts[1]) {
                 clearTimeout(g_powerUpTimeOuts[1]);
             }
             // Remove the powerup from the player after 7 sec
             g_powerUpTimeOuts[1] = setTimeout(function() {
-                g_gravity = false;
+                g_sauronEye = false;
             }, 7000);
             coin.play();
             bass.play();
@@ -261,7 +261,6 @@ Player.prototype.movePlayer = function (du) {
     for(var n = 0; n < entityManager._bricks.length; n++){
         if(g_bricks) {
             var temp = entityManager._bricks[n].cy;
-
             //falling/walking on bricks collision
             if((nextY + 50 > entityManager._bricks[n].cy &&
             nextY + 50 < entityManager._bricks[n].cy + brickheight) &&

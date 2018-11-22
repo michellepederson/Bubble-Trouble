@@ -42,12 +42,6 @@ function updateSimulation(du) {
 
 // GAME-SPECIFIC DIAGNOSTICS
 
-var g_allowMixedActions = true;
-var g_gravity = false;
-var g_useAveVel = true;
-var g_renderSpatialDebug = false;
-var g_bricks = false;
-
 var KEY_HALT  = keyCode('H');
 var KEY_RESET = keyCode('R');
 var KEY_SPATIAL = keyCode('X');
@@ -61,7 +55,7 @@ function processDiagnostics() {
     if (eatKey(KEY_RESET)) entityManager.resetBubbles();
     if(eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
 
-    if(eatKey(KEY_GRAVITY)) g_gravity = !g_gravity;
+    if(eatKey(KEY_GRAVITY)) g_sauronEye = !g_sauronEye;
 
     if(eatKey(KEY_BRICK)) {
         g_bricks = !g_bricks;
@@ -77,14 +71,14 @@ function processDiagnostics() {
 function renderSimulation(ctx) {
 
     entityManager.render(ctx);
-    // Blackhole would be object in entityManager if it has some behavior (features)
-    if (g_gravity) drawBlackHole();
+    // Drawing the sauron eye
+    if (g_sauronEye) drawSauronEye();
 
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
 // BLACKHOLE-DRAWING
-function drawBlackHole() {
+function drawSauronEye() {
     g_sprites.sauron.drawCentredAt(ctx, planetX, planetY, 0);
 }
 
@@ -130,8 +124,16 @@ function resetGame() {
             clearTimeout(g_powerUpTimeOuts[i]);
         }
     }
+    // Reset managers and global variables which most are for power up elements
     spatialManager.reset();
     entityManager.reset();
+    g_wireVelToggle = false;
+    g_shield = false;
+    g_sword = false;
+    g_eWires = false;
+    g_sauronEye = false;
+    scores.prototype.points = 0;
+    g_grenades = 1;
 }
 
 // Kill player and reset game
@@ -147,7 +149,6 @@ function tryAgain() {
 }
 
 function nextLevel() {
-
     resetGame();
     g_playerIsDead = false;
     if (g_level < 3) g_level += 1;
@@ -182,15 +183,14 @@ function dead() {
     document.getElementById("tryAgain").addEventListener("click", tryAgain);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
 }
 
 
 
-// Hardcoded bricks for levels 2 and 3
+// Hardcoded bricks for level 1
 function makeBricks(level){
     switch(level) {
-        case 2:
+        case 1:
         entityManager._bricks.push(new Brick ({cx:   0, cy: 400, rotation:0 }));
         entityManager._bricks.push(new Brick ({cx: 120, cy: 300,rotation:0 }));
         entityManager._bricks.push(new Brick ({cx: 300, cy: 200,rotation:0}));
@@ -198,21 +198,6 @@ function makeBricks(level){
         entityManager._bricks.push(new Brick ({cx: 420, cy: 200,rotation:0}));
         entityManager._bricks.push(new Brick ({cx: 480, cy: 200,rotation:0}));
         entityManager._bricks.push(new Brick ({cx: 540, cy: 200,rotation:0}));
-        break;
-
-        case 3:
-        entityManager._bricks.push(new Brick ({cx: 300, cy: 100,rotation:0}));
-        entityManager._bricks.push(new Brick ({cx: 360, cy: 100,rotation:0}));
-        entityManager._bricks.push(new Brick ({cx: 420, cy: 100,rotation:0}));
-        entityManager._bricks.push(new Brick ({cx: 480, cy: 100,rotation:0}));
-        entityManager._bricks.push(new Brick ({cx: 540, cy: 100,rotation:0}));
-
-        var height = Brick.prototype.Height;
-        var deg90 = 90 * Math.PI / 180;
-        entityManager._bricks.push(new Brick ({cx: 300, cy: 200 , rotation : deg90}));
-        entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*1 ,rotation : deg90}));
-        entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*2, rotation : deg90}));
-        entityManager._bricks.push(new Brick ({cx: 300, cy: 200+height*3, rotation : deg90}));
         break;
         default:
         break;
@@ -223,7 +208,6 @@ function makeBricks(level){
 // Could be removed when brick key is removed
 function killbricks(){
     for(var i = entityManager._bricks.length-1; i >= 0; i--){
-
         // didn't get KILL_ME_NOW to work so I use .pop(); for now.
         entityManager._bricks.pop();
     }

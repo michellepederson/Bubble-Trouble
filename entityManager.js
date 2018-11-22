@@ -73,7 +73,7 @@ makeGrenade: function(cx,cy,radius, left){
     );
 },
 
-//A flag to tell when to shake the entire screen to create an explosion effect
+// A flag to tell when to shake the entire screen to create an explosion effect
 explosion: false,
 
 fire: function(cx, cy) {
@@ -127,6 +127,7 @@ addBubble : function(bubble) {
     this._categories[6].push(bubble);
 },
 
+// Used to detect whether player has finished the level
 noBubblesOnScreen : function() {
     return this._categories[6].length === 0;
 },
@@ -155,16 +156,6 @@ getWires : function() {
 
 getPlayers : function() {
     return this._categories[4]
-},
-
-// Not implemented
-resetBubbles: function() {
-    //this._forEachOf(this._ships, Ship.prototype.reset);
-},
-
-// Not implemented
-haltBubbles: function() {
-    //this._forEachOf(this._ships, Ship.prototype.halt);
 },
 
 reset : function() {

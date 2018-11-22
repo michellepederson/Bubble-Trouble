@@ -66,7 +66,6 @@ main._iterCore = function (dt) {
     }
     if (g_playerIsDead) {
         this.gameOver();
-        //playerKilled();
         dead();
         return;
     }

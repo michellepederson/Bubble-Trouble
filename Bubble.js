@@ -65,7 +65,10 @@ Bubble.prototype.update = function (du) {
         }
     }
 
-    Bubble.orbit =  g_gravity;
+    // Collision check on bricks
+    this.collisonOnBrick(nextY);
+
+    Bubble.orbit =  g_sauronEye;
 
     // If orbit is on, set gravity orbit on
     if(Bubble.orbit){
@@ -148,7 +151,6 @@ Bubble.prototype.applyAccel = function(accelY, du) {
 
 Bubble.prototype.render = function (ctx) {
 
-    var originalScale = this.sprite.scale;
     this.sprite.scale = this.scale;
     if(!this.popped) this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
     else {
@@ -175,6 +177,66 @@ Bubble.prototype.gravityOn = function(){
         this.earthRadians = 0;
     }
     this.setEarthPosition();
+}
+
+Bubble.prototype.collisonOnBrick = function(nextY) {
+    if(g_bricks) {
+        var brickheight = 40;
+        var brickwidth = 60;
+        // Bricks are like "slimy" bricks, dont change only the direction of velocity
+        for(var n = 0; n < entityManager._bricks.length; n++){
+                var temp = entityManager._bricks[n].cy;
+                // Collision check on top of bricks
+                if((nextY + 30 > entityManager._bricks[n].cy &&
+                nextY + 30 < entityManager._bricks[n].cy + brickheight) &&
+
+                    ((this.cx - 20 > entityManager._bricks[n].cx &&
+                        this.cx - 20 < entityManager._bricks[n].cx + brickwidth)||
+                    (this.cx + 20 > entityManager._bricks[n].cx &&
+                        this.cx + 20 < entityManager._bricks[n].cx + brickwidth))){
+                    this.velY = -4;
+                    return;
+                }
+
+                // Collision check on bottom of bricks
+                else if((nextY - 30 < entityManager._bricks[n].cy + 40 &&
+                nextY - 30 > entityManager._bricks[n].cy) &&
+
+                    ((this.cx + 20 > entityManager._bricks[n].cx &&
+                    this.cx - 20 < entityManager._bricks[n].cx + 60))){
+                    this.velY = 4;
+                    return;
+                }
+
+                //Bricks on left collision
+                else if(this.cx - 20 < entityManager._bricks[n].cx + 60 && this.cx + 20 > entityManager._bricks[n].cx + 60){
+
+                    if((this.cy + 20 >= entityManager._bricks[n].cy &&
+                        this.cy - 20 <  entityManager._bricks[n].cy) ||
+
+                        (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
+                        this.cy - 20 < entityManager._bricks[n].cy+40)){
+
+                        this.velX *= -1;
+                        return;
+                    }
+                }
+
+                // Bricks on right colision
+                else if(this.cx + 20 > entityManager._bricks[n].cx  && this.cx < entityManager._bricks[n].cx){
+
+                    if((this.cy + 20 >= entityManager._bricks[n].cy &&
+                        this.cy - 20 <  entityManager._bricks[n].cy) ||
+
+                        (this.cy + 20 >= entityManager._bricks[n].cy+40 &&
+                        this.cy - 20 < entityManager._bricks[n].cy+40)){
+
+                        this.velX *= -1;
+                        return;
+                    }
+                }
+            }
+        }
 }
 
 //Make the bubbles orbit like earths/planets around the black hole (PlanetX/Y)

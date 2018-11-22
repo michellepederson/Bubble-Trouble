@@ -27,6 +27,13 @@ var g_addBubbleTime;
 var g_waves;
 var g_level = 1;
 var g_numberOfWaves;
+
+var g_allowMixedActions = true;
+var g_sauronEye = false;
+var g_useAveVel = true;
+var g_renderSpatialDebug = false;
+var g_bricks = true;
+
 // The "nominal interval" is the one that all of our time-based units are
 // calibrated to e.g. a velocity unit is "pixels per nominal interval"
 //

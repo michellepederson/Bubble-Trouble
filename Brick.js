@@ -23,6 +23,5 @@ Brick.prototype.update = function (du){
 };
 
 Brick.prototype.render = function (ctx) {
-
 	this.sprite.drawAt(ctx, this.cx, this.cy, this.rotation);
 };
