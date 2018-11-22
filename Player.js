@@ -384,11 +384,11 @@ Player.prototype.maybeJump = function (du) {
 
     var accelY = NOMINAL_GRAVITY*du;
 
-    if (keys[this.KEY_JUMP] && this.cy >= entityManager._blocks[0].cy-this.getRadius()*2) {
+    if (keys[this.KEY_JUMP] && this.cy >= entityManager._ground[0].cy-this.getRadius()*2) {
         this.jump();
     }
-    if(nextY > entityManager._blocks[0].cy-this.getRadius()*2){
-        this.cy = entityManager._blocks[0].cy-this.getRadius()*2;
+    if(nextY > entityManager._ground[0].cy-this.getRadius()*2){
+        this.cy = entityManager._ground[0].cy-this.getRadius()*2;
 
     }
     else{

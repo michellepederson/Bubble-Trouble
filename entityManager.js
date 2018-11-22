@@ -30,7 +30,7 @@ _backgrounds : [],
 _Wires : [],
 _players  : [],
 _bullets : [],
-_blocks : [],
+_ground : [],
 _bubbles : [],
 _bricks : [],
 _scores : [],
@@ -55,7 +55,7 @@ COUNTER : 20,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._backgrounds, this._bricks, this._bullets, this._Wires, this._players, this._blocks, this._bubbles, this._scores, this._power, this._grenade];
+    this._categories = [this._backgrounds, this._bricks, this._bullets, this._Wires, this._players, this._ground, this._bubbles, this._scores, this._power, this._grenade];
 },
 
 init: function() {
@@ -103,8 +103,8 @@ generatePlayer : function(cx, ground_edge) {
 },
 
 generateGround : function(cx,cy, halfWidth,halfHeight) {
-    this._blocks.push(
-        new Block({
+    this._ground.push(
+        new Ground({
             cx,
             cy,
             halfWidth,
@@ -171,7 +171,7 @@ reset : function() {
     this._Wires = [];
     this._players = [];
     this._bullets = [];
-    this._blocks = [];
+    this._ground = [];
     this._bubbles = [];
     this._bricks = [];
     this._scores = [];
