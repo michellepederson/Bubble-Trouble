@@ -1,3 +1,9 @@
+/*
+Values for the levels of the game
+Can be modified to change velocity direction, time between bubbles,
+amount of bubbles in each level and more.
+*/
+
 var x = g_canvas.width/4;
 var posX = [x*1,x*2,x*3];
 
@@ -28,5 +34,3 @@ g_waves = {
     3 : 4,
     4 : 6,
 }
-
-
