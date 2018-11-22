@@ -153,8 +153,8 @@ Bubble.prototype.render = function (ctx) {
     if(!this.popped) this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
     else {
         this.scale = 0.5;
-        this.sprite.drawSpriteAt(
-          ctx, this.cx, this.cy, this.scale, this
+        this.sprite.drawCentredAt(
+          ctx, this.cx, this.cy, this.rotation, this.scale, this
         );
     }
 };

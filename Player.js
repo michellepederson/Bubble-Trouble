@@ -30,7 +30,6 @@ Player.prototype.KEY_CROUCH = 'S'.charCodeAt(0);
 Player.prototype.KEY_SWORD  = 'Z'.charCodeAt(0);
 Player.prototype.KEY_GRENADE = 'N'.charCodeAt(0);
 
-
 // Initial, inheritable, default values
 Player.prototype.rotation = 0;
 Player.prototype.cx = 200;
@@ -52,24 +51,26 @@ Player.prototype.sword = false;
 
 Player.prototype.update = function (du) {
 
-//Unregister
-spatialManager.unregister(this);
+    //Unregister
+    spatialManager.unregister(this);
 
-//Quit game if the player dies
-if(this._isDeadNow && this.lives === 1){
-    g_playerIsDead = true;
-    return entityManager.KILL_ME_NOW;
-}
-
-if(this.spriteMode!==0){
-
-    this.movePlayer(du);
-
-    this.maybeJump(du);
-    // Shoot wire or swing sword
-    this.maybeAttack();
-
+    //Quit game if the player dies
+    if(this._isDeadNow && this.lives === 1){
+        g_playerIsDead = true;
+        return entityManager.KILL_ME_NOW;
     }
+
+    //If the player is not in death mode, check if he needs to move, jump, attack, or throw a grenade
+    if(this.spriteMode!==0){
+
+        this.movePlayer(du);
+
+        this.maybeJump(du);
+        // Shoot wire or swing sword
+        this.maybeAttack();
+
+        }
+
     this.grenade();
     //Update sprite to next animation frame
     this.spriteUpdate();
@@ -79,13 +80,15 @@ if(this.spriteMode!==0){
 
     if (entity) {
         this.checkEntity(entity);
-    } else {
+    } 
+
+    else {
         this.lastEnt = undefined;
     }
-        //Check for death and re-register
-        if(!this._isDeadNow){
-            spatialManager.register(this);
-        }
+    //Check for death and re-register
+    if(!this._isDeadNow){
+        spatialManager.register(this);
+    }
 };
 
 
@@ -132,6 +135,7 @@ Player.prototype.checkEntity = function (ent) {
          g_wireVelToggle = false;
          quack.play();
           }
+
         // Powerup that toggles the sauron eye on which the bubbles spin around
         else if (ent.powerUpId === 4) {
             g_gravity = true;
@@ -207,6 +211,8 @@ Player.prototype.movePlayer = function (du) {
     var nextX = prevX + this.velX;
     var nextY = prevY + this.velY;
 
+    //Check for crouch key and switch to crouch animation, but only if the player isn't moving
+
     if(keys[this.KEY_CROUCH] && !this.move){
         if(this.spriteMode!==6) this.spriteCell =0;
         this.spriteMode = 6;
@@ -222,7 +228,6 @@ Player.prototype.movePlayer = function (du) {
         this.spriteMode = 2;
        }
 
-
     //If moving right, make sure player stays within screen
     else if (keys[this.KEY_RIGHT] && nextX < 600-this.getRadius()) {
 
@@ -235,7 +240,7 @@ Player.prototype.movePlayer = function (du) {
 
 
     else {
-        //If player just stopped moving, set flag to false
+        //If player just stopped moving, set movement flag to false
         if(this.move) this.spriteCell = 0;
         this.move = false;
         //If the player isn't doing anything, return to idle animation cycle
@@ -243,7 +248,6 @@ Player.prototype.movePlayer = function (du) {
             this.spriteMode = 1;
         }
     }
-
 
     var brickheight = 40;
     var brickwidth = 60;
@@ -320,17 +324,21 @@ Player.prototype.movePlayer = function (du) {
 Player.prototype.maybeAttack = function () {
 
     if (eatKey(this.KEY_FIRE)){
+        //Check if in sword mode and animate the sword if so
         if(g_sword){
             swoosh.play();
             this.spriteMode = 4;
             this.spriteCell = 0;
         }
+        //Otherwise he will shoot a wire, if he has one available to shoot ie the previous wire is now off screen
         else{
             if(entityManager._Wires.length < 1 ||  g_eWires){
                 throw1.play();
                 entityManager.fire(this.cx, this.cy-this.getRadius());
                 if (entityManager._Wires.length > 1) g_eWires = false;
             }
+            //If the shoot flag was not set at this point, that means he just began shooting and is not in the middle of an animation 
+            //Reset the sprite cell to the beginning so the shooting animation starts at its beginning
             if(!this.shoot){
                 this.spriteCell = 0;
             }
@@ -350,7 +358,7 @@ Player.prototype.maybeAttack = function () {
             if (canTakeHit) canTakeHit.call(hitEntity);
         }
     }
-
+    //Change to the shooting sprite if he is shooting
     if(this.shoot){
         this.spriteMode = 3;
     }
@@ -416,8 +424,8 @@ Player.prototype.reset = function () {
 };
 
 Player.prototype.render = function (ctx) {
-    this.sprite.drawSpriteAt(
-        ctx, this.cx, this.cy, this.scale, this
+    this.sprite.drawCentredAt(
+        ctx, this.cx, this.cy, this.rotation, this.scale, this.left
         );
     this.renderPowerup();
 };

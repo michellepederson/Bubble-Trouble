@@ -57,10 +57,7 @@ Wire.prototype.takeWireHit = function () {
 
 
 Wire.prototype.render = function (ctx) {
-    //Draw the arrow
-    var originalScale = this.sprite.scale;
-    this.sprite.scale = this.scale;
-    this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
+
 
     //Draw the 'wire'
 
@@ -71,5 +68,9 @@ Wire.prototype.render = function (ctx) {
      for (var i = this.cy; i < 475; i+= g_sprites.wire.height){
         g_sprites.wire.drawAt(ctx, this.cx-5, i);
     }
+        //Draw the arrow
+    var originalScale = this.sprite.scale;
+    this.sprite.scale = this.scale;
+    this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0, 0.25);
 
 };

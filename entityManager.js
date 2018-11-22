@@ -49,6 +49,7 @@ _forEachOf: function(aCategory, fn) {
 // to request the blessed release of death!
 //
 KILL_ME_NOW : -1,
+// A counter to specify the duration of tremors when a grenade explodes
 COUNTER : 20,
 
 // Some things must be deferred until after initial construction
@@ -72,6 +73,7 @@ makeGrenade: function(cx,cy,radius, left){
     );
 },
 
+//A flag to tell when to shake the entire screen to create an explosion effect
 explosion: false,
 
 fire: function(cx, cy) {
@@ -130,7 +132,6 @@ noBubblesOnScreen : function() {
 },
 
 brick : function(cx, cy) {
-
    this._bricks.push(
         new Brick({
             cx,
@@ -186,7 +187,7 @@ update: function(du) {
   if(this.explosion){
 
     if(this.COUNTER > 0){
-
+      //Just translate everything by a random number on every frame for the duration of the counter
       ctx.save();
       var dx = Math.random()*10;
       var dy = Math.random()*10;
@@ -233,7 +234,7 @@ render: function(ctx) {
 
         }
     }
-    //Restore if shaking screen
+    //Restore if shaking screen during grenade explosion
     if(this.explosion){
       ctx.restore();
     }

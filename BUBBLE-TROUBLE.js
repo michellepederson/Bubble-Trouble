@@ -9,7 +9,6 @@ function init() {
     var cx = 300;
     // Returns y coordinate of the edge of the ground, its needed to place the player
     // on top of the ground edge
-
     g_groundEdge = entityManager.generateGround(g_canvas.width/2,ground_y,g_canvas.width/2, 5);
     entityManager.generateScores();
     entityManager.generatePlayer(cx, g_groundEdge);
@@ -202,12 +201,13 @@ function killbricks(){
 }
 
 
-      //START SCREEN
+//START SCREEN
 function startScreen() {
 
     entityManager.init();
     init();
     main.init();
+    //Hide the start screen artwork once the player presses play
     document.getElementById('startScreen').style.display = "none";
     start.play();
 
@@ -225,7 +225,6 @@ function requestPreloads() {
     var requiredImages = {
         bubble : "img/bubbles/bubble_2.png",
         pop : "img/bubbles/pop/pop-sheet.png",
-
 
         //Background One
         bkgBulkhead1 : "img/bkg-bulkhead/bulkhead-walls-back.png",
@@ -250,6 +249,7 @@ function requestPreloads() {
         //Wire and arrow
         wire : "img/player/chain.png",
         arrow : "img/player/arrow.png",
+
         //Separate spike sprite because we change the scale for the wire/powerup arrows
         spike : "img/player/arrow.png",
 
@@ -263,9 +263,7 @@ function requestPreloads() {
         powerupOrb : "img/powerups/powerup-orb.png",
         powerupRing : "img/powerups/powerup-ring.png",
         duck : "img/powerups/duck.png",
-        //gun : "img/powerups/gun.png",
         sword : "img/powerups/powerup-sword.png",
-        //trap : "img/powerups/trap.png",
         grenade : "img/powerups/grenade.png",
         grenadeLive : "img/powerups/grenade-live.png",
         sauron : "img/powerups/sauron.png",
@@ -398,8 +396,6 @@ function preloadDone() {
             spriteSheet : g_images.swipe,
             offsetX : -45,
             offsetY : -25
-
-
     };
             g_sprite_setup[5] = {
             celWidth : 196,
@@ -420,7 +416,6 @@ function preloadDone() {
             offsetY: 22
     };
 
-
             g_sprite_setup[7] = {
             celWidth : 172,
             celHeight : 168,
@@ -431,10 +426,8 @@ function preloadDone() {
 
     };
 
-
-
-
-    for(var i = 0; i < g_sprite_setup.length; i++){
+    //Go through the array of objects and pull the info to use to create a new sprite
+    for(var i = 0; i < g_sprite_setup.length; i++) {
 
          celWidth  = g_sprite_setup[i].celWidth;
          celHeight = g_sprite_setup[i].celHeight;
@@ -450,12 +443,12 @@ function preloadDone() {
             for (var col = 0; col < numCols; ++col) {
 
                 sprite = new Sprite(image, col * celWidth, row * celHeight,
-                                    celWidth, celHeight, offsetX, offsetY)
+                                    celWidth, celHeight, offsetX, offsetY);
                 g_sprite_cycles[i].push(sprite);
                 g_sprite_cycles[i].splice(numCels);
             }
         }
-}
+    }
 }
 
 requestPreloads();

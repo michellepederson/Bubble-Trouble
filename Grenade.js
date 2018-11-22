@@ -32,21 +32,23 @@ Grenade.prototype.update = function (du){
     if(this._isDeadNow){
         return   -1;
     }
-
+    //Decrement lifespan by delta unit
     this.lifespan -= du;
-    // if lifespan is over, the grenade explodes
+    // if lifespan is over, set the explosion flag to true to trigger explosion animation
     if (this.lifespan < 0 ) {
 
         this.explode = true;
         entityManager.explosion = true;
         explosion.play();
-
+        //Slow down the animation * animationLag times
         if(this.animationLag > 0) this.animationLag--;
 
         else{
+            //If you get here, the lifespan is over. Switch sprite to the first cell of the explosion animation frame
             this.sprite = g_sprites_explosion[this.spriteCell];
+            //Advance to next animation frame
             this.spriteCell++;
-
+            //Once the animation reaches its last frame, request death of bubble
             if(this.spriteCell > g_sprites_explosion.length) return entityManager.KILL_ME_NOW;
          }
     }
@@ -82,6 +84,7 @@ Grenade.prototype.update = function (du){
     var hitEntity = this.findHitEntity();
     hitEntity = spatialManager.findEntityOnGrenade(this);
 
+    //If there is an object(s) within explosion range, kill it and trigger explosion animation
     if (hitEntity){
         var canTakeHit = hitEntity.takeWireHit;
         if (canTakeHit) {
@@ -89,14 +92,16 @@ Grenade.prototype.update = function (du){
             this.lifespan = -1;
             this.sprite = g_sprites_explosion[this.spriteCell];
         }
-            if(this.radius > 70){
-                return entityManager.KILL_ME_NOW;
-            }
-            else{
-                this.radius *= 2;
+        //Once the explosion reaches the below size, request its death
+        if(this.radius > 70){
+            return entityManager.KILL_ME_NOW;
+        }
+        else{
+            //Explosion range grows
+            this.radius *= 2;
             }
     }
-
+    //Check for death and re register
     if(!this._isDeadNow){
         spatialManager.register(this);
     }
@@ -110,8 +115,6 @@ Grenade.prototype.render = function (ctx) {
 Grenade.prototype.getRadius = function () {
     return this.radius;
 };
-
-
 
 
 // Makes the grenade bounce off ground and handles it's gravity.

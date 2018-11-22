@@ -92,9 +92,12 @@ findEntityOnSword(cx, cy, width, height, frame){
     var entity, pos, posX, posY, radius;
     var bubbles = entityManager.getBubbles();
 
+    // In the animation sequence, only frame 1 and 2 include the sword 
+    // Therefore only those frames require collision checks
     if(frame === 0 || frame === 3) return;
 
     if(frame === 1){
+        // Since the sword is a different size in the two frames, use exact locations calulated in photoshop
         x1 = cx - width/2 + 83;
         y1 = cy - height/2 + 10;
         x2 = cx - width/2 + 246;
@@ -114,6 +117,7 @@ findEntityOnSword(cx, cy, width, height, frame){
         posY = pos['posY'];
         radius = e.getRadius();
 
+        // Circle and rectangle collision check
         if(posX + radius >= x1 && posX - radius <= x2){
             if(posY + radius <= y2 && posY - radius >= y1) entity = e;
         }

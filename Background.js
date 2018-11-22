@@ -7,9 +7,7 @@ function Background(descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
-
     // Default sprite and scale, if not otherwise specified
-    //this.sprite = this.sprite || g_sprites.bubble;
     this.scale  = this.scale  || 1;
 }
 
@@ -32,15 +30,16 @@ Background.prototype.update = function (du) {
     }
 };
 
-
 Background.prototype.render = function (ctx) {
 
     var cx = this.cx;
 
     util.clearCanvas(ctx);
 
+    //Background 1: Industrial
     if(this.level === 1){
-
+        //Scale the artwork to fill the screen with leeway for panning
+        //With each layer, translate farther to compound the pan and achieve parallax
         ctx.save();
         ctx.scale(4, 4);
         ctx.translate(cx/60, 0);
@@ -54,7 +53,7 @@ Background.prototype.render = function (ctx) {
 
         ctx.restore();
     }
-
+    //Background 2: Bulkhead
     else if(this.level === 2) {
 
         ctx.save();
@@ -69,9 +68,9 @@ Background.prototype.render = function (ctx) {
         g_sprites.bgkBulkhead4.drawAt(ctx, -50, 0);
 
         ctx.restore();
-
     }
 
+    //Background 3: Underwater
     else {
         ctx.save();
         ctx.scale(3.25,3.25);
@@ -84,12 +83,11 @@ Background.prototype.render = function (ctx) {
         ctx.restore();
     }
 
-    //Draw the spikes
+    //Draw the spikes - just repeat the arrow sprite, rotated 180 degrees
     for(var i=0; i< 650; i+=g_sprites.spike.width){
         ctx.beginPath();
         ctx.save();
         ctx.scale(1, 1);
-        //ctx.translate(i, 0);
         g_sprites.spike.drawCentredAt(ctx, i, 0, 3.14);
         ctx.restore();
     }
