@@ -6,11 +6,7 @@
 function Bubble(descr) {
         // Common inherited setup logic from Entity
     this.setup(descr);
-    /*
-    for (var property in descr) {
-        this[property] = descr[property];
-    }
-    */
+
     this.sprite = this.sprite || g_sprites.bubble;
     this.scale  = this.scale  || 1;
 };
