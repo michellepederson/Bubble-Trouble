@@ -6,11 +6,7 @@
 
 function Grenade(descr) {
    this.setup(descr);
-   /*
-    for (var property in descr) {
-        this[property] = descr[property];
-    }
-    */
+
     this.sprite = g_sprites.grenadeLive;
 };
 
@@ -38,6 +34,7 @@ Grenade.prototype.update = function (du){
     }
 
     this.lifespan -= du;
+    // if lifespan is over, the grenade explodes
     if (this.lifespan < 0 ) {
 
         this.explode = true;
@@ -51,29 +48,28 @@ Grenade.prototype.update = function (du){
             this.spriteCell++;
 
             if(this.spriteCell > g_sprites_explosion.length) return entityManager.KILL_ME_NOW;
-
          }
     }
 
     var accelY = Grenade.prototype.NOMINAL_GRAVITY*du;
     var accelX = 0;
 
-
     var prevX = this.cx;
     var prevY = this.cy;
     var nextX = prevX + this.velX;
     var nextY = prevY + this.velY;
 
-
+    // Bounce from the left side
     if(nextX <= this.sprite.width/2){
         this.left = false;
         this.velX *= -1;
-
     }
+    // Bounce from the right side
     if(nextX >= g_canvas.width-this.sprite.width/2){
         this.velX *= -1;
     }
 
+    // Slow grenade down to zero, from both sides
     if(this.velX > 0){
         this.velX -= 0.1;
     }
@@ -93,8 +89,6 @@ Grenade.prototype.update = function (du){
             this.lifespan = -1;
             this.sprite = g_sprites_explosion[this.spriteCell];
         }
-
-        //console.log(this.radius);
             if(this.radius > 70){
                 return entityManager.KILL_ME_NOW;
             }
@@ -109,15 +103,11 @@ Grenade.prototype.update = function (du){
 };
 
 Grenade.prototype.render = function (ctx) {
-
   this.sprite.drawCentredAt(ctx, this.cx, this.cy, 0);
-
-
 };
 
 
 Grenade.prototype.getRadius = function () {
-    //return 50; // weird bug
     return this.radius;
 };
 
@@ -128,25 +118,20 @@ Grenade.prototype.getRadius = function () {
 // Basically copy paste from Patrick's code in entities.
 Grenade.prototype.applyAccel = function (accelX, accelY, du) {
 
-    // u = original velocity
     if(this.left) this.velX = -5;
 
     var oldVelX = this.velX;
     var oldVelY = this.velY;
 
-    // v = u + at
     this.velX += accelX * du;
     this.velY += accelY * du;
 
-    // v_ave = (u + v) / 2
     var aveVelX = (oldVelX + this.velX) / 2;
     var aveVelY = (oldVelY + this.velY) / 2;
 
-    // Decide whether to use the average or not (average is best!)
     var intervalVelX = g_useAveVel ? aveVelX : this.velX;
     var intervalVelY = g_useAveVel ? aveVelY : this.velY;
 
-    // s = s + v_ave * t
     var nextX = this.cx + intervalVelX * du;
     var nextY = this.cy + intervalVelY * du;
 
@@ -155,17 +140,16 @@ Grenade.prototype.applyAccel = function (accelX, accelY, du) {
     var minY = this.radius/ 2;
     var maxY = 510 - minY;
 
-    // Ignore the bounce if the ship is already in
+    // Ignore the bounce if the grenade is already in
     // the "border zone" (to avoid trapping them there)
     if (this.cy > maxY || this.cy < minY) {
         // do nothing
     }
     else if (nextY > maxY) {
-            this.velY = oldVelY * -0.6;
-            intervalVelY = this.velY;
+        this.velY = oldVelY * -0.6;
+        intervalVelY = this.velY;
     }
 
-    // s = s + v_ave * t
     this.cx += du * intervalVelX;
     this.cy += du * intervalVelY;
 };
