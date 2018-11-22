@@ -7,13 +7,13 @@
 function Ground(descr) {
     for (var property in descr) {
         this[property] = descr[property];
-    } 
+    }
 };
 
 // Initial, inheritable, default values
 Ground.prototype.cx = 200;
 Ground.prototype.cy = 200;
-    
+
 Ground.prototype.update = function (du) {
 
 };
